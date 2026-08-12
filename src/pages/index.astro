@@ -1,11 +1,40 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import MandapScene from '../components/MandapScene.astro';
+import BaraatDancers from '../components/BaraatDancers.astro';
+import Player from '../components/Player.astro';
 ---
 
 <Layout>
-	<Welcome />
+	<div class="scene">
+		<div class="rangoli"></div>
+		<div class="stars" id="stars"></div>
+
+		<header>
+			<div class="brandmark">
+				<div class="glyph">श</div>
+				<span>DeluxShaadi</span>
+			</div>
+			<nav>
+				<a href="https://open.spotify.com/playlist/37i9dQZF1DXa4t5hT1c3jZ" target="_blank" rel="noopener noreferrer">Listen on Spotify</a>
+				<a href="https://music.youtube.com/playlist?list=PLCB05E03DA939D484" target="_blank" rel="noopener noreferrer">Listen on YT Music</a>
+			</nav>
+		</header>
+
+		<div class="lights" id="lights"></div>
+
+		<div class="hero">
+			<div class="kicker">now playing · dhol ke saath</div>
+			<h1>शादी रेडियो<span class="eng">wedding songs, playing all night</span></h1>
+			<p class="tagline">Baraat to vidaai, one long tape that never stops — old favourites and new sangeet hits on loop, the way the DJ at every wedding hall keeps it going till 2am.</p>
+		</div>
+
+		<MandapScene />
+
+		<BaraatDancers />
+
+		<p class="disclaimer">Audio plays through embedded YouTube. Nothing is hosted here, and all rights stay with the labels and performers. Song credits from film soundtrack listings.</p>
+	</div>
+
+	<Player />
 </Layout>
