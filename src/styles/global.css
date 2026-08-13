@@ -549,13 +549,48 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   header{ padding:14px 16px; }
   .nav-links{ display:none; }
   .hamburger{ display:flex; }
-  .hero{ padding:10px 16px 30px; }
-  .tabs{ margin-top:-130px; }
   .baraat-strip{ margin-top:48px; }
 }
 
 /* ========== RESPONSIVE: MOBILE (≤640px) ========== */
 @media (max-width: 640px){
+  /* ── Hero: compact, no flex stretch ── */
+  .scene{ padding-bottom:130px; }
+
+  .hero{
+    flex:none;
+    padding:12px 16px 8px;
+  }
+  .kicker{ font-size:10px; letter-spacing:2px; margin-bottom:6px; }
+  h1{ font-size:clamp(26px, 7vw, 32px); }
+  h1 .eng{ font-size:clamp(11px, 2.8vw, 14px); margin-top:6px; }
+  .tagline{
+    font-size:12px; line-height:1.55;
+    margin-top:8px; max-width:340px;
+  }
+
+  /* ── Mandap: smaller, less overlap ── */
+  .mandap{ margin-top:-10px; aspect-ratio:1440/180; }
+
+  /* ── Tabs: below mandap, centered, scrollable ── */
+  .tabs{
+    margin-top:0;
+    gap:6px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding:10px 12px;
+    justify-content:safe center;
+    flex-wrap:nowrap;
+  }
+  .tabs::-webkit-scrollbar{ display:none; }
+  .tab{ padding:6px 14px; font-size:12px; flex-shrink:0; }
+
+  /* ── Baraat dancers ── */
+  .baraat-strip{ gap:2px; padding:4px 8px 2px; margin-top:20px; }
+  .dancer svg{ width:30px !important; height:45px !important; }
+
   /* ── Player: 2-row layout ── */
   .player{
     padding:10px 12px 10px;
@@ -570,7 +605,6 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   .track-info{ display:none; }
   .vol{ display:none; }
   .player-divider{ display:none; }
-  .scene{ padding-bottom:130px; }
 
   /* row 1: prev | play | next | queue */
   .player .navbtn,
@@ -592,21 +626,6 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   .scrub .time{ font-size:10px; min-width:28px; }
   .track{ height:5px; }
 
-  /* ── Tabs: centered when they fit, scrollable when they don't ── */
-  .tabs{
-    margin-top:-110px;
-    gap:6px;
-    overflow-x:auto;
-    overflow-y:hidden;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-    padding:0 12px;
-    justify-content:safe center;
-    flex-wrap:nowrap;
-  }
-  .tabs::-webkit-scrollbar{ display:none; }
-  .tab{ padding:6px 14px; font-size:12px; flex-shrink:0; }
-
   /* ── Queue panel ── */
   .queue-panel{
     bottom:calc(70px + env(safe-area-inset-bottom, 0px));
@@ -615,15 +634,6 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   .queue-item{ padding:8px 16px; }
   .queue-name{ font-size:12.5px; }
   .queue-film{ font-size:10.5px; }
-
-  /* ── Baraat dancers ── */
-  .baraat-strip{ gap:2px; padding:4px 8px 2px; margin-top:40px; }
-  .dancer svg{ width:30px !important; height:45px !important; }
-
-  /* ── Hero ── */
-  .hero{ padding:8px 14px 24px; }
-  .kicker{ font-size:10px; letter-spacing:2px; }
-  .tagline{ font-size:12px; margin-top:10px; }
 
   /* ── Disclaimer ── */
   .disclaimer{ font-size:10px; margin-top:16px; }
@@ -642,25 +652,27 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   .faq-section{ padding:0 16px; }
   .faq-q{ padding:12px 40px 12px 14px; font-size:13px; }
   .faq-a{ padding:0 14px 12px; }
-
-  /* ── Mandap ── */
-  .mandap{ margin-top:-20px; }
 }
 
 /* ========== RESPONSIVE: VERY SMALL (≤360px) ========== */
 @media (max-width: 360px){
-  h1{ font-size:26px; }
-  h1 .eng{ font-size:12px; }
+  .hero{ padding:10px 14px 6px; }
+  h1{ font-size:24px; }
+  h1 .eng{ font-size:11px; margin-top:4px; }
+  .tagline{ font-size:11px; margin-top:6px; }
+  .kicker{ font-size:9px; margin-bottom:4px; }
+  .mandap{ margin-top:-6px; aspect-ratio:1440/140; }
+  .tabs{ padding:8px 10px; gap:5px; }
+  .tab{ padding:5px 11px; font-size:11px; }
+  .baraat-strip{ gap:1px; margin-top:16px; }
+  .dancer svg{ width:24px !important; height:36px !important; }
   .about-card h1{ font-size:22px; }
   .about-card h1 .eng{ font-size:14px; }
   .content-title{ font-size:22px; }
   .error-code{ font-size:56px; }
   .error-title{ font-size:22px; }
-  .baraat-strip{ gap:1px; }
-  .dancer svg{ width:24px !important; height:36px !important; }
   .player .playbtn{ width:36px; height:36px; }
   .player .navbtn{ width:26px; height:26px; }
-  .tab{ padding:5px 11px; font-size:11px; }
   .queue-panel{ bottom:calc(60px + env(safe-area-inset-bottom, 0px)); }
   .scene{ padding-bottom:120px; }
 }

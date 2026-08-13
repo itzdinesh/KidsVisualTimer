@@ -27,16 +27,16 @@ import Player from '../components/Player.astro';
 		</script>
 	</head>
 	<body class="overflow-x-hidden">
-		<div class="scene max-sm:pb-[130px]">
+		<div class="scene">
 			<div class="rangoli"></div>
 			<div class="stars" id="stars"></div>
 
-			<header class="max-sm:px-4 max-sm:py-3.5">
+			<header>
 				<div class="brandmark">
 					<div class="glyph">श</div>
 					<a href="/" style="text-decoration:none;color:inherit;">DeluxShaadi</a>
 				</div>
-				<div class="nav-links max-sm:hidden">
+				<div class="nav-links">
 					<a href="/about">About</a>
 					<a href="/privacy">Privacy</a>
 					<a href="/terms">Terms</a>
@@ -45,7 +45,7 @@ import Player from '../components/Player.astro';
 						<span aria-hidden="true">&#x1F31A;</span>
 					</button>
 				</div>
-				<button class="hamburger max-sm:flex" id="hamburgerBtn" aria-label="Open menu">
+				<button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
 					<span></span><span></span><span></span>
 				</button>
 			</header>
@@ -68,17 +68,17 @@ import Player from '../components/Player.astro';
 				<slot />
 			</main>
 
-			<footer class="site-footer max-sm:py-5 max-sm:px-4 max-sm:mt-6">
-				<div class="footer-links max-sm:gap-2.5 max-sm:gap-x-3.5">
-					<a href="/about" class="max-sm:text-[11.5px]">About</a>
-					<a href="/privacy" class="max-sm:text-[11.5px]">Privacy</a>
-					<a href="/terms" class="max-sm:text-[11.5px]">Terms</a>
-					<a href="/contact" class="max-sm:text-[11.5px]">Contact</a>
+			<footer class="site-footer">
+				<div class="footer-links">
+					<a href="/about">About</a>
+					<a href="/privacy">Privacy</a>
+					<a href="/terms">Terms</a>
+					<a href="/contact">Contact</a>
 				</div>
-				<p class="footer-copy max-sm:text-[10px]">&copy; 2026 DeluxShaadi Radio. All rights belong to the original artists and labels.</p>
+				<p class="footer-copy">&copy; 2026 DeluxShaadi Radio. All rights belong to the original artists and labels.</p>
 			</footer>
 
-			<p class="disclaimer max-sm:text-[10px] max-sm:mt-4">Audio plays through embedded YouTube. Nothing is hosted here, and all rights stay with the labels and performers. Song credits from film soundtrack listings.</p>
+			<p class="disclaimer">Audio plays through embedded YouTube. Nothing is hosted here, and all rights stay with the labels and performers. Song credits from film soundtrack listings.</p>
 		</div>
 
 		<Player />
