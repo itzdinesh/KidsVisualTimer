@@ -498,6 +498,22 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
 .vol .fill::after{ border-color: var(--magenta); }
 
 /* ========== QUEUE / SONG LIST PANEL ========== */
+.preview-notice{
+  position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
+  z-index:11;
+  background: rgba(58,15,58,.92);
+  border:1px solid rgba(247,236,217,.15);
+  border-radius:10px;
+  padding:8px 14px;
+  font-size:11.5px; color:var(--cream); opacity:.85;
+  max-width:90vw; text-align:center;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  display:none; align-items:center; gap:8px;
+  pointer-events:auto;
+}
+.preview-notice a{ color:var(--marigold); text-decoration:underline; }
+.preview-notice.visible{ display:flex; }
+
 .queue-panel{
   position:fixed; bottom:80px; left:0; right:0; z-index:11;
   background: linear-gradient(180deg, #3A0F3A 0%, #2E0F3D 100%);
@@ -546,36 +562,136 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   header{ padding:14px 16px; }
   .nav-links{ display:none; }
   .hamburger{ display:flex; }
+  .hero{ padding:10px 16px 30px; }
+  .tabs{ margin-top:-130px; }
+  .baraat-strip{ margin-top:48px; }
 }
 
 /* ========== RESPONSIVE: MOBILE (≤640px) ========== */
 @media (max-width: 640px){
-  .player{ padding:12px 14px; gap:8px; }
-  .track-info{ min-width:0; display:none; }
+  /* ── Player: 2-row layout ── */
+  .player{
+    padding:10px 12px 10px;
+    gap:0;
+    flex-wrap:wrap;
+    justify-content:center;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  }
+  .player::before{ height:2px; }
+  .player::after{ display:none; }
+  .thumb{ display:none; }
+  .track-info{ display:none; }
   .vol{ display:none; }
-  .navbtn{ width:26px; height:26px; }
-  .baraat-strip{ gap:2px; padding:4px 8px 2px; }
-  .dancer svg{ width:32px; height:48px; }
-  .hero{ padding:10px 16px 30px; }
-  .tabs{ margin-top:-120px; gap:6px; }
-  .tab{ padding:6px 14px; font-size:12px; }
-  .baraat-strip{ margin-top:44px; }
-  .queue-panel.open{ max-height:60vh; }
+  .player-divider{ display:none; }
+  .scene{ padding-bottom:130px; }
+
+  /* row 1: prev | play | next | queue */
+  .player .navbtn,
+  .player .playbtn{
+    margin:0 4px;
+  }
+  .player .navbtn{ width:28px; height:28px; }
+  .player .navbtn svg{ width:12px; height:12px; }
+  .player .playbtn{ width:40px; height:40px; }
+  .player .playbtn svg{ width:14px; height:14px; }
+
+  /* row 2: scrub bar full width */
+  .scrub{
+    width:100%;
+    order:10;
+    padding:6px 0 0;
+    gap:6px;
+  }
+  .scrub .time{ font-size:10px; min-width:28px; }
+  .track{ height:5px; }
+
+  /* ── Tabs: horizontal scroll ── */
+  .tabs{
+    margin-top:-110px;
+    gap:6px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding:0 12px;
+    justify-content:flex-start;
+    flex-wrap:nowrap;
+  }
+  .tabs::-webkit-scrollbar{ display:none; }
+  .tab{ padding:6px 14px; font-size:12px; flex-shrink:0; }
+
+  /* ── Queue panel ── */
+  .queue-panel{
+    bottom:calc(70px + env(safe-area-inset-bottom, 0px));
+    max-height:55vh;
+  }
+  .queue-panel.open{ max-height:55vh; }
+  .queue-item{ padding:8px 16px; }
+  .queue-name{ font-size:12.5px; }
+  .queue-film{ font-size:10.5px; }
+  .preview-notice{ bottom:calc(72px + env(safe-area-inset-bottom, 0px)); font-size:10.5px; padding:6px 12px; }
+
+  /* ── Baraat dancers ── */
+  .baraat-strip{ gap:2px; padding:4px 8px 2px; margin-top:40px; }
+  .dancer svg{ width:30px; height:45px; }
+
+  /* ── Hero ── */
+  .hero{ padding:8px 14px 24px; }
   .kicker{ font-size:10px; letter-spacing:2px; }
-  .tagline{ font-size:12.5px; margin-top:12px; }
-  .footer-links{ gap:12px 16px; }
-  .footer-links a{ font-size:12px; }
+  .tagline{ font-size:12px; margin-top:10px; }
+
+  /* ── Disclaimer ── */
+  .disclaimer{ font-size:10px; margin-top:16px; }
+
+  /* ── Footer ── */
+  .footer-links{ gap:10px 14px; }
+  .footer-links a{ font-size:11.5px; }
+  .footer-copy{ font-size:10px; }
+  .site-footer{ padding:20px 16px 0; margin-top:24px; }
+
+  /* ── Content pages ── */
+  .content-page{ padding:clamp(20px, 4vw, 32px) 16px 60px; }
+  .content-card{ padding:clamp(18px, 4vw, 28px) clamp(16px, 3vw, 24px); }
+
+  /* ── FAQ ── */
+  .faq-section{ padding:0 16px; }
+  .faq-q{ padding:12px 40px 12px 14px; font-size:13px; }
+  .faq-a{ padding:0 14px 12px; }
+
+  /* ── Mandap ── */
+  .mandap{ margin-top:-20px; }
 }
 
 /* ========== RESPONSIVE: VERY SMALL (≤360px) ========== */
 @media (max-width: 360px){
-  h1{ font-size:28px; }
-  h1 .eng{ font-size:13px; }
-  .about-card h1{ font-size:24px; }
-  .content-title{ font-size:24px; }
-  .error-code{ font-size:64px; }
+  h1{ font-size:26px; }
+  h1 .eng{ font-size:12px; }
+  .about-card h1{ font-size:22px; }
+  .about-card h1 .eng{ font-size:14px; }
+  .content-title{ font-size:22px; }
+  .error-code{ font-size:56px; }
+  .error-title{ font-size:22px; }
   .baraat-strip{ gap:1px; }
-  .dancer svg{ width:28px; height:42px; }
+  .dancer svg{ width:24px; height:36px; }
+  .player .playbtn{ width:36px; height:36px; }
+  .player .navbtn{ width:26px; height:26px; }
+  .tab{ padding:5px 11px; font-size:11px; }
+  .queue-panel{ bottom:calc(60px + env(safe-area-inset-bottom, 0px)); }
+  .scene{ padding-bottom:120px; }
+}
+
+/* ========== RESPONSIVE: LANDSCAPE PHONE ========== */
+@media (max-height:500px) and (orientation:landscape){
+  .hero{ padding:4px 16px 8px; }
+  .hero .kicker{ margin-bottom:4px; }
+  .hero .tagline{ margin-top:6px; }
+  .baraat-strip{ display:none; }
+  .mandap{ display:none; }
+  .tabs{ margin-top:-40px; }
+  .lights{ display:none; }
+  .rangoli{ display:none; }
+  .scene{ padding-bottom:80px; }
+  .queue-panel{ bottom:60px; }
 }
 
 /* ========== TOUCH DEVICE HELPERS ========== */
@@ -584,4 +700,16 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   .playbtn:hover{ transform:none; }
   .error-btn:hover{ transform:none; box-shadow:none; }
   .faq-q:hover{ color:var(--cream); }
+  .tab:hover{ background: rgba(247,236,217,.1); border-color:rgba(247,236,217,.2); }
+}
+
+/* ========== SAFE AREA (notched phones) ========== */
+@supports(padding: max(0px)){
+  .player{
+    padding-left: max(24px, env(safe-area-inset-left));
+    padding-right: max(24px, env(safe-area-inset-right));
+  }
+  .site-footer{
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
 }

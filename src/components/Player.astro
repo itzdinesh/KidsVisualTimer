@@ -50,6 +50,7 @@
     <span class="time" id="durationTime">0:00</span>
   </div>
   <svg
+    class="player-divider"
     width="18"
     height="18"
     viewBox="0 0 24 24"
@@ -71,6 +72,12 @@
     >
     <div class="track"><div class="fill"></div></div>
   </div>
+</div>
+
+<!-- Preview mode notice -->
+<div class="preview-notice" id="previewNotice">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+  <span>Playing 30-second previews — <a href="https://open.spotify.com" target="_blank" rel="noopener">log into Spotify</a> in this browser for full songs</span>
 </div>
 
 <!-- Song list panel -->
@@ -1348,12 +1355,18 @@
             activeSource === "spotify" && activeSpotifyKey === key;
           if (!isActiveSource) return;
 
+          console.log("[Spotify] playback_update data:", data);
+
           const isPaused = data.isPaused === true;
           const isPlaying = !isPaused;
 
-          console.log(
-            `[Spotify] playback_update: ${key} isPaused=${isPaused} uri=${data.playingURI ?? "none"} pos=${data.position ?? 0}`,
-          );
+          /* ── preview-mode detection: duration ~30s = logged-out embed ── */
+          const dur = data.duration || 0;
+          const previewNotice = document.getElementById("previewNotice");
+          if (previewNotice) {
+            const isPreview = dur > 20000 && dur < 35000;
+            previewNotice.classList.toggle("visible", isPreview);
+          }
 
           /* ── clear nav timer: we got a confirming update ── */
           clearSpotifyNavTimer();
@@ -1388,7 +1401,6 @@
 
           /* scrub bar */
           const pos = data.position || 0;
-          const dur = data.duration || 0;
           const currentTimeEl = document.getElementById("currentTime");
           const durationTimeEl = document.getElementById("durationTime");
           const scrubFillEl = document.getElementById("scrubFill");
@@ -1465,6 +1477,8 @@
     spotifyBusy = false;
     spotifyWantsPlay = false;
     clearSpotifyNavTimer();
+    const previewNotice = document.getElementById("previewNotice");
+    if (previewNotice) previewNotice.classList.remove("visible");
 
     /* ── reset UI to neutral immediately ── */
     updatePlayButtonState(false);
