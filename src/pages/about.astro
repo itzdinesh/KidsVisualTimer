@@ -1,7 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import MandapScene from '../components/MandapScene.astro';
-import BaraatDancers from '../components/BaraatDancers.astro';
 import Player from '../components/Player.astro';
 ---
 
@@ -18,9 +16,9 @@ import Player from '../components/Player.astro';
 			<nav>
 				<a href="https://open.spotify.com/playlist/37i9dQZF1DXa4t5hT1c3jZ" target="_blank" rel="noopener noreferrer">Listen on Spotify</a>
 				<a href="https://music.youtube.com/playlist?list=PLCB05E03DA939D484" target="_blank" rel="noopener noreferrer">Listen on YT Music</a>
-				<a href="/about">About</a>
+				<a href="/about" class="active">About</a>
 				<button class="navbtn" id="quietCornerToggle" aria-label="Quiet corner mode" title="Quiet corner mode">
-					<span aria-hidden="true">&#x1F31A;</span>
+					<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3" fill="currentColor"/><path d="M9 9a3 3 0 106 0 3 3 0 00-6 0zm11.9-.5a6 6 0 01-11.8 0 4 4 0 017.4-2.6 4 4 0 014.4 2.6z"/><path d="M1 12.5a6 6 0 015.8-6.2 4 4 0 017.2 2.8 6 6 0 01-13 3.4z"/></svg>
 				</button>
 			</nav>
 		</header>
@@ -28,14 +26,15 @@ import Player from '../components/Player.astro';
 		<div class="lights" id="lights"></div>
 
 		<div class="hero">
-			<div class="kicker">now playing · dhol ke saath</div>
 			<h1>शादी रेडियो<span class="eng">wedding songs, playing all night</span></h1>
-			<p class="tagline">Baraat to vidaai, one long tape that never stops — old favourites and new sangeet hits on loop, the way the DJ at every wedding hall keeps it going till 2am.</p>
 		</div>
 
-		<MandapScene />
-
-		<BaraatDancers />
+		<div style="display:flex; justify-content:center; align-items:center; min-height:calc(100vh - 280px);">
+			<div class="about-card">
+				<h1>DeluxShaadi Radio<span class="eng">all wedding, all the time</span></h1>
+				<p>This station exists because one too many wedding playlists end at 2am and silence falls. Here, the dhol never stops — Bollywood classics, bhangra anthems, and new sangeet hits spinning back-to-back, the way the DJs at every hall keep the dance floor burning till sunrise. Whether you're getting ready, missing a celebration, or just need a reason to dance alone in your kitchen, there's always a baraat rolling somewhere on this frequency.</p>
+			</div>
+		</div>
 
 		<p class="disclaimer">Audio plays through embedded YouTube. Nothing is hosted here, and all rights stay with the labels and performers. Song credits from film soundtrack listings.</p>
 

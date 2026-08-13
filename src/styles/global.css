@@ -8,6 +8,7 @@
   --magenta:#AD1F5C;
   --plum:#3A0F3A;
   --ink:#241220;
+  --turmeric:#FFD23F;
 }
 *{box-sizing:border-box; margin:0; padding:0;}
 body{
@@ -24,6 +25,12 @@ body{
   display:flex;
   flex-direction:column;
   padding-bottom:110px;
+}
+body.theme-early-evening .scene{
+  background: linear-gradient(180deg, #1E0E28 0%, #3A1540 20%, #7A1840 44%, #9C2A30 64%, #B85A1C 84%, #D4801E 100%);
+}
+body.theme-late-night .scene{
+  background: linear-gradient(180deg, #200E30 0%, #2E0F3D 20%, #5C1038 44%, #7A1F3B 64%, #96401C 84%, #B0681E 100%);
 }
 .rangoli{
   position:absolute; top:8%; left:50%; transform:translateX(-50%);
@@ -65,6 +72,32 @@ body{
 @keyframes legKickL{ 0%,100%{ transform:rotate(18deg); } 50%{ transform:rotate(-14deg); } }
 @keyframes legKickR{ 0%,100%{ transform:rotate(-18deg); } 50%{ transform:rotate(14deg); } }
 .dhol-player .arm-l, .dhol-player .arm-r{ animation-duration:.55s; }
+@keyframes petal-fall{
+  0%{ transform:translateY(0) translateX(0) rotate(0deg); opacity:.9; }
+  100%{ transform:translateY(100vh) translateX(var(--drift, 30px)) rotate(var(--spin, 540deg)); opacity:0; }
+}
+.petal-layer{
+  position:fixed; inset:0; z-index:6; pointer-events:none; overflow:hidden;
+}
+.petal{
+  position:absolute; top:-20px;
+  width:10px; height:8px;
+  border-radius:0 100% 0 100%;
+  opacity:.9;
+  animation: petal-fall var(--fall-duration, 3s) var(--fall-delay, 0s) ease-in forwards;
+}
+@keyframes dholPulse{
+  0%, 100%{ transform:scale(1); box-shadow: 0 0 0 0 rgba(232,135,30,.45); }
+  50%{ transform:scale(1.06); box-shadow: 0 0 0 8px rgba(232,135,30,0); }
+}
+.quiet-mode .dancer .bob,
+.quiet-mode .dancer .arm-l,
+.quiet-mode .dancer .arm-r,
+.quiet-mode .dancer .leg-l,
+.quiet-mode .dancer .leg-r{ animation: none !important; }
+.quiet-mode .petal-layer .petal{ animation: none !important; }
+.quiet-mode .playbtn{ animation: none !important; }
+.quiet-mode .star, .quiet-mode .diya{ animation: none !important; }
 
 header{
   position:relative; z-index:5;
@@ -87,6 +120,29 @@ nav a{
   transition: border-color .2s, opacity .2s;
 }
 nav a:hover{ opacity:1; border-color: var(--marigold); }
+#quietCornerToggle{
+  display:flex; align-items:center; justify-content:center;
+}
+#quietCornerToggle svg{ width:16px; height:16px; }
+
+.about-card{
+  background: rgba(247,236,217,.06);
+  border: 1px solid rgba(247,236,217,.12);
+  border-radius: 16px;
+  padding: 40px 32px;
+  max-width: 540px;
+  text-align: center;
+}
+.about-card h1{
+  font-family:'Yatra One', cursive;
+  font-size:42px; line-height:1.05; color:var(--cream);
+  margin-bottom: 20px;
+}
+.about-card h1 .eng{ display:block; font-size:20px; font-family:'Poppins',sans-serif; font-weight:400; color:var(--cream); opacity:.8; margin-top:8px; }
+.about-card p{
+  font-size:14.5px; line-height:1.7; color:var(--cream); opacity:.82;
+}
+
 
 .lights{
   position:relative; z-index:4; height:34px; margin-top:-6px;
@@ -235,4 +291,18 @@ h1 .eng{ display:block; font-size:22px; font-family:'Poppins',sans-serif; font-w
   .track-info{ min-width:0; display:none; }
   .vol{ display:none; }
   .navbtn{ width:26px; height:26px; }
+}
+.petal-layer{
+  position:fixed; inset:0; z-index:6; pointer-events:none; overflow:hidden;
+}
+.petal{
+  position:absolute; top:-20px;
+  width:10px; height:8px;
+  border-radius:0 100% 0 100%;
+  opacity:.9;
+  animation: petal-fall var(--fall-duration, 3s) var(--fall-delay, 0s) ease-in forwards;
+}
+@keyframes petal-fall{
+  0%{ transform:translateY(0) translateX(0) rotate(0deg); opacity:.9; }
+  100%{ transform:translateY(100vh) translateX(var(--drift, 30px)) rotate(var(--spin, 540deg)); opacity:0; }
 }
