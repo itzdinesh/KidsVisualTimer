@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root{
   --night-indigo:#1B1030;
   --dusk-maroon:#5C1220;
@@ -11,6 +13,7 @@
   --turmeric:#FFD23F;
 }
 *{box-sizing:border-box; margin:0; padding:0;}
+html{ overflow-x:hidden; }
 body{
   font-family:'Poppins', sans-serif;
   background: var(--night-indigo);
@@ -589,7 +592,7 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   .scrub .time{ font-size:10px; min-width:28px; }
   .track{ height:5px; }
 
-  /* ── Tabs: horizontal scroll ── */
+  /* ── Tabs: centered when they fit, scrollable when they don't ── */
   .tabs{
     margin-top:-110px;
     gap:6px;
@@ -598,7 +601,7 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
     -webkit-overflow-scrolling:touch;
     scrollbar-width:none;
     padding:0 12px;
-    justify-content:flex-start;
+    justify-content:safe center;
     flex-wrap:nowrap;
   }
   .tabs::-webkit-scrollbar{ display:none; }
@@ -607,7 +610,6 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   /* ── Queue panel ── */
   .queue-panel{
     bottom:calc(70px + env(safe-area-inset-bottom, 0px));
-    max-height:55vh;
   }
   .queue-panel.open{ max-height:55vh; }
   .queue-item{ padding:8px 16px; }
@@ -616,7 +618,7 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
 
   /* ── Baraat dancers ── */
   .baraat-strip{ gap:2px; padding:4px 8px 2px; margin-top:40px; }
-  .dancer svg{ width:30px; height:45px; }
+  .dancer svg{ width:30px !important; height:45px !important; }
 
   /* ── Hero ── */
   .hero{ padding:8px 14px 24px; }
@@ -655,7 +657,7 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   .error-code{ font-size:56px; }
   .error-title{ font-size:22px; }
   .baraat-strip{ gap:1px; }
-  .dancer svg{ width:24px; height:36px; }
+  .dancer svg{ width:24px !important; height:36px !important; }
   .player .playbtn{ width:36px; height:36px; }
   .player .navbtn{ width:26px; height:26px; }
   .tab{ padding:5px 11px; font-size:11px; }
