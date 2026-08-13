@@ -417,40 +417,6 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
 .navbtn:active{ transform:scale(.9); }
 .navbtn svg{ width:14px; height:14px; }
 
-.queuebtn{
-  width:36px; height:36px; border-radius:8px; border:none; cursor:pointer;
-  background: rgba(247,236,217,.08); color: var(--cream);
-  display:flex; align-items:center; justify-content:center; flex-shrink:0;
-  transition: background .15s;
-  -webkit-tap-highlight-color:transparent;
-}
-.queuebtn:hover, .queuebtn.open{ background: rgba(232,135,30,.22); color:var(--marigold); }
-.queuebtn svg{ width:16px; height:16px; }
-
-.queue-panel{
-  position:fixed; right:16px; bottom:80px; z-index:11;
-  width:280px; max-height:280px; overflow-y:auto;
-  background: rgba(24,12,24,.96);
-  border:1px solid rgba(247,236,217,.14); border-radius:12px;
-  padding:8px; display:none;
-  -webkit-overflow-scrolling:touch;
-}
-.queue-panel.open{ display:block; }
-.queue-item{
-  display:flex; align-items:center; gap:10px; padding:10px; border-radius:8px; cursor:pointer;
-  min-height:44px;
-}
-.queue-item:hover{ background: rgba(247,236,217,.06); }
-.queue-item.active{ background: rgba(232,135,30,.15); }
-.queue-item .qthumb{
-  width:28px; height:28px; border-radius:6px; flex-shrink:0;
-  background: linear-gradient(135deg, var(--marigold), var(--magenta));
-  display:flex; align-items:center; justify-content:center;
-  font-family:'Yatra One', cursive; font-size:12px; color:var(--cream);
-}
-.queue-item .qname{ font-size:12.5px; font-weight:500; color:var(--cream); }
-.queue-item .qfilm{ font-size:10.5px; color:var(--cream); opacity:.5; }
-
 .playbtn{
   width:44px; height:44px; border-radius:50%; border:2px solid var(--gold); cursor:pointer;
   background: radial-gradient(circle at 35% 30%, var(--marigold), #B85A0E 85%);
@@ -510,10 +476,6 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   .track-info .film{ font-size:10px; }
   .scrub{ order:10; flex:1 1 100%; gap:6px; margin-top:4px; }
   .vol{ display:none; }
-  .queue-panel{
-    right:8px; left:8px; width:auto;
-    bottom:90px;
-  }
   .baraat-strip{ gap:2px; padding:4px 8px 2px; }
   .dancer svg{ width:32px; height:48px; }
   .hero{ padding:10px 16px 30px; }
@@ -538,7 +500,6 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
 @media (hover:none) and (pointer:coarse){
   .navbtn:hover{ background: rgba(247,236,217,.08); }
   .playbtn:hover{ transform:none; }
-  .queuebtn:hover{ background: rgba(247,236,217,.08); color:var(--cream); }
   .error-btn:hover{ transform:none; box-shadow:none; }
   .faq-q:hover{ color:var(--cream); }
 }
