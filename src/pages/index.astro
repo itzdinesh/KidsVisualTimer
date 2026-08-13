@@ -81,10 +81,43 @@ import BaraatDancers from '../components/BaraatDancers.astro';
 		</script>
 	</Fragment>
 
-	<div class="hero">
+	<div class="hero" id="heroSection">
 		<div class="kicker">now playing · dhol ke saath</div>
-		<h1>शादी रेडियो<span class="eng">wedding songs, playing all night</span></h1>
+		<!-- default branding -->
+		<div id="heroDefault">
+			<h1>शादी रेडियो<span class="eng">wedding songs, playing all night</span></h1>
+		</div>
+		<!-- personalized branding -->
+		<div id="heroPersonalized" class="hero-personalized" style="display:none;">
+			<h1 class="hero-names" id="heroNames"></h1>
+			<h1 class="hero-brand">DELUX SHAADI RADIO</h1>
+			<button class="shaadi-edit" id="shaadiEdit">✏️ Edit</button>
+		</div>
 		<p class="tagline">Baraat to vidaai, one long tape that never stops — old favourites and new sangeet hits on loop, the way the DJ at every wedding hall keeps it going till 2am.</p>
+		<button class="shaadi-cta" id="shaadiCta">
+			<span class="shaadi-cta-icon">💍</span>
+			<span class="shaadi-cta-text">Personalize Shaadi</span>
+		</button>
+	</div>
+
+	<!-- Shaadi modal -->
+	<div class="shaadi-overlay" id="shaadiOverlay">
+		<div class="shaadi-modal" id="shaadiModal">
+			<button class="shaadi-close" id="shaadiClose" aria-label="Close">&times;</button>
+			<h2 class="shaadi-modal-title">Whose Shaadi Is It?</h2>
+			<form id="shaadiForm" class="shaadi-form" autocomplete="off">
+				<label class="shaadi-label">
+					<span>Bride</span>
+					<input type="text" id="brideInput" placeholder="Enter name" maxlength="30" />
+				</label>
+				<label class="shaadi-label">
+					<span>Groom</span>
+					<input type="text" id="groomInput" placeholder="Enter name" maxlength="30" />
+				</label>
+				<button type="submit" class="shaadi-submit">💍 Enter Shaadi</button>
+				<button type="button" class="shaadi-reset" id="shaadiReset">Remove Names</button>
+			</form>
+		</div>
 	</div>
 
 	<div class="stage-wrap">

@@ -608,6 +608,122 @@ body[data-theme="vidaai"] .stage-char svg{ filter: drop-shadow(0 0 2px rgba(232,
 }
 .tab:active{ transform:scale(.95); }
 
+/* ========== SHAADI CTA ========== */
+.shaadi-cta{
+  display:inline-flex; align-items:center; gap:6px;
+  margin-top:16px; padding:8px 18px; border-radius:20px;
+  background:rgba(247,236,217,.06); border:1px solid rgba(247,236,217,.1);
+  color:var(--cream); cursor:pointer; position:relative; z-index:3;
+  transition: background .25s, border-color .25s, transform .15s;
+  font-size:12px; opacity:.65;
+}
+.shaadi-cta:hover{ background:rgba(247,236,217,.1); border-color:rgba(247,236,217,.2); opacity:1; }
+.shaadi-cta:active{ transform:scale(.97); }
+.shaadi-cta-icon{ font-size:14px; line-height:1; }
+.shaadi-cta-text{ font-weight:500; letter-spacing:.3px; }
+.shaadi-cta.hidden{ display:none; }
+
+/* edit button (shown when personalized) */
+.shaadi-edit{
+  display:inline-flex; align-items:center; gap:4px;
+  margin-top:10px; padding:5px 12px; border-radius:16px;
+  background:rgba(247,236,217,.06); border:1px solid rgba(247,236,217,.1);
+  color:var(--cream); font-size:11px; cursor:pointer; position:relative; z-index:3;
+  transition: background .2s, border-color .2s, opacity .2s;
+  opacity:.55;
+}
+.shaadi-edit:hover{ background:rgba(247,236,217,.12); border-color:rgba(247,236,217,.2); opacity:.85; }
+
+/* personalized hero */
+.hero-personalized{ text-align:center; }
+.hero-names{
+  font-family:'Yatra One', cursive;
+  font-size:clamp(20px, 5vw, 32px); line-height:1.15;
+  color:var(--cream); margin-bottom:2px;
+  text-shadow: 0 2px 20px rgba(0,0,0,.3);
+}
+.hero-names .heart{ color:#FF6B6B; margin:0 4px; font-size:.85em; }
+.hero-brand{
+  font-family:'Yatra One', cursive;
+  font-size:clamp(14px, 3.5vw, 22px); line-height:1.1;
+  color:var(--marigold); letter-spacing:1px;
+  text-shadow: 0 2px 16px rgba(232,135,30,.25);
+}
+
+/* personalized shimmer animation */
+@keyframes shimmer{
+  0%{ background-position:-200% center; }
+  100%{ background-position:200% center; }
+}
+.hero-names.shimmer{
+  background: linear-gradient(90deg, var(--cream) 0%, var(--marigold) 25%, var(--cream) 50%, var(--marigold) 75%, var(--cream) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ========== SHAADI MODAL ========== */
+.shaadi-overlay{
+  position:fixed; inset:0; z-index:100;
+  background:rgba(20,10,36,.92);
+  display:none; align-items:center; justify-content:center;
+  padding:16px;
+  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+}
+.shaadi-overlay.open{ display:flex; }
+.shaadi-modal{
+  position:relative;
+  background: linear-gradient(160deg, #3A0F3A 0%, #2E0F3D 60%, #1B1030 100%);
+  border:1px solid rgba(247,236,217,.12);
+  border-radius:18px;
+  padding:clamp(24px, 5vw, 36px) clamp(20px, 4vw, 32px);
+  max-width:380px; width:100%;
+  box-shadow: 0 16px 48px rgba(0,0,0,.5);
+}
+.shaadi-close{
+  position:absolute; top:12px; right:14px;
+  width:32px; height:32px; border:none; border-radius:50%;
+  background:rgba(247,236,217,.08); color:var(--cream);
+  font-size:20px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition: background .2s;
+}
+.shaadi-close:hover{ background:rgba(247,236,217,.15); }
+.shaadi-modal-title{
+  font-family:'Yatra One', cursive;
+  font-size:clamp(20px, 5vw, 26px); color:var(--cream);
+  text-align:center; margin-bottom:18px;
+}
+.shaadi-form{ display:flex; flex-direction:column; gap:14px; }
+.shaadi-label{ display:flex; flex-direction:column; gap:5px; }
+.shaadi-label span{ font-size:12px; font-weight:500; color:var(--cream); opacity:.75; letter-spacing:.3px; }
+.shaadi-label input{
+  padding:12px 14px; border-radius:10px;
+  background:rgba(247,236,217,.06); border:1px solid rgba(247,236,217,.12);
+  color:var(--cream); font-size:15px; font-family:'Poppins',sans-serif;
+  outline:none; transition: border-color .2s, background .2s;
+}
+.shaadi-label input::placeholder{ color:rgba(247,236,217,.3); }
+.shaadi-label input:focus{ border-color:var(--marigold); background:rgba(247,236,217,.09); }
+.shaadi-submit{
+  margin-top:6px; padding:14px; border-radius:12px; border:none;
+  background:linear-gradient(135deg, var(--marigold), #B85A0E);
+  color:var(--ink); font-size:15px; font-weight:600;
+  font-family:'Poppins',sans-serif; cursor:pointer;
+  transition: transform .15s, box-shadow .2s;
+}
+.shaadi-submit:hover{ transform:translateY(-1px); box-shadow:0 4px 16px rgba(232,135,30,.3); }
+.shaadi-submit:active{ transform:scale(.98); }
+.shaadi-reset{
+  padding:0; border:none; background:none;
+  color:var(--cream); font-size:12px; opacity:.4; cursor:pointer;
+  text-align:center; margin-top:-4px;
+  transition: opacity .2s;
+}
+.shaadi-reset:hover{ opacity:.7; }
+.shaadi-reset.hidden{ display:none; }
+
 /* ========== DISCLAIMER ========== */
 .disclaimer{
   position:relative; z-index:3; text-align:center; font-size:11px; color:var(--cream);
@@ -1227,6 +1343,17 @@ body[data-theme="vidaai"] .tab.active{
   .faq-q{ padding:12px 40px 12px 14px; font-size:13px; }
   .faq-a{ padding:0 14px 12px; }
 
+  /* ── Shaadi feature mobile ── */
+  .shaadi-cta{ padding:7px 14px; margin-top:12px; }
+  .shaadi-cta-icon{ font-size:13px; }
+  .shaadi-cta-text{ font-size:11px; }
+  .hero-names{ font-size:clamp(20px, 5.5vw, 32px); }
+  .hero-brand{ font-size:clamp(14px, 3.5vw, 20px); }
+  .shaadi-modal{ padding:20px 18px; max-width:340px; }
+  .shaadi-modal-title{ font-size:clamp(18px, 4.5vw, 24px); }
+  .shaadi-label input{ padding:10px 12px; font-size:14px; }
+  .shaadi-submit{ padding:12px; font-size:14px; }
+
   /* ── Theme elements on mobile ── */
   .eq-bars{ height:20px; gap:2px; }
   .eq-bar{ width:3px; }
@@ -1238,6 +1365,10 @@ body[data-theme="vidaai"] .tab.active{
 @media (max-width: 360px){
   .stage-char{ transform:scale(.5); }
   .hero{ padding:10px 14px 6px; }
+  .hero-names{ font-size:18px; }
+  .hero-brand{ font-size:13px; }
+  .shaadi-modal{ padding:18px 16px; max-width:300px; }
+  .shaadi-modal-title{ font-size:17px; }
   h1{ font-size:24px; }
   h1 .eng{ font-size:11px; margin-top:4px; }
   .tagline{ font-size:11px; margin-top:6px; }

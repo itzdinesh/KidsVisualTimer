@@ -139,6 +139,102 @@ import Player from '../components/Player.astro';
     if (overlayToggle) overlayToggle.addEventListener('click', () => { quietModeOn = !quietModeOn; applyQuiet(); });
   })();
 
+  /* ═══════════════════════════════════
+     SHAADI PERSONALIZATION
+     ═══════════════════════════════════ */
+  function initShaadi() {
+    const overlay = document.getElementById('shaadiOverlay');
+    const form = document.getElementById('shaadiForm') as HTMLFormElement | null;
+    const ctaBtn = document.getElementById('shaadiCta');
+    const editBtn = document.getElementById('shaadiEdit');
+    const closeBtn = document.getElementById('shaadiClose');
+    const resetBtn = document.getElementById('shaadiReset');
+    const brideInput = document.getElementById('brideInput') as HTMLInputElement | null;
+    const groomInput = document.getElementById('groomInput') as HTMLInputElement | null;
+    const heroDefault = document.getElementById('heroDefault');
+    const heroPersonalized = document.getElementById('heroPersonalized');
+    const heroNames = document.getElementById('heroNames');
+    if (!overlay || !form || !brideInput || !groomInput) return;
+
+    function openModal() {
+      overlay.classList.add('open');
+      const params = new URLSearchParams(window.location.search);
+      const eb = params.get('bride') || '';
+      const eg = params.get('groom') || '';
+      brideInput.value = eb ? decodeURIComponent(eb) : '';
+      groomInput.value = eg ? decodeURIComponent(eg) : '';
+      if (resetBtn) resetBtn.classList.toggle('hidden', !eb && !eg);
+      setTimeout(() => brideInput.focus(), 100);
+    }
+    function closeModal() { overlay.classList.remove('open'); }
+
+    if (ctaBtn) ctaBtn.addEventListener('click', openModal);
+    if (editBtn) editBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+    function applyPersonalization(bride: string, groom: string) {
+      if (!heroDefault || !heroPersonalized || !heroNames) return;
+      if (!bride && !groom) {
+        heroDefault.style.display = '';
+        heroPersonalized.style.display = 'none';
+        if (ctaBtn) ctaBtn.classList.remove('hidden');
+        return;
+      }
+      heroDefault.style.display = 'none';
+      heroPersonalized.style.display = '';
+      /* graceful single-name handling */
+      const display = bride && groom
+        ? `💍 ${bride.toUpperCase()} <span class="heart">❤️</span> ${groom.toUpperCase()}`
+        : bride
+          ? `💍 ${bride.toUpperCase()} <span class="heart">❤️</span>`
+          : `<span class="heart">❤️</span> ${groom.toUpperCase()}`;
+      heroNames.innerHTML = display;
+      heroNames.classList.add('shimmer');
+      if (ctaBtn) ctaBtn.classList.add('hidden');
+    }
+
+    function setUrlParams(bride: string, groom: string) {
+      const url = new URL(window.location.href);
+      if (bride) url.searchParams.set('bride', bride);
+      else url.searchParams.delete('bride');
+      if (groom) url.searchParams.set('groom', groom);
+      else url.searchParams.delete('groom');
+      window.history.replaceState({}, '', url.toString());
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const bride = brideInput.value.trim();
+      const groom = groomInput.value.trim();
+      if (!bride && !groom) return;
+      setUrlParams(bride, groom);
+      applyPersonalization(bride, groom);
+      closeModal();
+    });
+
+    if (resetBtn) resetBtn.addEventListener('click', () => {
+      brideInput.value = '';
+      groomInput.value = '';
+      setUrlParams('', '');
+      applyPersonalization('', '');
+      closeModal();
+    });
+
+    /* on load: check URL params */
+    const params = new URLSearchParams(window.location.search);
+    const initBride = params.get('bride') || '';
+    const initGroom = params.get('groom') || '';
+    if (initBride || initGroom) {
+      applyPersonalization(
+        initBride ? decodeURIComponent(initBride) : '',
+        initGroom ? decodeURIComponent(initGroom) : '',
+      );
+    }
+  }
+  initShaadi();
+
   /* ── hamburger menu (persistent across SPA) ── */
   function initHamburger() {
     const hamburger = document.getElementById('hamburgerBtn');
@@ -218,6 +314,7 @@ import Player from '../components/Player.astro';
         pageContent.innerHTML = homeContent.innerHTML;
         highlightNav('/');
         window.scrollTo(0, 0);
+        initShaadi();
       }
     });
   }
@@ -240,6 +337,7 @@ import Player from '../components/Player.astro';
       if (newTitle) document.title = newTitle.textContent || document.title;
       highlightNav(url);
       window.scrollTo(0, 0);
+      initShaadi();
 
       /* history: back/forward uses browser's own history, don't touch it */
       if (!fromPopstate) {
