@@ -16,6 +16,7 @@
     --deep-rose:#8C1F3B;
     --magenta:#AD1F5C;
     --plum:#3A0F3A;
+    --turmeric:#FFD23F;
     --ink:#241220;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
@@ -58,6 +59,7 @@
     position:relative; z-index:3;
     display:flex; justify-content:center; align-items:flex-end; gap:6px;
     padding: 4px 24px 2px;
+    margin-top:-46px;
     flex-wrap:wrap;
   }
   .dancer{
@@ -93,9 +95,9 @@
     color:var(--cream); text-decoration:none; font-size:14px; font-weight:400;
     opacity:.85; letter-spacing:.3px;
     padding-bottom:4px; border-bottom:1px solid transparent;
-    transition: border-color .2s, opacity .2s;
+    transition: border-color .35s ease, opacity .35s ease, color .35s ease;
   }
-  nav a:hover{ opacity:1; border-color: var(--marigold); }
+  nav a:hover{ opacity:1; color: var(--turmeric); border-color: var(--marigold); }
 
   .lights{
     position:relative; z-index:4; height:34px; margin-top:-6px;
@@ -136,85 +138,69 @@
 
   .player{
     position:fixed; left:0; right:0; bottom:0; z-index:10;
-    background: linear-gradient(90deg, #2B0E2B 0%, #5A1030 45%, #7A1F2B 75%, #8C3315 100%);
-    border-top: 1px solid rgba(247,236,217,.14);
-    padding: 12px 24px;
+    background: linear-gradient(180deg, #6B1140 0%, #8C1F3B 45%, #A3491C 100%);
+    padding: 14px 24px;
     display:flex; align-items:center; gap:16px;
-    box-shadow: 0 -8px 30px rgba(0,0,0,.35);
+    box-shadow: 0 -10px 30px rgba(0,0,0,.4);
   }
   .player::before{
-    content:''; position:absolute; left:0; right:0; top:0; height:4px;
-    background: repeating-linear-gradient(90deg, var(--marigold) 0 12px, var(--gold) 12px 24px, var(--magenta) 24px 36px);
+    content:''; position:absolute; left:0; right:0; top:0; height:3px;
+    background: repeating-linear-gradient(115deg, var(--gold) 0 3px, transparent 3px 9px);
+    opacity:.8;
+  }
+  .player::after{
+    content:''; position:absolute; left:0; right:0; top:3px; height:0;
+    border-top: 8px solid transparent;
+    background-image: radial-gradient(circle, var(--deep-rose) 2.5px, transparent 2.6px),
+                       radial-gradient(circle, var(--gold) 1.6px, transparent 1.7px);
+    background-size: 26px 8px, 26px 8px;
+    background-position: 0 0, 13px 0;
+    height:8px;
+    opacity:.75;
   }
   .thumb{
     width:52px; height:52px; border-radius:50%; flex-shrink:0;
-    background: conic-gradient(from 180deg, var(--marigold), var(--magenta), var(--gold), var(--marigold));
+    background: conic-gradient(from 180deg, var(--gold), var(--deep-rose), var(--marigold), var(--gold));
     display:flex; align-items:center; justify-content:center;
     position:relative;
+    box-shadow: 0 0 0 3px rgba(247,236,217,.14);
   }
   .thumb::after{
     content:''; position:absolute; inset:3px; border-radius:50%;
-    background: radial-gradient(circle at 35% 30%, #A3491C, var(--plum) 80%);
+    background: radial-gradient(circle at 35% 30%, #7A1F2B, var(--plum) 80%);
   }
   .thumb span{ position:relative; z-index:1; font-family:'Yatra One', cursive; font-size:19px; color:var(--cream); }
   .track-info .name{ font-size:13.5px; font-weight:500; color:var(--cream); }
   .track-info .film{ font-size:11.5px; color:var(--cream); opacity:.6; margin-top:2px; }
-  .track-info{ min-width:150px; }
+  .track-info{ min-width:150px; position:relative; z-index:1; }
+  .player > *{ position:relative; z-index:1; }
   .navbtn{
-    width:30px; height:30px; border-radius:50%; border:none; cursor:pointer;
+    width:30px; height:30px; border-radius:50%; border:1px solid rgba(247,236,217,.2); cursor:pointer;
     background: rgba(247,236,217,.08); color: var(--cream);
     display:flex; align-items:center; justify-content:center; flex-shrink:0;
-    transition: background .15s, transform .15s;
+    transition: background .3s ease, transform .15s, color .3s ease;
   }
-  .navbtn:hover{ background: rgba(247,236,217,.16); }
+  .navbtn:hover{ background: linear-gradient(120deg, var(--marigold), var(--turmeric)); color: var(--ink); border-color:transparent; }
   .navbtn:active{ transform:scale(.9); }
   .navbtn svg{ width:14px; height:14px; }
 
-  .queuebtn{
-    width:32px; height:32px; border-radius:8px; border:none; cursor:pointer;
-    background: rgba(247,236,217,.08); color: var(--cream);
-    display:flex; align-items:center; justify-content:center; flex-shrink:0;
-    transition: background .15s;
-  }
-  .queuebtn:hover, .queuebtn.open{ background: rgba(232,135,30,.22); color:var(--marigold); }
-  .queuebtn svg{ width:16px; height:16px; }
-
-  .queue-panel{
-    position:fixed; right:24px; bottom:82px; z-index:11;
-    width:280px; max-height:280px; overflow-y:auto;
-    background: rgba(24,12,24,.96);
-    border:1px solid rgba(247,236,217,.14); border-radius:12px;
-    padding:8px; display:none;
-  }
-  .queue-panel.open{ display:block; }
-  .queue-item{
-    display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; cursor:pointer;
-  }
-  .queue-item:hover{ background: rgba(247,236,217,.06); }
-  .queue-item.active{ background: rgba(232,135,30,.15); }
-  .queue-item .qthumb{
-    width:28px; height:28px; border-radius:6px; flex-shrink:0;
-    background: linear-gradient(135deg, var(--marigold), var(--magenta));
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Yatra One', cursive; font-size:12px; color:var(--cream);
-  }
-  .queue-item .qname{ font-size:12.5px; font-weight:500; color:var(--cream); }
-  .queue-item .qfilm{ font-size:10.5px; color:var(--cream); opacity:.5; }
-  @media (max-width: 640px){
-    .queue-panel{ right:10px; left:10px; width:auto; }
-  }
   .playbtn{
-    width:42px; height:42px; border-radius:50%; border:2px solid var(--gold); cursor:pointer;
-    background: radial-gradient(circle at 35% 30%, var(--marigold), #B85A0E 85%);
-    color: var(--ink);
+    width:44px; height:44px; border-radius:50%; border:3px double var(--gold); cursor:pointer;
+    background: radial-gradient(circle at 35% 30%, var(--marigold), #7A1F2B 85%);
+    color: var(--cream);
     display:flex; align-items:center; justify-content:center; flex-shrink:0;
     transition: transform .15s;
+    animation: dholPulse 1.15s ease-in-out infinite;
+  }
+  @keyframes dholPulse{
+    0%, 100%{ transform:scale(1); box-shadow: 0 0 0 0 rgba(232,135,30,.4); }
+    50%{ transform:scale(1.06); box-shadow: 0 0 0 8px rgba(232,135,30,0); }
   }
   .playbtn:active{ transform:scale(.92); }
   .playbtn svg{ width:16px; height:16px; }
 
   .scrub{ flex:1; display:flex; align-items:center; gap:10px; }
-  .scrub .time{ font-size:11px; color:var(--cream); opacity:.6; min-width:34px; font-variant-numeric:tabular-nums; }
+  .scrub .time{ font-size:11px; color:var(--cream); opacity:.65; min-width:34px; font-variant-numeric:tabular-nums; }
   .track{
     flex:1; height:6px; border-radius:3px; position:relative; cursor:pointer;
     background: repeating-linear-gradient(90deg, rgba(247,236,217,.14) 0 5px, rgba(247,236,217,.22) 5px 6px);
@@ -391,9 +377,6 @@
     <div class="track"><div class="fill"></div></div>
     <span class="time">4:02</span>
   </div>
-  <button class="queuebtn" id="queueBtn" aria-label="Show song list">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h10"/></svg>
-  </button>
   <svg width="18" height="18" viewBox="0 0 24 24" style="flex-shrink:0; opacity:.55;" aria-hidden="true">
     <g fill="var(--marigold)">
       <circle cx="12" cy="6" r="3.4"/><circle cx="12" cy="18" r="3.4"/>
@@ -441,24 +424,7 @@
   const thumb = document.getElementById('thumbText');
   const trackName = document.getElementById('trackName');
   const trackFilm = document.getElementById('trackFilm');
-  const queuePanel = document.getElementById('queuePanel');
-  const queueBtn = document.getElementById('queueBtn');
-
-  function renderQueue(){
-    queuePanel.innerHTML = tracks.map((t,i)=>`
-      <div class="queue-item ${i===current?'active':''}" data-i="${i}">
-        <div class="qthumb">${t.initials}</div>
-        <div>
-          <div class="qname">${t.name}</div>
-          <div class="qfilm">${t.film}</div>
-        </div>
-      </div>`).join('');
-    queuePanel.querySelectorAll('.queue-item').forEach(item=>{
-      item.addEventListener('click', ()=>{
-        setTrack(parseInt(item.dataset.i));
-      });
-    });
-  }
+  let current = 0;
 
   function setTrack(i){
     current = (i + tracks.length) % tracks.length;
@@ -466,18 +432,10 @@
     thumb.textContent = t.initials;
     trackName.textContent = t.name;
     trackFilm.textContent = t.film;
-    renderQueue();
   }
 
   document.getElementById('prevBtn').addEventListener('click', ()=> setTrack(current - 1));
   document.getElementById('nextBtn').addEventListener('click', ()=> setTrack(current + 1));
-
-  queueBtn.addEventListener('click', ()=>{
-    queuePanel.classList.toggle('open');
-    queueBtn.classList.toggle('open');
-  });
-
-  renderQueue();
 
   const playBtn = document.getElementById('playBtn');
   let playing = false;
