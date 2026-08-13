@@ -751,4 +751,31 @@
       }
     });
   }
+
+  /* ══════════════════════════════════
+     GLOBAL PLAYER API (for Baraat mode etc.)
+     ══════════════════════════════════ */
+  (window as any).__dsPlayer = {
+    play() {
+      if (ytPlayer && typeof ytPlayer.playVideo === "function") {
+        ytPlayer.playVideo();
+        updatePlayButtonState(true);
+        startSprinkles();
+      }
+    },
+    pause() {
+      if (ytPlayer && typeof ytPlayer.pauseVideo === "function") {
+        ytPlayer.pauseVideo();
+        updatePlayButtonState(false);
+        stopSprinkles();
+      }
+    },
+    isPlaying() {
+      return ytPlayer && typeof ytPlayer.getPlayerState === "function"
+        ? ytPlayer.getPlayerState() === 1
+        : false;
+    },
+    startSprinkles,
+    stopSprinkles,
+  };
 </script>

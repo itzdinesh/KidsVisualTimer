@@ -196,6 +196,9 @@ body[data-theme="vidaai"]{
 .quiet-mode .petal-layer .petal{ animation: none !important; }
 .quiet-mode .playbtn{ animation: none !important; }
 .quiet-mode .star, .quiet-mode .diya{ animation: none !important; }
+.quiet-mode .baraat-petal{ animation: none !important; }
+.quiet-mode .baraat-confetti{ animation: none !important; }
+.quiet-mode .baraat-btn.active{ animation: none !important; }
 
 /* ========== HEADER ========== */
 header{
@@ -723,6 +726,156 @@ body[data-theme="vidaai"] .stage-char svg{ filter: drop-shadow(0 0 2px rgba(232,
 }
 .shaadi-reset:hover{ opacity:.7; }
 .shaadi-reset.hidden{ display:none; }
+
+/* ========== BARAAT MODE ========== */
+.baraat-btn{
+  display:inline-flex; align-items:center; gap:7px;
+  margin-top:12px; padding:10px 22px; border-radius:24px;
+  background:linear-gradient(135deg, var(--marigold), #B85A0E);
+  border:1px solid var(--marigold);
+  color:var(--ink); font-size:13px; font-weight:600; font-family:'Poppins',sans-serif;
+  cursor:pointer; position:relative; z-index:3;
+  transition: transform .2s, box-shadow .3s, background .3s;
+  letter-spacing:.5px;
+  box-shadow: 0 2px 12px rgba(232,135,30,.25);
+}
+.baraat-btn:hover{ transform:translateY(-2px); box-shadow:0 4px 20px rgba(232,135,30,.4); }
+.baraat-btn:active{ transform:scale(.97); }
+.baraat-btn-icon{ font-size:16px; line-height:1; }
+.baraat-btn-text{ line-height:1; }
+/* active state */
+.baraat-btn.active{
+  background:linear-gradient(135deg, #FF6B6B, #E8871E);
+  border-color:#FF6B6B;
+  box-shadow: 0 0 20px rgba(255,107,107,.35), 0 0 40px rgba(232,135,30,.15);
+  animation: baraatPulse 1.5s ease-in-out infinite;
+}
+@keyframes baraatPulse{
+  0%,100%{ box-shadow: 0 0 20px rgba(255,107,107,.35), 0 0 40px rgba(232,135,30,.15); }
+  50%{ box-shadow: 0 0 28px rgba(255,107,107,.5), 0 0 56px rgba(232,135,30,.25); }
+}
+
+/* ── Energy meter ── */
+.energy-meter{
+  position:relative; z-index:4;
+  display:flex; align-items:center; gap:10px;
+  max-width:280px; margin:0 auto;
+  padding:0 16px; margin-top:8px;
+  opacity:0; transition:opacity .4s;
+  pointer-events:none;
+}
+.energy-meter.visible{ opacity:1; }
+.energy-label{
+  font-size:10px; font-weight:500; color:var(--cream);
+  opacity:.65; letter-spacing:.5px; white-space:nowrap;
+  text-transform:uppercase;
+}
+.energy-track{
+  flex:1; height:6px; border-radius:3px;
+  background:rgba(247,236,217,.1); overflow:hidden;
+}
+.energy-fill{
+  height:100%; border-radius:3px; width:0%;
+  background:linear-gradient(90deg, var(--marigold), #FF6B6B);
+  transition:width .1s linear;
+  box-shadow:0 0 8px rgba(232,135,30,.3);
+}
+.energy-pct{
+  font-size:10px; font-weight:600; color:var(--marigold);
+  min-width:28px; text-align:right;
+}
+
+/* ── Celebration banner ── */
+.baraat-banner{
+  position:absolute; top:50%; left:50%; z-index:10;
+  transform:translate(-50%,-50%) scale(0);
+  padding:14px 28px; border-radius:16px;
+  background:rgba(20,10,36,.88);
+  border:2px solid var(--marigold);
+  box-shadow:0 0 40px rgba(232,135,30,.4), 0 0 80px rgba(255,107,107,.2);
+  pointer-events:none;
+  opacity:0;
+  transition: transform .5s cubic-bezier(.34,1.56,.64,1), opacity .4s;
+}
+.baraat-banner.show{
+  transform:translate(-50%,-50%) scale(1);
+  opacity:1;
+}
+.baraat-banner-text{
+  font-family:'Yatra One', cursive;
+  font-size:clamp(18px, 4.5vw, 28px);
+  color:var(--cream);
+  white-space:nowrap;
+  text-shadow:0 2px 16px rgba(232,135,30,.5);
+}
+
+/* ── Baraat mode: boosted effects ── */
+body.baraat-active .bulb{
+  animation: glowBaraat .8s ease-in-out infinite !important;
+}
+@keyframes glowBaraat{
+  0%,100%{ opacity:.85; fill:var(--marigold); }
+  33%{ opacity:1; fill:#FF6B6B; filter:brightness(1.4); }
+  66%{ opacity:.9; fill:#FFD23F; filter:brightness(1.2); }
+}
+/* boost character animations */
+body.baraat-active .char-baraati{ animation-duration:.6s !important; }
+body.baraat-active .char-dancer{ animation-duration:.5s !important; }
+body.baraat-active .char-dhol{ animation-duration:.4s !important; }
+body.baraat-active .char-chachi{ animation-duration:.55s !important; }
+body.baraat-active .char-uncle{ animation-duration:.65s !important; }
+body.baraat-active .char-photo{ animation-duration:.7s !important; }
+body.baraat-active .char-baraati .char-arm-l,
+body.baraat-active .char-baraati .char-arm-r{ animation-duration:.5s !important; }
+body.baraat-active .char-dancer .char-arm-l,
+body.baraat-active .char-dancer .char-arm-r{ animation-duration:.45s !important; }
+body.baraat-active .char-dhol .char-stick-l,
+body.baraat-active .char-dhol .char-stick-r{ animation-duration:.35s !important; }
+body.baraat-active .char-chachi .char-arm-l,
+body.baraat-active .char-chachi .char-arm-r{ animation-duration:.45s !important; }
+body.baraat-active .char-baraati .char-leg-l,
+body.baraat-active .char-baraati .char-leg-r{ animation-duration:.5s !important; }
+body.baraat-active .char-dancer .char-leg-l,
+body.baraat-active .char-dancer .char-leg-r{ animation-duration:.45s !important; }
+/* boost baraats strip dancers */
+body.baraat-active .baraat-strip .dancer{ animation-duration:.5s !important; }
+body.baraat-active .baraat-strip .dancer .arm-l,
+body.baraat-active .baraat-strip .dancer .arm-r{ animation-duration:.4s !important; }
+body.baraat-active .baraat-strip .dancer .leg-l,
+body.baraat-active .baraat-strip .dancer .leg-r{ animation-duration:.4s !important; }
+body.baraat-active .baraat-strip .dhol-player .arm-l,
+body.baraat-active .baraat-strip .dhol-player .arm-r{ animation-duration:.3s !important; }
+/* golden glow on characters */
+body.baraat-active .stage-char svg{
+  filter: drop-shadow(0 0 6px rgba(232,135,30,.4)) drop-shadow(0 0 12px rgba(255,107,107,.2));
+}
+/* subtle golden vignette pulse */
+body.baraat-active .scene::after{
+  content:''; position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 50%, rgba(232,135,30,.08) 100%);
+  animation:vignettePulse 2s ease-in-out infinite;
+}
+@keyframes vignettePulse{
+  0%,100%{ opacity:.5; }
+  50%{ opacity:1; }
+}
+
+/* ── Baraat petal burst layer ── */
+.baraat-petal{
+  position:absolute; top:-20px;
+  width:10px; height:8px;
+  border-radius:0 100% 0 100%;
+  opacity:.9;
+  animation: petal-fall var(--fall-duration, 2.5s) 0s ease-in forwards;
+  pointer-events:none;
+}
+.baraat-confetti{
+  position:absolute; top:-10px;
+  width:7px; height:7px; border-radius:1px;
+  opacity:.85;
+  animation: petal-fall var(--fall-duration, 3s) 0s ease-in forwards;
+  pointer-events:none;
+}
 
 /* ========== DISCLAIMER ========== */
 .disclaimer{
@@ -1347,6 +1500,13 @@ body[data-theme="vidaai"] .tab.active{
   .shaadi-cta{ padding:7px 14px; margin-top:12px; }
   .shaadi-cta-icon{ font-size:13px; }
   .shaadi-cta-text{ font-size:11px; }
+  .baraat-btn{ padding:8px 18px; font-size:12px; margin-top:10px; }
+  .baraat-btn-icon{ font-size:14px; }
+  .energy-meter{ max-width:240px; margin-top:6px; }
+  .energy-label{ font-size:9px; }
+  .energy-pct{ font-size:9px; }
+  .baraat-banner-text{ font-size:clamp(16px, 4vw, 22px); }
+  .baraat-banner{ padding:10px 20px; }
   .hero-names{ font-size:clamp(20px, 5.5vw, 32px); }
   .hero-brand{ font-size:clamp(14px, 3.5vw, 20px); }
   .shaadi-modal{ padding:20px 18px; max-width:340px; }
@@ -1365,6 +1525,10 @@ body[data-theme="vidaai"] .tab.active{
 @media (max-width: 360px){
   .stage-char{ transform:scale(.5); }
   .hero{ padding:10px 14px 6px; }
+  .baraat-btn{ padding:7px 14px; font-size:11px; }
+  .energy-meter{ max-width:200px; }
+  .baraat-banner{ padding:8px 16px; }
+  .baraat-banner-text{ font-size:15px; }
   .hero-names{ font-size:18px; }
   .hero-brand{ font-size:13px; }
   .shaadi-modal{ padding:18px 16px; max-width:300px; }
@@ -1397,6 +1561,8 @@ body[data-theme="vidaai"] .tab.active{
   .baraat-strip{ display:none; }
   .mandap{ display:none; }
   .stage-chars{ display:none; }
+  .baraat-banner{ display:none; }
+  .energy-meter{ display:none; }
   .tabs{ margin-top:-40px; }
   .lights{ display:none; }
   .rangoli{ display:none; }

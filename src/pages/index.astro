@@ -98,6 +98,10 @@ import BaraatDancers from '../components/BaraatDancers.astro';
 			<span class="shaadi-cta-icon">💍</span>
 			<span class="shaadi-cta-text">Personalize Shaadi</span>
 		</button>
+		<button class="baraat-btn" id="baraatBtn">
+			<span class="baraat-btn-icon">🥁</span>
+			<span class="baraat-btn-text">START BARAAT</span>
+		</button>
 	</div>
 
 	<!-- Shaadi modal -->
@@ -123,6 +127,19 @@ import BaraatDancers from '../components/BaraatDancers.astro';
 	<div class="stage-wrap">
 		<MandapScene />
 		<StageCharacters />
+		<!-- Baraat celebration banner -->
+		<div class="baraat-banner" id="baraatBanner">
+			<span class="baraat-banner-text">🔥 BARAAT HAS ARRIVED!</span>
+		</div>
+	</div>
+
+	<!-- Shaadi Energy meter -->
+	<div class="energy-meter" id="energyMeter">
+		<span class="energy-label">Shaadi Energy</span>
+		<div class="energy-track">
+			<div class="energy-fill" id="energyFill" style="width:0%"></div>
+		</div>
+		<span class="energy-pct" id="energyPct">0%</span>
 	</div>
 
 	<div class="tabs" id="sourceTabs">

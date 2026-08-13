@@ -235,6 +235,150 @@ import Player from '../components/Player.astro';
   }
   initShaadi();
 
+  /* ═══════════════════════════════════
+     BARAAT MODE
+     ═══════════════════════════════════ */
+  (function initBaraat() {
+    const btn = document.getElementById('baraatBtn');
+    const meter = document.getElementById('energyMeter');
+    const fill = document.getElementById('energyFill');
+    const pctEl = document.getElementById('energyPct');
+    const banner = document.getElementById('baraatBanner');
+    if (!btn || !meter || !fill || !pctEl || !banner) return;
+
+    let active = false;
+    let energyAnim = 0;
+    let currentEnergy = 0;
+    let petalInterval: ReturnType<typeof setInterval> | null = null;
+    let confettiInterval: ReturnType<typeof setInterval> | null = null;
+    let bannerTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    const MAX_SPRINKLES = 20;
+    const MAX_CONFETTI = 25;
+
+    function spawnBaraatPetal() {
+      const layer = document.getElementById('petalLayer');
+      if (!layer) return;
+      if (layer.children.length >= MAX_SPRINKLES) return;
+      const el = document.createElement('div');
+      el.className = 'baraat-petal';
+      const colors = ['#E8871E', '#FFD23F', '#FF6B6B', '#AD1F5C', '#F7ECD9', '#FF9ECD'];
+      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      el.style.left = Math.random() * 100 + '%';
+      el.style.setProperty('--fall-duration', (2 + Math.random() * 2) + 's');
+      el.style.setProperty('--drift', (Math.random() * 80 - 40) + 'px');
+      el.style.setProperty('--spin', (Math.random() * 720 - 360) + 'deg');
+      el.addEventListener('animationend', () => el.remove());
+      layer.appendChild(el);
+    }
+
+    function spawnBaraatConfetti() {
+      const layer = document.getElementById('confettiLayer');
+      if (!layer) return;
+      if (layer.children.length >= MAX_CONFETTI) return;
+      const el = document.createElement('div');
+      el.className = 'baraat-confetti';
+      const colors = ['#FF6B9D', '#FFD23F', '#E8871E', '#AD1F5C', '#FF9ECD', '#fff', '#00D4FF'];
+      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      el.style.left = Math.random() * 100 + '%';
+      el.style.setProperty('--fall-duration', (2.5 + Math.random() * 2.5) + 's');
+      el.style.setProperty('--drift', (Math.random() * 70 - 35) + 'px');
+      el.style.setProperty('--spin', (Math.random() * 900 - 450) + 'deg');
+      el.addEventListener('animationend', () => el.remove());
+      layer.appendChild(el);
+    }
+
+    function startParticles() {
+      if (petalInterval) return;
+      petalInterval = setInterval(spawnBaraatPetal, 200);
+      confettiInterval = setInterval(spawnBaraatConfetti, 280);
+    }
+
+    function stopParticles() {
+      if (petalInterval) { clearInterval(petalInterval); petalInterval = null; }
+      if (confettiInterval) { clearInterval(confettiInterval); confettiInterval = null; }
+    }
+
+    function animateEnergy(from: number, to: number, duration: number) {
+      const start = performance.now();
+      function tick(now: number) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        /* ease-out cubic */
+        const eased = 1 - Math.pow(1 - progress, 3);
+        currentEnergy = Math.round(from + (to - from) * eased);
+        fill.style.width = currentEnergy + '%';
+        pctEl.textContent = currentEnergy + '%';
+        if (progress < 1) {
+          energyAnim = requestAnimationFrame(tick);
+        }
+      }
+      cancelAnimationFrame(energyAnim);
+      energyAnim = requestAnimationFrame(tick);
+    }
+
+    function showBanner() {
+      if (bannerTimeout) clearTimeout(bannerTimeout);
+      banner.classList.add('show');
+      bannerTimeout = setTimeout(() => {
+        banner.classList.remove('show');
+      }, 3000);
+    }
+
+    function startBaraat() {
+      active = true;
+      document.body.classList.add('baraat-active');
+      btn.classList.add('active');
+      btn.querySelector('.baraat-btn-text')!.textContent = 'BARAAT IN PROGRESS';
+      btn.querySelector('.baraat-btn-icon')!.textContent = '🔥';
+
+      /* start music if not playing */
+      const ds = (window as any).__dsPlayer;
+      if (ds && !ds.isPlaying()) {
+        ds.play();
+      }
+
+      /* show energy meter and animate to 100% */
+      meter.classList.add('visible');
+      animateEnergy(currentEnergy, 100, 2500);
+
+      /* show celebration banner */
+      showBanner();
+
+      /* start particles */
+      startParticles();
+    }
+
+    function stopBaraat() {
+      active = false;
+      document.body.classList.remove('baraat-active');
+      btn.classList.remove('active');
+      btn.querySelector('.baraat-btn-text')!.textContent = 'START BARAAT';
+      btn.querySelector('.baraat-btn-icon')!.textContent = '🥁';
+
+      /* stop particles */
+      stopParticles();
+
+      /* animate energy back down */
+      animateEnergy(currentEnergy, 0, 1200);
+      setTimeout(() => {
+        meter.classList.remove('visible');
+      }, 1400);
+
+      /* hide banner */
+      if (bannerTimeout) clearTimeout(bannerTimeout);
+      banner.classList.remove('show');
+    }
+
+    btn.addEventListener('click', () => {
+      if (active) {
+        stopBaraat();
+      } else {
+        startBaraat();
+      }
+    });
+  })();
+
   /* ── hamburger menu (persistent across SPA) ── */
   function initHamburger() {
     const hamburger = document.getElementById('hamburgerBtn');
