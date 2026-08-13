@@ -13,7 +13,7 @@ import Player from '../components/Player.astro';
 				<div class="glyph">श</div>
 				<a href="/" style="text-decoration:none;color:inherit;">DeluxShaadi</a>
 			</div>
-			<nav>
+			<div class="nav-links">
 				<a href="/about" class="active">About</a>
 				<a href="/privacy">Privacy</a>
 				<a href="/terms">Terms</a>
@@ -21,8 +21,23 @@ import Player from '../components/Player.astro';
 				<button class="navbtn" id="quietCornerToggle" aria-label="Quiet corner mode" title="Quiet corner mode">
 					<span aria-hidden="true">&#x1F31A;</span>
 				</button>
-			</nav>
+			</div>
+			<button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+				<span></span><span></span><span></span>
+			</button>
 		</header>
+
+		<div class="nav-overlay" id="navOverlay">
+			<button class="overlay-close" id="navClose" aria-label="Close menu">&times;</button>
+			<a href="/">Home</a>
+			<a href="/about">About</a>
+			<a href="/privacy">Privacy</a>
+			<a href="/terms">Terms</a>
+			<a href="/contact">Contact</a>
+			<button class="overlay-toggle" id="quietCornerToggleOverlay" aria-label="Quiet corner mode" title="Quiet corner mode">
+				<span aria-hidden="true">&#x1F31A;</span>
+			</button>
+		</div>
 
 		<div class="lights" id="lights"></div>
 
@@ -75,7 +90,42 @@ import Player from '../components/Player.astro';
         localStorage.setItem('quietCornerMode', 'off');
       }
     });
+    const overlayToggle = document.getElementById('quietCornerToggleOverlay');
+    if (overlayToggle) {
+      overlayToggle.addEventListener('click', () => {
+        quietModeOn = !quietModeOn;
+        if (quietModeOn) {
+          document.body.classList.add('quiet-mode');
+          localStorage.setItem('quietCornerMode', 'on');
+        } else {
+          document.body.classList.remove('quiet-mode');
+          localStorage.setItem('quietCornerMode', 'off');
+        }
+      });
+    }
   })();
+
+  const hamburger = document.getElementById('hamburgerBtn');
+  const navOverlay = document.getElementById('navOverlay');
+  const navClose = document.getElementById('navClose');
+  if (hamburger && navOverlay) {
+    hamburger.addEventListener('click', () => {
+      navOverlay.classList.add('open');
+      hamburger.classList.add('open');
+    });
+    if (navClose) {
+      navClose.addEventListener('click', () => {
+        navOverlay.classList.remove('open');
+        hamburger.classList.remove('open');
+      });
+    }
+    navOverlay.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navOverlay.classList.remove('open');
+        hamburger.classList.remove('open');
+      });
+    });
+  }
 </script>
 	</div>
 
