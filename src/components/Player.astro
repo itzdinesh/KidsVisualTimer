@@ -100,6 +100,10 @@
   let playerReady = false;
   let tabGeneration = 0;
 
+  /* ── scrub state ── */
+  let isDragging = false;
+  let dragPct = 0;
+
   /* ══════════════════════════════════
      TAB CONFIG — all YouTube
      ══════════════════════════════════ */
@@ -341,6 +345,7 @@
      YOUTUBE PLAYER (unified for all tabs)
      ══════════════════════════════════ */
   function updateYTProgress() {
+    if (isDragging) return; /* user is scrubbing — don't fight their position */
     if (
       !ytPlayer ||
       typeof ytPlayer.getCurrentTime !== "function"
@@ -630,55 +635,53 @@
       if (!ytPlayer) return;
       const state = ytPlayer.getPlayerState ? ytPlayer.getPlayerState() : -1;
       if (state === 1) {
-        ytPlayer.pauseVideo();
+        /* playing → pause */
         updatePlayButtonState(false);
         stopSprinkles();
+        ytPlayer.pauseVideo();
       } else {
-        ytPlayer.playVideo();
+        /* paused/stopped/ended → play */
         updatePlayButtonState(true);
         startSprinkles();
+        ytPlayer.playVideo();
       }
     });
   }
 
   /* ── scrub ── */
   const scrubTrackEl = document.getElementById("scrubTrack");
-  let scrubRaf: number | null = null;
-  let scrubPendingPct = -1;
-  function flushScrubSeek() {
-    if (scrubPendingPct < 0) return;
-    if (scrubRaf !== null) { cancelAnimationFrame(scrubRaf); scrubRaf = null; }
-    if (ytPlayer && typeof ytPlayer.getDuration === "function") {
-      const dur = ytPlayer.getDuration() || 0;
-      if (dur > 0) ytPlayer.seekTo(scrubPendingPct * dur, true);
-    }
-    scrubPendingPct = -1;
-  }
   if (scrubTrackEl) {
-    makeDraggable(scrubTrackEl, (pct) => {
-      scrubPendingPct = pct;
-      if (scrubRaf === null) {
-        scrubRaf = requestAnimationFrame(() => {
-          scrubRaf = null;
-          if (scrubPendingPct < 0) return;
-          if (ytPlayer && typeof ytPlayer.getDuration === "function") {
-            const dur = ytPlayer.getDuration() || 0;
-            if (dur > 0) ytPlayer.seekTo(scrubPendingPct * dur, true);
-          }
-          scrubPendingPct = -1;
-        });
-      }
-    });
-    scrubTrackEl.addEventListener("mouseup", flushScrubSeek);
-    scrubTrackEl.addEventListener("touchend", flushScrubSeek);
-    document.addEventListener("mouseup", flushScrubSeek);
-    document.addEventListener("touchend", flushScrubSeek);
+    makeDraggable(
+      scrubTrackEl,
+      /* onChange — visual only, no seek */
+      (pct) => {
+        isDragging = true;
+        dragPct = pct;
+        /* update time label to show where user is aiming */
+        if (ytPlayer && typeof ytPlayer.getDuration === "function") {
+          const dur = ytPlayer.getDuration() || 0;
+          const curTimeEl = document.getElementById("currentTime");
+          if (curTimeEl) curTimeEl.textContent = formatTime(pct * dur);
+        }
+      },
+      /* onEnd — seek to final position */
+      (pct) => {
+        isDragging = false;
+        if (ytPlayer && typeof ytPlayer.getDuration === "function") {
+          const dur = ytPlayer.getDuration() || 0;
+          if (dur > 0) ytPlayer.seekTo(pct * dur, true);
+        }
+        /* force one progress update so UI snaps to the seeked position */
+        updateYTProgress();
+      },
+    );
   }
 
   /* ── volume ── */
   function makeDraggable(
     trackEl: HTMLElement,
     onChange: (pct: number) => void,
+    onEnd?: (pct: number) => void,
   ) {
     const fill = trackEl.querySelector(".fill") as HTMLElement;
     if (!fill) return;
@@ -688,30 +691,33 @@
       pct = Math.max(0, Math.min(1, pct));
       fill.style.width = pct * 100 + "%";
       onChange(pct);
+      return pct;
     }
     trackEl.addEventListener("mousedown", (e: MouseEvent) => {
       e.preventDefault();
-      setFromEvent(e.clientX);
+      let lastPct = setFromEvent(e.clientX);
       function move(e: MouseEvent) {
-        setFromEvent(e.clientX);
+        lastPct = setFromEvent(e.clientX);
       }
       function up() {
         document.removeEventListener("mousemove", move);
         document.removeEventListener("mouseup", up);
+        if (onEnd) onEnd(lastPct);
       }
       document.addEventListener("mousemove", move);
       document.addEventListener("mouseup", up);
     });
     trackEl.addEventListener("touchstart", (e: TouchEvent) => {
       e.preventDefault();
-      setFromEvent(e.touches[0].clientX);
+      let lastPct = setFromEvent(e.touches[0].clientX);
       function move(e: TouchEvent) {
         e.preventDefault();
-        setFromEvent(e.touches[0].clientX);
+        lastPct = setFromEvent(e.touches[0].clientX);
       }
       function end() {
         document.removeEventListener("touchmove", move);
         document.removeEventListener("touchend", end);
+        if (onEnd) onEnd(lastPct);
       }
       document.addEventListener("touchmove", move, { passive: false });
       document.addEventListener("touchend", end);

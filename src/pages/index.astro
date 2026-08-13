@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import MandapScene from '../components/MandapScene.astro';
+import StageCharacters from '../components/StageCharacters.astro';
 import BaraatDancers from '../components/BaraatDancers.astro';
 ---
 
@@ -86,7 +87,10 @@ import BaraatDancers from '../components/BaraatDancers.astro';
 		<p class="tagline">Baraat to vidaai, one long tape that never stops — old favourites and new sangeet hits on loop, the way the DJ at every wedding hall keeps it going till 2am.</p>
 	</div>
 
-	<MandapScene />
+	<div class="stage-wrap">
+		<MandapScene />
+		<StageCharacters />
+	</div>
 
 	<div class="tabs" id="sourceTabs">
 		<button class="tab active" data-tab-key="90s">90s Songs</button>

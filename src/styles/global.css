@@ -309,6 +309,280 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
 @keyframes glow{ 0%,100%{ opacity:.55; } 50%{ opacity:1; } }
 
 .mandap{ position:relative; display:block; width:100%; aspect-ratio:1440/260; margin-top:-30px; z-index:1; pointer-events:none; }
+.stage-wrap{ position:relative; }
+
+/* ========== STAGE CHARACTERS ========== */
+.stage-chars{
+  position:absolute; inset:0; z-index:2; pointer-events:none;
+  overflow:hidden;
+}
+.stage-char{
+  position:absolute;
+  transform-origin:bottom center;
+}
+.stage-char svg{ display:block; overflow:visible; }
+
+/* ── Base arm/leg animations ── */
+.char-arm-l{ transform-origin:20px 20px; }
+.char-arm-r{ transform-origin:20px 20px; }
+.char-leg-l{ transform-origin:20px 42px; }
+.char-leg-r{ transform-origin:20px 42px; }
+.char-stick-l{ transform-origin:8px 22px; }
+.char-stick-r{ transform-origin:36px 22px; }
+
+/* ═══════════════════════════════════
+   90s THEME — relaxed, nostalgic
+   ═══════════════════════════════════ */
+body[data-theme="90s"] .char-baraati{
+  animation: charBob 2s ease-in-out infinite;
+}
+body[data-theme="90s"] .char-baraati .char-arm-l{ animation: armSwingSlow 2s ease-in-out infinite; }
+body[data-theme="90s"] .char-baraati .char-arm-r{ animation: armSwingSlow 2s ease-in-out infinite .3s; }
+
+body[data-theme="90s"] .char-dancer{
+  animation: charBob 2.4s ease-in-out infinite .2s;
+}
+body[data-theme="90s"] .char-dancer .char-arm-l{ animation: armWaveSlow 2.4s ease-in-out infinite; }
+body[data-theme="90s"] .char-dancer .char-arm-r{ animation: armWaveSlow 2.4s ease-in-out infinite .4s; }
+body[data-theme="90s"] .char-dancer .char-leg-l{ animation: legKickSlow 2.4s ease-in-out infinite; }
+
+body[data-theme="90s"] .char-dhol{
+  animation: charBob 1.8s ease-in-out infinite .1s;
+}
+body[data-theme="90s"] .char-dhol .char-stick-l{ animation: dholBeatSlow 1.8s ease-in-out infinite; }
+body[data-theme="90s"] .char-dhol .char-stick-r{ animation: dholBeatSlow 1.8s ease-in-out infinite .3s; }
+
+body[data-theme="90s"] .char-chachi{
+  animation: charBob 2.2s ease-in-out infinite .4s;
+}
+body[data-theme="90s"] .char-chachi .char-arm-l{ animation: clapSlow 2.2s ease-in-out infinite; }
+body[data-theme="90s"] .char-chachi .char-arm-r{ animation: clapSlow 2.2s ease-in-out infinite .1s; }
+
+body[data-theme="90s"] .char-uncle{
+  animation: charSway 3s ease-in-out infinite;
+}
+
+body[data-theme="90s"] .char-photo{
+  animation: charBob 2.8s ease-in-out infinite .5s;
+}
+body[data-theme="90s"] .char-photo .char-arm-r{ animation: photoAim 3s ease-in-out infinite; }
+
+/* ═══════════════════════════════════
+   SANGEET THEME — energetic, festive
+   ═══════════════════════════════════ */
+body[data-theme="sangeet"] .char-baraati{
+  animation: charJump 1s ease-in-out infinite;
+}
+body[data-theme="sangeet"] .char-baraati .char-arm-l{ animation: armSwingFast 1s ease-in-out infinite; }
+body[data-theme="sangeet"] .char-baraati .char-arm-r{ animation: armSwingFast 1s ease-in-out infinite .2s; }
+body[data-theme="sangeet"] .char-baraati .char-leg-l{ animation: legKickFast 1s ease-in-out infinite; }
+body[data-theme="sangeet"] .char-baraati .char-leg-r{ animation: legKickFast 1s ease-in-out infinite .3s; }
+
+body[data-theme="sangeet"] .char-dancer{
+  animation: charSpin 1.2s ease-in-out infinite;
+}
+body[data-theme="sangeet"] .char-dancer .char-arm-l{ animation: armWaveFast 1.2s ease-in-out infinite; }
+body[data-theme="sangeet"] .char-dancer .char-arm-r{ animation: armWaveFast 1.2s ease-in-out infinite .2s; }
+body[data-theme="sangeet"] .char-dancer .char-leg-l{ animation: legKickFast 1.2s ease-in-out infinite .1s; }
+body[data-theme="sangeet"] .char-dancer .char-leg-r{ animation: legKickFast 1.2s ease-in-out infinite .4s; }
+
+body[data-theme="sangeet"] .char-dhol{
+  animation: charBob .8s ease-in-out infinite;
+}
+body[data-theme="sangeet"] .char-dhol .char-stick-l{ animation: dholBeatFast .8s ease-in-out infinite; }
+body[data-theme="sangeet"] .char-dhol .char-stick-r{ animation: dholBeatFast .8s ease-in-out infinite .2s; }
+
+body[data-theme="sangeet"] .char-chachi{
+  animation: charBob 1s ease-in-out infinite .1s;
+}
+body[data-theme="sangeet"] .char-chachi .char-arm-l{ animation: clapFast 1s ease-in-out infinite; }
+body[data-theme="sangeet"] .char-chachi .char-arm-r{ animation: clapFast 1s ease-in-out infinite .1s; }
+body[data-theme="sangeet"] .char-chachi .char-leg-l{ animation: legKickFast 1s ease-in-out infinite .2s; }
+
+body[data-theme="sangeet"] .char-uncle{
+  animation: charJump 1.4s ease-in-out infinite .2s;
+}
+body[data-theme="sangeet"] .char-uncle .char-arm-l{ animation: armSwingFast 1.4s ease-in-out infinite; }
+body[data-theme="sangeet"] .char-uncle .char-arm-r{ animation: armSwingFast 1.4s ease-in-out infinite .3s; }
+
+body[data-theme="sangeet"] .char-photo{
+  animation: charBob 1.6s ease-in-out infinite .3s;
+}
+body[data-theme="sangeet"] .char-photo .char-arm-r{ animation: photoSnap 1.6s ease-in-out infinite; }
+
+/* ═══════════════════════════════════
+   DJ THEME — high energy, disco
+   ═══════════════════════════════════ */
+body[data-theme="dj"] .char-baraati{
+  animation: charJump .7s ease-in-out infinite;
+}
+body[data-theme="dj"] .char-baraati .char-arm-l{ animation: armPump .7s ease-in-out infinite; }
+body[data-theme="dj"] .char-baraati .char-arm-r{ animation: armPump .7s ease-in-out infinite .15s; }
+body[data-theme="dj"] .char-baraati .char-leg-l{ animation: legKickFast .7s ease-in-out infinite; }
+body[data-theme="dj"] .char-baraati .char-leg-r{ animation: legKickFast .7s ease-in-out infinite .2s; }
+
+body[data-theme="dj"] .char-dancer{
+  animation: charSpin .9s ease-in-out infinite;
+}
+body[data-theme="dj"] .char-dancer .char-arm-l{ animation: armWaveFast .9s ease-in-out infinite; }
+body[data-theme="dj"] .char-dancer .char-arm-r{ animation: armWaveFast .9s ease-in-out infinite .15s; }
+body[data-theme="dj"] .char-dancer .char-leg-l{ animation: legKickFast .9s ease-in-out infinite .1s; }
+
+body[data-theme="dj"] .char-dhol{
+  animation: charBob .6s ease-in-out infinite;
+}
+body[data-theme="dj"] .char-dhol .char-stick-l{ animation: dholBeatFast .6s ease-in-out infinite; }
+body[data-theme="dj"] .char-dhol .char-stick-r{ animation: dholBeatFast .6s ease-in-out infinite .15s; }
+
+body[data-theme="dj"] .char-chachi{
+  animation: charBob .8s ease-in-out infinite .1s;
+}
+body[data-theme="dj"] .char-chachi .char-arm-l{ animation: clapFast .8s ease-in-out infinite; }
+body[data-theme="dj"] .char-chachi .char-arm-r{ animation: clapFast .8s ease-in-out infinite .1s; }
+
+body[data-theme="dj"] .char-uncle{
+  animation: charJump 1s ease-in-out infinite .15s;
+}
+body[data-theme="dj"] .char-uncle .char-arm-l{ animation: armPump 1s ease-in-out infinite; }
+body[data-theme="dj"] .char-uncle .char-arm-r{ animation: armPump 1s ease-in-out infinite .2s; }
+
+body[data-theme="dj"] .char-photo{
+  animation: charBob 1.2s ease-in-out infinite .2s;
+}
+body[data-theme="dj"] .char-photo .char-arm-r{ animation: photoSnap 1.2s ease-in-out infinite; }
+
+/* DJ neon glow on characters */
+body[data-theme="dj"] .stage-char svg{ filter: drop-shadow(0 0 3px rgba(0,212,255,.2)); }
+
+/* ═══════════════════════════════════
+   VIDAAI THEME — gentle, emotional
+   ═══════════════════════════════════ */
+body[data-theme="vidaai"] .char-baraati{
+  animation: charSway 3.5s ease-in-out infinite;
+}
+body[data-theme="vidaai"] .char-baraati .char-arm-l{ animation: armSwingSlow 3.5s ease-in-out infinite; }
+body[data-theme="vidaai"] .char-baraati .char-arm-r{ animation: armSwingSlow 3.5s ease-in-out infinite .5s; }
+
+body[data-theme="vidaai"] .char-dancer{
+  animation: charSway 4s ease-in-out infinite .3s;
+}
+body[data-theme="vidaai"] .char-dancer .char-arm-l{ animation: armWaveSlow 4s ease-in-out infinite; }
+body[data-theme="vidaai"] .char-dancer .char-arm-r{ animation: armWaveSlow 4s ease-in-out infinite .6s; }
+
+body[data-theme="vidaai"] .char-dhol{
+  animation: charBob 3s ease-in-out infinite .2s;
+}
+body[data-theme="vidaai"] .char-dhol .char-stick-l{ animation: dholBeatSlow 3s ease-in-out infinite; }
+body[data-theme="vidaai"] .char-dhol .char-stick-r{ animation: dholBeatSlow 3s ease-in-out infinite .5s; }
+
+body[data-theme="vidaai"] .char-chachi{
+  animation: charSway 3.8s ease-in-out infinite .4s;
+}
+body[data-theme="vidaai"] .char-chachi .char-arm-l{ animation: clapSlow 3.8s ease-in-out infinite; }
+body[data-theme="vidaai"] .char-chachi .char-arm-r{ animation: clapSlow 3.8s ease-in-out infinite .2s; }
+
+body[data-theme="vidaai"] .char-uncle{
+  animation: charSway 4.2s ease-in-out infinite;
+}
+
+body[data-theme="vidaai"] .char-photo{
+  animation: charBob 3.6s ease-in-out infinite .6s;
+}
+body[data-theme="vidaai"] .char-photo .char-arm-r{ animation: photoAim 4s ease-in-out infinite; }
+
+/* Vidaai soft glow */
+body[data-theme="vidaai"] .stage-char svg{ filter: drop-shadow(0 0 2px rgba(232,160,176,.15)); }
+
+/* ═══════════════════════════════════
+   KEYFRAMES
+   ═══════════════════════════════════ */
+@keyframes charBob{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-4px); }
+}
+@keyframes charJump{
+  0%,100%{ transform:translateY(0) scale(1); }
+  50%{ transform:translateY(-8px) scale(1.02); }
+}
+@keyframes charSway{
+  0%,100%{ transform:translateX(0) rotate(0deg); }
+  25%{ transform:translateX(-2px) rotate(-2deg); }
+  75%{ transform:translateX(2px) rotate(2deg); }
+}
+@keyframes charSpin{
+  0%,100%{ transform:translateY(0) rotate(0deg); }
+  25%{ transform:translateY(-6px) rotate(-8deg); }
+  50%{ transform:translateY(-8px) rotate(0deg); }
+  75%{ transform:translateY(-6px) rotate(8deg); }
+}
+
+/* arm animations */
+@keyframes armSwingSlow{
+  0%,100%{ transform:rotate(-15deg); }
+  50%{ transform:rotate(20deg); }
+}
+@keyframes armSwingFast{
+  0%,100%{ transform:rotate(-30deg); }
+  50%{ transform:rotate(40deg); }
+}
+@keyframes armWaveSlow{
+  0%,100%{ transform:rotate(-10deg); }
+  50%{ transform:rotate(30deg); }
+}
+@keyframes armWaveFast{
+  0%,100%{ transform:rotate(-25deg); }
+  50%{ transform:rotate(50deg); }
+}
+@keyframes armPump{
+  0%,100%{ transform:rotate(-40deg) translateY(0); }
+  50%{ transform:rotate(20deg) translateY(-4px); }
+}
+
+/* leg animations */
+@keyframes legKickSlow{
+  0%,100%{ transform:rotate(10deg); }
+  50%{ transform:rotate(-8deg); }
+}
+@keyframes legKickFast{
+  0%,100%{ transform:rotate(20deg); }
+  50%{ transform:rotate(-18deg); }
+}
+
+/* dhol stick animations */
+@keyframes dholBeatSlow{
+  0%,100%{ transform:rotate(0deg) translateY(0); }
+  30%{ transform:rotate(-12deg) translateY(2px); }
+  60%{ transform:rotate(5deg) translateY(-1px); }
+}
+@keyframes dholBeatFast{
+  0%,100%{ transform:rotate(0deg) translateY(0); }
+  25%{ transform:rotate(-20deg) translateY(3px); }
+  50%{ transform:rotate(8deg) translateY(-2px); }
+  75%{ transform:rotate(-10deg) translateY(1px); }
+}
+
+/* clap animations */
+@keyframes clapSlow{
+  0%,100%{ transform:rotate(-5deg) translateX(0); }
+  50%{ transform:rotate(10deg) translateX(4px); }
+}
+@keyframes clapFast{
+  0%,100%{ transform:rotate(-15deg) translateX(0); }
+  40%{ transform:rotate(15deg) translateX(6px); }
+}
+
+/* photo animations */
+@keyframes photoAim{
+  0%,100%{ transform:rotate(0deg) translateY(0); }
+  30%{ transform:rotate(-5deg) translateY(-2px); }
+  60%{ transform:rotate(3deg) translateY(1px); }
+}
+@keyframes photoSnap{
+  0%,100%{ transform:rotate(0deg) translateY(0); }
+  20%{ transform:rotate(-8deg) translateY(-3px); }
+  40%{ transform:rotate(0deg) translateY(0); filter:brightness(1.3); }
+  50%{ transform:rotate(2deg) translateY(-1px); }
+}
 
 /* ========== TABS (inside mandap arch) ========== */
 .tabs{
@@ -877,6 +1151,15 @@ body[data-theme="vidaai"] .tab.active{
   .tabs::-webkit-scrollbar{ display:none; }
   .tab{ padding:6px 14px; font-size:12px; flex-shrink:0; }
 
+  /* ── Stage characters: scale down on mobile ── */
+  .stage-char{ transform:scale(.65); }
+  .char-baraati{ left:4% !important; bottom:30% !important; }
+  .char-dancer{ right:4% !important; bottom:28% !important; }
+  .char-dhol{ left:16% !important; bottom:26% !important; }
+  .char-chachi{ right:16% !important; bottom:27% !important; }
+  .char-uncle{ left:1% !important; bottom:22% !important; }
+  .char-photo{ right:1% !important; bottom:24% !important; }
+
   /* ── Baraat dancers ── */
   .baraat-strip{ gap:2px; padding:4px 8px 2px; margin-top:20px; }
   .dancer svg{ width:30px !important; height:45px !important; }
@@ -953,6 +1236,7 @@ body[data-theme="vidaai"] .tab.active{
 
 /* ========== RESPONSIVE: VERY SMALL (≤360px) ========== */
 @media (max-width: 360px){
+  .stage-char{ transform:scale(.5); }
   .hero{ padding:10px 14px 6px; }
   h1{ font-size:24px; }
   h1 .eng{ font-size:11px; margin-top:4px; }
@@ -981,6 +1265,7 @@ body[data-theme="vidaai"] .tab.active{
   .hero .tagline{ margin-top:6px; }
   .baraat-strip{ display:none; }
   .mandap{ display:none; }
+  .stage-chars{ display:none; }
   .tabs{ margin-top:-40px; }
   .lights{ display:none; }
   .rangoli{ display:none; }
