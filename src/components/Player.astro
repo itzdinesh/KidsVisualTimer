@@ -468,9 +468,12 @@
     }
   }
 
-  document.getElementById('sourceTabs')?.addEventListener('click', (e) => {
+  /* ── event delegation: survives SPA DOM swaps ── */
+  document.addEventListener('click', (e) => {
     const tab = (e.target as HTMLElement).closest('.tab') as HTMLElement;
-    if (tab) switchTab(tab);
+    if (tab && tab.closest('#sourceTabs')) {
+      switchTab(tab);
+    }
   });
 
   /* ══════════════════════════════════
