@@ -1,142 +1,25 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Player from '../components/Player.astro';
 ---
 
 <Layout>
-	<div class="scene">
-		<div class="rangoli"></div>
-		<div class="stars" id="stars"></div>
+	<div class="content-page">
+		<h1 class="content-title">Terms &amp; Conditions</h1>
+		<div class="content-card">
+			<h2>Use of This Site</h2>
+			<p>DeluxShaadi Radio is provided for personal, non-commercial entertainment use. By using this site, you agree to these terms.</p>
 
-		<header>
-			<div class="brandmark">
-				<div class="glyph">श</div>
-				<a href="/" style="text-decoration:none;color:inherit;">DeluxShaadi</a>
-			</div>
-			<div class="nav-links">
-				<a href="/about">About</a>
-				<a href="/privacy">Privacy</a>
-				<a href="/terms" class="active">Terms</a>
-				<a href="/contact">Contact</a>
-				<button class="navbtn" id="quietCornerToggle" aria-label="Quiet corner mode" title="Quiet corner mode">
-					<span aria-hidden="true">&#x1F31A;</span>
-				</button>
-			</div>
-			<button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
-				<span></span><span></span><span></span>
-			</button>
-		</header>
+			<h2>Music &amp; Licensing</h2>
+			<p>All music is played via embedded YouTube players and is owned by the respective labels and artists. We do not host, reproduce, or distribute any audio content. All rights remain with the original copyright holders.</p>
 
-		<div class="nav-overlay" id="navOverlay">
-			<button class="overlay-close" id="navClose" aria-label="Close menu">&times;</button>
-			<a href="/">Home</a>
-			<a href="/about">About</a>
-			<a href="/privacy">Privacy</a>
-			<a href="/terms">Terms</a>
-			<a href="/contact">Contact</a>
-			<button class="overlay-toggle" id="quietCornerToggleOverlay" aria-label="Quiet corner mode" title="Quiet corner mode">
-				<span aria-hidden="true">&#x1F31A;</span>
-			</button>
+			<h2>No Warranties</h2>
+			<p>This site is provided "as is" without warranties of any kind. We do not guarantee uninterrupted playback or availability of specific tracks.</p>
+
+			<h2>Limitation of Liability</h2>
+			<p>DeluxShaadi Radio and its creators are not liable for any damages arising from the use of this site or its embedded services.</p>
+
+			<h2>Changes to Terms</h2>
+			<p>We may update these terms at any time. Continued use of the site after changes constitutes acceptance of the new terms. Last updated: August 2026.</p>
 		</div>
-
-		<div class="lights" id="lights"></div>
-
-		<div class="content-page">
-			<h1 class="content-title">Terms &amp; Conditions</h1>
-			<div class="content-card">
-				<h2>Use of This Site</h2>
-				<p>DeluxShaadi Radio is provided for personal, non-commercial entertainment use. By using this site, you agree to these terms.</p>
-
-				<h2>Music &amp; Licensing</h2>
-				<p>All music is played via embedded YouTube players and is owned by the respective labels and artists. We do not host, reproduce, or distribute any audio content. All rights remain with the original copyright holders.</p>
-
-				<h2>No Warranties</h2>
-				<p>This site is provided "as is" without warranties of any kind. We do not guarantee uninterrupted playback or availability of specific tracks.</p>
-
-				<h2>Limitation of Liability</h2>
-				<p>DeluxShaadi Radio and its creators are not liable for any damages arising from the use of this site or its embedded services.</p>
-
-				<h2>Changes to Terms</h2>
-				<p>We may update these terms at any time. Continued use of the site after changes constitutes acceptance of the new terms. Last updated: August 2026.</p>
-			</div>
-		</div>
-
-		<footer class="site-footer">
-			<div class="footer-links">
-				<a href="/about">About</a>
-				<a href="/privacy">Privacy</a>
-				<a href="/terms">Terms</a>
-				<a href="/contact">Contact</a>
-			</div>
-			<p class="footer-copy">&copy; 2026 DeluxShaadi Radio. All rights belong to the original artists and labels.</p>
-		</footer>
-
-		<p class="disclaimer">Audio plays through embedded YouTube. Nothing is hosted here, and all rights stay with the labels and performers. Song credits from film soundtrack listings.</p>
-
-<script>
-  (function() {
-    const toggle = document.getElementById('quietCornerToggle');
-    if (!toggle) return;
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let quietModeOn = false;
-    const storedMode = localStorage.getItem('quietCornerMode');
-    if (storedMode === 'on' && !prefersReduced.matches) {
-      quietModeOn = true;
-    } else if (storedMode === 'off' && prefersReduced.matches) {
-      quietModeOn = false;
-    } else if (storedMode === '' && prefersReduced.matches) {
-      quietModeOn = true;
-      localStorage.setItem('quietCornerMode', 'on');
-    }
-    if (quietModeOn) document.body.classList.add('quiet-mode');
-    toggle.addEventListener('click', () => {
-      quietModeOn = !quietModeOn;
-      if (quietModeOn) {
-        document.body.classList.add('quiet-mode');
-        localStorage.setItem('quietCornerMode', 'on');
-      } else {
-        document.body.classList.remove('quiet-mode');
-        localStorage.setItem('quietCornerMode', 'off');
-      }
-    });
-    const overlayToggle = document.getElementById('quietCornerToggleOverlay');
-    if (overlayToggle) {
-      overlayToggle.addEventListener('click', () => {
-        quietModeOn = !quietModeOn;
-        if (quietModeOn) {
-          document.body.classList.add('quiet-mode');
-          localStorage.setItem('quietCornerMode', 'on');
-        } else {
-          document.body.classList.remove('quiet-mode');
-          localStorage.setItem('quietCornerMode', 'off');
-        }
-      });
-    }
-  })();
-
-  const hamburger = document.getElementById('hamburgerBtn');
-  const navOverlay = document.getElementById('navOverlay');
-  const navClose = document.getElementById('navClose');
-  if (hamburger && navOverlay) {
-    hamburger.addEventListener('click', () => {
-      navOverlay.classList.add('open');
-      hamburger.classList.add('open');
-    });
-    if (navClose) {
-      navClose.addEventListener('click', () => {
-        navOverlay.classList.remove('open');
-        hamburger.classList.remove('open');
-      });
-    }
-    navOverlay.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        navOverlay.classList.remove('open');
-        hamburger.classList.remove('open');
-      });
-    });
-  }
-</script>
 	</div>
-
-	<Player />
 </Layout>

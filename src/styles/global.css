@@ -87,6 +87,14 @@ body.theme-late-night .scene{
   opacity:.9;
   animation: petal-fall var(--fall-duration, 3s) var(--fall-delay, 0s) ease-in forwards;
 }
+.sprinkle{
+  position:absolute; top:-20px;
+  width:8px; height:6px;
+  border-radius:0 100% 0 100%;
+  opacity:.85;
+  animation: petal-fall var(--fall-duration, 4s) 0s ease-in forwards;
+  pointer-events:none;
+}
 @keyframes dholPulse{
   0%, 100%{ transform:scale(1); box-shadow: 0 0 0 0 rgba(232,135,30,.45); }
   50%{ transform:scale(1.06); box-shadow: 0 0 0 8px rgba(232,135,30,0); }

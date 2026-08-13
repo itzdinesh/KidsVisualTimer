@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import MandapScene from '../components/MandapScene.astro';
 import BaraatDancers from '../components/BaraatDancers.astro';
-import Player from '../components/Player.astro';
 ---
 
 <Layout>
@@ -80,167 +79,52 @@ import Player from '../components/Player.astro';
 }
 		</script>
 	</Fragment>
-	<div class="scene">
-		<div class="rangoli"></div>
-		<div class="stars" id="stars"></div>
 
-		<header>
-			<div class="brandmark">
-				<div class="glyph">श</div>
-				<a href="/" style="text-decoration:none;color:inherit;">DeluxShaadi</a>
-			</div>
-			<div class="nav-links">
-				<a href="/about">About</a>
-				<a href="/privacy">Privacy</a>
-				<a href="/terms">Terms</a>
-				<a href="/contact">Contact</a>
-				<button class="navbtn" id="quietCornerToggle" aria-label="Quiet corner mode" title="Quiet corner mode">
-					<span aria-hidden="true">&#x1F31A;</span>
-				</button>
-			</div>
-			<button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
-				<span></span><span></span><span></span>
-			</button>
-		</header>
-
-		<div class="nav-overlay" id="navOverlay">
-			<button class="overlay-close" id="navClose" aria-label="Close menu">&times;</button>
-			<a href="/">Home</a>
-			<a href="/about">About</a>
-			<a href="/privacy">Privacy</a>
-			<a href="/terms">Terms</a>
-			<a href="/contact">Contact</a>
-			<button class="overlay-toggle" id="quietCornerToggleOverlay" aria-label="Quiet corner mode" title="Quiet corner mode">
-				<span aria-hidden="true">&#x1F31A;</span>
-			</button>
-		</div>
-
-		<div class="lights" id="lights"></div>
-
-		<div class="hero">
-			<div class="kicker">now playing · dhol ke saath</div>
-			<h1>शादी रेडियो<span class="eng">wedding songs, playing all night</span></h1>
-			<p class="tagline">Baraat to vidaai, one long tape that never stops — old favourites and new sangeet hits on loop, the way the DJ at every wedding hall keeps it going till 2am.</p>
-		</div>
-
-		<MandapScene />
-
-		<BaraatDancers />
-
-		<footer class="site-footer">
-			<div class="footer-links">
-				<a href="/about">About</a>
-				<a href="/privacy">Privacy</a>
-				<a href="/terms">Terms</a>
-				<a href="/contact">Contact</a>
-			</div>
-			<p class="footer-copy">&copy; 2026 DeluxShaadi Radio. All rights belong to the original artists and labels.</p>
-		</footer>
-
-		<p class="disclaimer">Audio plays through embedded YouTube. Nothing is hosted here, and all rights stay with the labels and performers. Song credits from film soundtrack listings.</p>
-
-		<section class="faq-section">
-			<h2 class="faq-heading">Frequently Asked Questions</h2>
-			<div class="faq-list">
-				<details class="faq-item">
-					<summary class="faq-q">What is DeluxShaadi Radio?</summary>
-					<div class="faq-a"><p>It's a wedding radio station that plays Hindi wedding and sangeet songs on a continuous loop, similar to how a DJ keeps the music going all night at a real wedding hall.</p></div>
-				</details>
-				<details class="faq-item">
-					<summary class="faq-q">Is DeluxShaadi Radio free to use?</summary>
-					<div class="faq-a"><p>Yes, the site is completely free to listen to. There's no signup, subscription, or payment required.</p></div>
-				</details>
-				<details class="faq-item">
-					<summary class="faq-q">What kind of songs does DeluxShaadi Radio play?</summary>
-					<div class="faq-a"><p>A mix of classic and newer Bollywood wedding songs — baraat entrance tracks, sangeet dance numbers, mehendi songs, and emotional vidaai songs.</p></div>
-				</details>
-				<details class="faq-item">
-					<summary class="faq-q">Can I choose or skip songs?</summary>
-					<div class="faq-a"><p>Yes, you can use the next and previous buttons to skip tracks, or open the song list to jump straight to any track in the playlist.</p></div>
-				</details>
-				<details class="faq-item">
-					<summary class="faq-q">Does DeluxShaadi Radio work on mobile phones?</summary>
-					<div class="faq-a"><p>Yes, the site is built to work on both desktop and mobile browsers.</p></div>
-				</details>
-				<details class="faq-item">
-					<summary class="faq-q">Where does the music come from?</summary>
-					<div class="faq-a"><p>Audio plays through embedded YouTube — nothing is hosted or downloaded, and all rights remain with the original labels and artists.</p></div>
-				</details>
-				<details class="faq-item">
-					<summary class="faq-q">Can I play DeluxShaadi Radio at an actual wedding or sangeet function?</summary>
-					<div class="faq-a"><p>It works well as ambient background music for small gatherings, sangeet nights, or mehendi functions where you want continuous music without manually queuing songs.</p></div>
-				</details>
-				<details class="faq-item">
-					<summary class="faq-q">Do I need to create an account to use it?</summary>
-					<div class="faq-a"><p>No account or login is required — just open the site and start listening.</p></div>
-				</details>
-			</div>
-		</section>
-
-<script>
-  (function() {
-    const toggle = document.getElementById('quietCornerToggle');
-    if (!toggle) return;
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let quietModeOn = false;
-    const storedMode = localStorage.getItem('quietCornerMode');
-    if (storedMode === 'on' && !prefersReduced.matches) {
-      quietModeOn = true;
-    } else if (storedMode === 'off' && prefersReduced.matches) {
-      quietModeOn = false;
-    } else if (storedMode === '' && prefersReduced.matches) {
-      quietModeOn = true;
-      localStorage.setItem('quietCornerMode', 'on');
-    }
-    if (quietModeOn) document.body.classList.add('quiet-mode');
-    toggle.addEventListener('click', () => {
-      quietModeOn = !quietModeOn;
-      if (quietModeOn) {
-        document.body.classList.add('quiet-mode');
-        localStorage.setItem('quietCornerMode', 'on');
-      } else {
-        document.body.classList.remove('quiet-mode');
-        localStorage.setItem('quietCornerMode', 'off');
-      }
-    });
-    const overlayToggle = document.getElementById('quietCornerToggleOverlay');
-    if (overlayToggle) {
-      overlayToggle.addEventListener('click', () => {
-        quietModeOn = !quietModeOn;
-        if (quietModeOn) {
-          document.body.classList.add('quiet-mode');
-          localStorage.setItem('quietCornerMode', 'on');
-        } else {
-          document.body.classList.remove('quiet-mode');
-          localStorage.setItem('quietCornerMode', 'off');
-        }
-      });
-    }
-  })();
-
-  const hamburger = document.getElementById('hamburgerBtn');
-  const navOverlay = document.getElementById('navOverlay');
-  const navClose = document.getElementById('navClose');
-  if (hamburger && navOverlay) {
-    hamburger.addEventListener('click', () => {
-      navOverlay.classList.add('open');
-      hamburger.classList.add('open');
-    });
-    if (navClose) {
-      navClose.addEventListener('click', () => {
-        navOverlay.classList.remove('open');
-        hamburger.classList.remove('open');
-      });
-    }
-    navOverlay.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        navOverlay.classList.remove('open');
-        hamburger.classList.remove('open');
-      });
-    });
-  }
-</script>
+	<div class="hero">
+		<div class="kicker">now playing · dhol ke saath</div>
+		<h1>शादी रेडियो<span class="eng">wedding songs, playing all night</span></h1>
+		<p class="tagline">Baraat to vidaai, one long tape that never stops — old favourites and new sangeet hits on loop, the way the DJ at every wedding hall keeps it going till 2am.</p>
 	</div>
 
-	<Player />
+	<MandapScene />
+
+	<BaraatDancers />
+
+	<section class="faq-section">
+		<h2 class="faq-heading">Frequently Asked Questions</h2>
+		<div class="faq-list">
+			<details class="faq-item">
+				<summary class="faq-q">What is DeluxShaadi Radio?</summary>
+				<div class="faq-a"><p>It's a wedding radio station that plays Hindi wedding and sangeet songs on a continuous loop, similar to how a DJ keeps the music going all night at a real wedding hall.</p></div>
+			</details>
+			<details class="faq-item">
+				<summary class="faq-q">Is DeluxShaadi Radio free to use?</summary>
+				<div class="faq-a"><p>Yes, the site is completely free to listen to. There's no signup, subscription, or payment required.</p></div>
+			</details>
+			<details class="faq-item">
+				<summary class="faq-q">What kind of songs does DeluxShaadi Radio play?</summary>
+				<div class="faq-a"><p>A mix of classic and newer Bollywood wedding songs — baraat entrance tracks, sangeet dance numbers, mehendi songs, and emotional vidaai songs.</p></div>
+			</details>
+			<details class="faq-item">
+				<summary class="faq-q">Can I choose or skip songs?</summary>
+				<div class="faq-a"><p>Yes, you can use the next and previous buttons to skip tracks, or open the song list to jump straight to any track in the playlist.</p></div>
+			</details>
+			<details class="faq-item">
+				<summary class="faq-q">Does DeluxShaadi Radio work on mobile phones?</summary>
+				<div class="faq-a"><p>Yes, the site is built to work on both desktop and mobile browsers.</p></div>
+			</details>
+			<details class="faq-item">
+				<summary class="faq-q">Where does the music come from?</summary>
+				<div class="faq-a"><p>Audio plays through embedded YouTube — nothing is hosted or downloaded, and all rights remain with the original labels and artists.</p></div>
+			</details>
+			<details class="faq-item">
+				<summary class="faq-q">Can I play DeluxShaadi Radio at an actual wedding or sangeet function?</summary>
+				<div class="faq-a"><p>It works well as ambient background music for small gatherings, sangeet nights, or mehendi functions where you want continuous music without manually queuing songs.</p></div>
+			</details>
+			<details class="faq-item">
+				<summary class="faq-q">Do I need to create an account to use it?</summary>
+				<div class="faq-a"><p>No account or login is required — just open the site and start listening.</p></div>
+			</details>
+		</div>
+	</section>
 </Layout>

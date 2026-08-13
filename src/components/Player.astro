@@ -3,6 +3,8 @@
 
 <div id="yt-player" style="display:none;"></div>
 
+<div class="petal-layer" id="petalLayer"></div>
+
 <div class="player">
   <div class="thumb" id="thumb"><span id="thumbText">ला</span></div>
   <div class="track-info">
@@ -56,6 +58,27 @@
   let tracks: Track[] = [];
   let current = 0;
 
+  /* ── persistence across page navigations ── */
+  const STORAGE_KEY = 'dsRadio';
+  function saveState() {
+    if (!player || typeof player.getCurrentTime !== 'function') return;
+    const state = {
+      idx: current,
+      time: player.getCurrentTime() || 0,
+      vol: lastVolume,
+      wasPlaying: player.getPlayerState?.() === (window.YT?.PlayerState?.PLAYING ?? 1)
+    };
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+  }
+  function loadState(): { idx: number; time: number; vol: number; wasPlaying: boolean } | null {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch { return null; }
+  }
+  setInterval(saveState, 2000);
+
   function formatTime(seconds: number): string {
     if (isNaN(seconds) || seconds < 0) return '0:00';
     const mins = Math.floor(seconds / 60);
@@ -72,6 +95,44 @@
       ? '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>'
       : '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
     playBtn.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
+  }
+
+  /* ── sprinkle / ambient petal layer ── */
+  const petalLayer = document.getElementById('petalLayer');
+  let sprinkleInterval: ReturnType<typeof setInterval> | null = null;
+  const MAX_SPRINKLES = 15;
+
+  function spawnSprinkle() {
+    if (!petalLayer) return;
+    if (petalLayer.children.length >= MAX_SPRINKLES) return;
+
+    const el = document.createElement('div');
+    el.className = 'sprinkle';
+
+    const colors = ['#E8871E', '#D4A017', '#AD1F5C', '#FFC93C', '#F7ECD9'];
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+    el.style.left = Math.random() * 100 + '%';
+    el.style.setProperty('--fall-duration', (3 + Math.random() * 3) + 's');
+    el.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
+    el.style.setProperty('--spin', (Math.random() * 720 - 360) + 'deg');
+
+    el.addEventListener('animationend', () => el.remove());
+    petalLayer.appendChild(el);
+  }
+
+  function startSprinkles() {
+    if (sprinkleInterval) return;
+    sprinkleInterval = setInterval(() => {
+      spawnSprinkle();
+    }, 400 + Math.random() * 300);
+  }
+
+  function stopSprinkles() {
+    if (sprinkleInterval) {
+      clearInterval(sprinkleInterval);
+      sprinkleInterval = null;
+    }
   }
 
   function updateTrackUI() {
@@ -188,7 +249,14 @@
         events: {
           onReady: async () => {
             console.log('player ready');
-            updateProgress();
+
+            const saved = loadState();
+            if (saved) {
+              lastVolume = saved.vol;
+              if (player && typeof player.setVolume === 'function') {
+                player.setVolume(lastVolume);
+              }
+            }
 
             if (player && typeof player.getPlaylist === 'function') {
               const videoIds = player.getPlaylist();
@@ -196,8 +264,23 @@
                 const loadedTracks = await fetchPlaylistTracks(videoIds);
                 if (loadedTracks.length > 0) {
                   tracks = loadedTracks;
-                  const idx = typeof player.getPlaylistIndex === 'function' ? player.getPlaylistIndex() : 0;
-                  current = idx >= 0 && idx < tracks.length ? idx : 0;
+                  const targetIdx = saved && saved.idx >= 0 && saved.idx < tracks.length ? saved.idx : 0;
+                  if (targetIdx > 0 || (saved && saved.time > 0)) {
+                    player.playVideoAt(targetIdx);
+                    if (saved && saved.time > 0) {
+                      setTimeout(() => {
+                        if (player && typeof player.seekTo === 'function') {
+                          player.seekTo(saved.time, true);
+                          if (!saved.wasPlaying && typeof player.pauseVideo === 'function') {
+                            player.pauseVideo();
+                          }
+                        }
+                      }, 500);
+                    }
+                  } else {
+                    updateProgress();
+                  }
+                  current = targetIdx;
                   updateTrackUI();
                 }
               }
@@ -206,6 +289,12 @@
           onStateChange: (event: any) => {
             updatePlayButtonState(event.data);
             updateProgress();
+            if (event.data === (window.YT?.PlayerState?.PLAYING ?? 1)) {
+              startSprinkles();
+            } else if (event.data === (window.YT?.PlayerState?.PAUSED ?? 2) || event.data === (window.YT?.PlayerState?.ENDED ?? 0)) {
+              stopSprinkles();
+            }
+            saveState();
           }
         }
       });
@@ -228,35 +317,12 @@
     }
   }
 
-  const starsWrap = document.getElementById('stars');
-  if (starsWrap) {
-    for(let i=0;i<50;i++){
-      const s = document.createElement('div');
-      s.className='star';
-      s.style.left = Math.random()*100+'%';
-      s.style.top = Math.random()*70+'%';
-      s.style.animationDelay = (Math.random()*3)+'s';
-      starsWrap.appendChild(s);
-    }
-  }
-
-  const lightsWrap = document.getElementById('lights');
-  if (lightsWrap) {
-    const lightSvg = `<svg width="1440" height="34" viewBox="0 0 1440 34" xmlns="http://www.w3.org/2000/svg" style="position:absolute; left:0; top:0;">`;
-    let bulbs = '';
-    for(let x=20; x<1440; x+=44){
-      const dy = Math.sin(x/90)*6+10;
-      const delay = (x%9)/4;
-      bulbs += `<circle class="bulb" cx="${x}" cy="${dy}" r="4" fill="#E8871E" style="animation-delay:${delay}s"/>`;
-    }
-    lightsWrap.innerHTML = lightSvg + bulbs + `</svg>`;
-  }
-
   const prevBtn = document.getElementById('prevBtn');
   if (prevBtn) {
     prevBtn.addEventListener('click', () => {
       if (player && typeof player.previousVideo === 'function') {
         player.previousVideo();
+        saveState();
       }
     });
   }
@@ -266,6 +332,7 @@
     nextBtn.addEventListener('click', () => {
       if (player && typeof player.nextVideo === 'function') {
         player.nextVideo();
+        saveState();
       }
     });
   }
@@ -280,6 +347,7 @@
       } else {
         player.playVideo();
       }
+      saveState();
     });
   }
 

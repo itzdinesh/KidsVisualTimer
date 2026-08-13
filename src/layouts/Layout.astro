@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Player from '../components/Player.astro';
 ---
 <!doctype html>
 <html lang="en">
@@ -17,7 +18,6 @@ import '../styles/global.css';
 		<meta name="generator" content={Astro.generator} />
 		<title>DeluxShaadi — wedding radio</title>
 		<slot name="head" />
-		<!-- Google tag (gtag.js) -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=G-51P3YK1X9C"></script>
 		<script>
 			window.dataLayer = window.dataLayer || [];
@@ -27,6 +27,233 @@ import '../styles/global.css';
 		</script>
 	</head>
 	<body>
-		<slot />
+		<div class="scene">
+			<div class="rangoli"></div>
+			<div class="stars" id="stars"></div>
+
+			<header>
+				<div class="brandmark">
+					<div class="glyph">श</div>
+					<a href="/" style="text-decoration:none;color:inherit;">DeluxShaadi</a>
+				</div>
+				<div class="nav-links">
+					<a href="/about">About</a>
+					<a href="/privacy">Privacy</a>
+					<a href="/terms">Terms</a>
+					<a href="/contact">Contact</a>
+					<button class="navbtn" id="quietCornerToggle" aria-label="Quiet corner mode" title="Quiet corner mode">
+						<span aria-hidden="true">&#x1F31A;</span>
+					</button>
+				</div>
+				<button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+					<span></span><span></span><span></span>
+				</button>
+			</header>
+
+			<div class="nav-overlay" id="navOverlay">
+				<button class="overlay-close" id="navClose" aria-label="Close menu">&times;</button>
+				<a href="/">Home</a>
+				<a href="/about">About</a>
+				<a href="/privacy">Privacy</a>
+				<a href="/terms">Terms</a>
+				<a href="/contact">Contact</a>
+				<button class="overlay-toggle" id="quietCornerToggleOverlay" aria-label="Quiet corner mode" title="Quiet corner mode">
+					<span aria-hidden="true">&#x1F31A;</span>
+				</button>
+			</div>
+
+			<div class="lights" id="lights"></div>
+
+			<main id="page-content">
+				<slot />
+			</main>
+
+			<footer class="site-footer">
+				<div class="footer-links">
+					<a href="/about">About</a>
+					<a href="/privacy">Privacy</a>
+					<a href="/terms">Terms</a>
+					<a href="/contact">Contact</a>
+				</div>
+				<p class="footer-copy">&copy; 2026 DeluxShaadi Radio. All rights belong to the original artists and labels.</p>
+			</footer>
+
+			<p class="disclaimer">Audio plays through embedded YouTube. Nothing is hosted here, and all rights stay with the labels and performers. Song credits from film soundtrack listings.</p>
+		</div>
+
+		<Player />
+
+<script>
+  /* ── quiet corner toggle (persistent across SPA) ── */
+  (function() {
+    const toggle = document.getElementById('quietCornerToggle');
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let quietModeOn = false;
+    const storedMode = localStorage.getItem('quietCornerMode');
+    if (storedMode === 'on' && !prefersReduced.matches) {
+      quietModeOn = true;
+    } else if (storedMode === 'off' && prefersReduced.matches) {
+      quietModeOn = false;
+    } else if (storedMode === '' && prefersReduced.matches) {
+      quietModeOn = true;
+      localStorage.setItem('quietCornerMode', 'on');
+    }
+    if (quietModeOn) document.body.classList.add('quiet-mode');
+    function applyQuiet() {
+      if (quietModeOn) {
+        document.body.classList.add('quiet-mode');
+        localStorage.setItem('quietCornerMode', 'on');
+      } else {
+        document.body.classList.remove('quiet-mode');
+        localStorage.setItem('quietCornerMode', 'off');
+      }
+    }
+    if (toggle) toggle.addEventListener('click', () => { quietModeOn = !quietModeOn; applyQuiet(); });
+    const overlayToggle = document.getElementById('quietCornerToggleOverlay');
+    if (overlayToggle) overlayToggle.addEventListener('click', () => { quietModeOn = !quietModeOn; applyQuiet(); });
+  })();
+
+  /* ── hamburger menu (persistent across SPA) ── */
+  function initHamburger() {
+    const hamburger = document.getElementById('hamburgerBtn');
+    const navOverlay = document.getElementById('navOverlay');
+    const navClose = document.getElementById('navClose');
+    if (!hamburger || !navOverlay) return;
+    hamburger.addEventListener('click', () => {
+      navOverlay.classList.add('open');
+      hamburger.classList.add('open');
+    });
+    if (navClose) {
+      navClose.addEventListener('click', () => {
+        navOverlay.classList.remove('open');
+        hamburger.classList.remove('open');
+      });
+    }
+    navOverlay.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navOverlay.classList.remove('open');
+        hamburger.classList.remove('open');
+      });
+    });
+  }
+  initHamburger();
+
+  /* ── active nav link highlight ── */
+  function highlightNav(path: string) {
+    document.querySelectorAll('.nav-links a, .nav-overlay a').forEach(a => {
+      const href = a.getAttribute('href');
+      if (!href) return;
+      const isActive = href === path || (href !== '/' && path.startsWith(href));
+      a.classList.toggle('active', isActive);
+    });
+  }
+  highlightNav(window.location.pathname);
+
+  /* ── stars (persistent) ── */
+  const starsWrap = document.getElementById('stars');
+  if (starsWrap && starsWrap.children.length === 0) {
+    for(let i=0;i<50;i++){
+      const s = document.createElement('div');
+      s.className='star';
+      s.style.left = Math.random()*100+'%';
+      s.style.top = Math.random()*70+'%';
+      s.style.animationDelay = (Math.random()*3)+'s';
+      starsWrap.appendChild(s);
+    }
+  }
+
+  /* ── lights (persistent) ── */
+  const lightsWrap = document.getElementById('lights');
+  if (lightsWrap && lightsWrap.children.length === 0) {
+    const lightSvg = `<svg width="1440" height="34" viewBox="0 0 1440 34" xmlns="http://www.w3.org/2000/svg" style="position:absolute; left:0; top:0;">`;
+    let bulbs = '';
+    for(let x=20; x<1440; x+=44){
+      const dy = Math.sin(x/90)*6+10;
+      const delay = (x%9)/4;
+      bulbs += `<circle class="bulb" cx="${x}" cy="${dy}" r="4" fill="#E8871E" style="animation-delay:${delay}s"/>`;
+    }
+    lightsWrap.innerHTML = lightSvg + bulbs + `</svg>`;
+  }
+
+  /* ══════════════════════════════════════
+     SPA NAVIGATION — keeps player alive
+     ══════════════════════════════════════ */
+  const pageContent = document.getElementById('page-content');
+  let isNavigating = false;
+  const initialPath = window.location.pathname;
+
+  /* ── if user landed on inner page, swap content to home + fix history ── */
+  if (initialPath !== '/') {
+    window.history.replaceState({}, '', '/');
+    fetch('/').then(r => r.text()).then(html => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const homeContent = doc.getElementById('page-content');
+      if (homeContent && pageContent) {
+        pageContent.innerHTML = homeContent.innerHTML;
+        highlightNav('/');
+        window.scrollTo(0, 0);
+      }
+    });
+  }
+
+  async function loadPage(url: string, fromPopstate = false) {
+    if (isNavigating) return;
+    isNavigating = true;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) { window.location.href = url; return; }
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const newContent = doc.getElementById('page-content');
+      const newTitle = doc.querySelector('title');
+      if (!newContent) { window.location.href = url; return; }
+
+      const prevUrl = window.location.pathname;
+
+      pageContent!.innerHTML = newContent.innerHTML;
+      if (newTitle) document.title = newTitle.textContent || document.title;
+      highlightNav(url);
+      window.scrollTo(0, 0);
+
+      /* history: back/forward uses browser's own history, don't touch it */
+      if (!fromPopstate) {
+        if (prevUrl === '/') {
+          /* home → inner: push so back goes home */
+          window.history.pushState({}, '', url);
+        } else {
+          /* inner → anything: replace so back always goes home directly */
+          window.history.replaceState({}, '', url);
+        }
+      }
+
+      pageContent!.querySelectorAll('script').forEach(old => {
+        const s = document.createElement('script');
+        if (old.src) { s.src = old.src; }
+        else { s.textContent = old.textContent; }
+        old.replaceWith(s);
+      });
+    } catch {
+      window.location.href = url;
+    } finally {
+      isNavigating = false;
+    }
+  }
+
+  /* ── click interception ── */
+  document.addEventListener('click', (e: MouseEvent) => {
+    const a = (e.target as HTMLElement).closest('a[href]');
+    if (!a) return;
+    const href = a.getAttribute('href')!;
+    if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('#')) return;
+    e.preventDefault();
+    if (href === window.location.pathname) return;
+    loadPage(href);
+  });
+
+  /* ── back/forward: just load the content, browser already set the URL ── */
+  window.addEventListener('popstate', () => {
+    loadPage(window.location.pathname, true);
+  });
+</script>
 	</body>
 </html>
