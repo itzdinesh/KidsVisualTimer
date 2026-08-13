@@ -26,10 +26,36 @@ import Player from '../components/Player.astro';
 			gtag('config', 'G-51P3YK1X9C');
 		</script>
 	</head>
-	<body class="overflow-x-hidden">
+	<body class="overflow-x-hidden" data-theme="90s">
 		<div class="scene">
 			<div class="rangoli"></div>
 			<div class="stars" id="stars"></div>
+
+			<!-- Theme overlays -->
+			<div class="theme-overlay theme-overlay-90s"></div>
+			<div class="theme-overlay theme-overlay-sangeet"></div>
+			<div class="theme-overlay theme-overlay-dj"></div>
+			<div class="theme-overlay theme-overlay-vidaai"></div>
+
+			<!-- 90s scanlines -->
+			<div class="scanlines"></div>
+
+			<!-- DJ equalizer -->
+			<div class="eq-bars">
+				<div class="eq-bar"></div>
+				<div class="eq-bar"></div>
+				<div class="eq-bar"></div>
+				<div class="eq-bar"></div>
+				<div class="eq-bar"></div>
+				<div class="eq-bar"></div>
+				<div class="eq-bar"></div>
+			</div>
+
+			<!-- Sangeet confetti -->
+			<div class="confetti-layer" id="confettiLayer"></div>
+
+			<!-- Vidaai petals -->
+			<div class="vidaai-petals" id="vidaaiPetals"></div>
 
 			<header>
 				<div class="brandmark">
@@ -170,7 +196,7 @@ import Player from '../components/Player.astro';
     for(let x=20; x<1440; x+=44){
       const dy = Math.sin(x/90)*6+10;
       const delay = (x%9)/4;
-      bulbs += `<circle class="bulb" cx="${x}" cy="${dy}" r="4" fill="#E8871E" style="animation-delay:${delay}s"/>`;
+      bulbs += `<circle class="bulb" cx="${x}" cy="${dy}" r="4" style="animation-delay:${delay}s"/>`;
     }
     lightsWrap.innerHTML = lightSvg + bulbs + `</svg>`;
   }

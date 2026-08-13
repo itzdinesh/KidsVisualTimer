@@ -278,6 +278,66 @@
   }
 
   /* ══════════════════════════════════
+     THEME PARTICLE SYSTEMS
+     ══════════════════════════════════ */
+  let confettiInterval: ReturnType<typeof setInterval> | null = null;
+  let vidaaiInterval: ReturnType<typeof setInterval> | null = null;
+
+  function clearThemeParticles() {
+    if (confettiInterval) { clearInterval(confettiInterval); confettiInterval = null; }
+    if (vidaaiInterval) { clearInterval(vidaaiInterval); vidaaiInterval = null; }
+  }
+
+  function spawnConfetti() {
+    const layer = document.getElementById("confettiLayer");
+    if (!layer) return;
+    if (layer.children.length >= 20) return;
+    const el = document.createElement("div");
+    el.className = "confetti";
+    const colors = ["#FF6B9D", "#FFD23F", "#E8871E", "#AD1F5C", "#FF9ECD", "#fff"];
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.left = Math.random() * 100 + "%";
+    el.style.setProperty("--conf-speed", (3 + Math.random() * 3) + "s");
+    el.style.setProperty("--conf-drift", (Math.random() * 60 - 30) + "px");
+    el.style.setProperty("--conf-spin", (Math.random() * 720 - 360) + "deg");
+    el.style.animationDelay = Math.random() * 2 + "s";
+    el.addEventListener("animationend", () => el.remove());
+    layer.appendChild(el);
+  }
+
+  function spawnVidaaiPetal() {
+    const layer = document.getElementById("vidaaiPetals");
+    if (!layer) return;
+    if (layer.children.length >= 12) return;
+    const el = document.createElement("div");
+    el.className = "vidaai-petal";
+    const colors = ["#E8A0B0", "#C890D0", "#F7ECD9", "#D4A0A0", "#B080A0"];
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.left = Math.random() * 100 + "%";
+    el.style.setProperty("--vp-speed", (5 + Math.random() * 4) + "s");
+    el.style.setProperty("--vp-drift", (Math.random() * 40 - 20) + "px");
+    el.style.setProperty("--vp-spin", (Math.random() * 360) + "deg");
+    el.style.animationDelay = Math.random() * 3 + "s";
+    el.addEventListener("animationend", () => el.remove());
+    layer.appendChild(el);
+  }
+
+  function spawnThemeParticles(tabKey: string) {
+    clearThemeParticles();
+    /* clear existing particles */
+    const confLayer = document.getElementById("confettiLayer");
+    const vidaaiLayer = document.getElementById("vidaaiPetals");
+    if (confLayer) confLayer.innerHTML = "";
+    if (vidaaiLayer) vidaaiLayer.innerHTML = "";
+
+    if (tabKey === "sangeet") {
+      confettiInterval = setInterval(spawnConfetti, 500);
+    } else if (tabKey === "vidaai") {
+      vidaaiInterval = setInterval(spawnVidaaiPetal, 700);
+    }
+  }
+
+  /* ══════════════════════════════════
      YOUTUBE PLAYER (unified for all tabs)
      ══════════════════════════════════ */
   function updateYTProgress() {
@@ -523,6 +583,10 @@
       .querySelectorAll(".tab")
       .forEach((t) => t.classList.remove("active"));
     tab.classList.add("active");
+
+    /* apply theme */
+    document.body.setAttribute("data-theme", tabKey);
+    spawnThemeParticles(tabKey);
 
     /* load new tab */
     loadTab(tabKey);

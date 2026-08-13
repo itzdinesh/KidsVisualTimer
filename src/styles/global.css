@@ -22,28 +22,113 @@ body{
   overflow-x:hidden;
   -webkit-text-size-adjust:100%;
 }
+
+/* ═══════════════════════════════════
+   THEME VARIABLES
+   ═══════════════════════════════════ */
+body, body::before, body::after,
+.scene, .player, .tabs, .tab, .tab.active,
+.hero, .baraat-strip, .footer-links,
+.disclaimer, .site-footer, .faq-item,
+.kicker, .tagline, h1, h1 .eng,
+.queue-panel, .queue-item,
+.brandmark .glyph, .brandmark a,
+.navbtn, .playbtn, .scrub .track,
+.thumb, .mandap, .lights, .rangoli,
+.faq-heading, .faq-q, .faq-a p,
+.error-code, .error-title, .error-desc,
+.about-card, .about-card h1 .eng, .about-card p,
+.content-title, .content-card h2, .content-card p {
+  transition: background .6s ease, color .4s ease, border-color .4s ease, opacity .4s ease, box-shadow .4s ease, filter .4s ease;
+}
+
+/* ── 90s Songs (default) ── */
+body[data-theme="90s"]{
+  --scene-gradient: linear-gradient(180deg, #140A24 0%, #2E0F3D 20%, #6B1140 44%, #8C1F3B 64%, #A3491C 84%, #C2701E 100%);
+  --player-gradient: linear-gradient(180deg, #6B1140 0%, #8C1F3B 45%, #A3491C 100%);
+  --accent: #E8871E;
+  --accent2: #D4A017;
+  --tab-active-bg: linear-gradient(135deg, #E8871E, #B85A0E);
+  --tab-active-text: #241220;
+  --queue-active-bg: rgba(232,135,30,.15);
+  --playbtn-gradient: radial-gradient(circle at 35% 30%, #E8871E, #7A1F2B 85%);
+  --playbtn-border: #D4A017;
+  --scrub-fill: linear-gradient(90deg, #D4A017, #E8871E);
+  --glyph-bg: radial-gradient(circle at 35% 30%, #D4A017, #E8871E 70%);
+  --rangoli-color: rgba(232,135,30,.09);
+  --rangoli-mask: radial-gradient(circle, black 0%, black 40%, transparent 72%);
+  --hero-text-shadow: 0 2px 24px rgba(0,0,0,.35);
+}
+
+/* ── Sangeet ── */
+body[data-theme="sangeet"]{
+  --scene-gradient: linear-gradient(180deg, #2A0A30 0%, #5C1048 18%, #AD1F5C 40%, #E8871E 62%, #FFD23F 82%, #F7ECD9 100%);
+  --player-gradient: linear-gradient(180deg, #AD1F5C 0%, #E8871E 50%, #D4A017 100%);
+  --accent: #FF6B9D;
+  --accent2: #FFD23F;
+  --tab-active-bg: linear-gradient(135deg, #FF6B9D, #AD1F5C);
+  --tab-active-text: #fff;
+  --queue-active-bg: rgba(255,107,157,.15);
+  --playbtn-gradient: radial-gradient(circle at 35% 30%, #FF6B9D, #AD1F5C 85%);
+  --playbtn-border: #FFD23F;
+  --scrub-fill: linear-gradient(90deg, #FFD23F, #FF6B9D);
+  --glyph-bg: radial-gradient(circle at 35% 30%, #FFD23F, #FF6B9D 70%);
+  --rangoli-color: rgba(255,107,157,.1);
+  --rangoli-mask: radial-gradient(circle, black 0%, black 45%, transparent 75%);
+  --hero-text-shadow: 0 2px 24px rgba(255,107,157,.3);
+}
+
+/* ── DJ Songs ── */
+body[data-theme="dj"]{
+  --scene-gradient: linear-gradient(180deg, #0A0A2E 0%, #12125C 20%, #1E1E8C 42%, #2A1060 62%, #3A0F5A 80%, #1A0A30 100%);
+  --player-gradient: linear-gradient(180deg, #1E1E8C 0%, #2A1060 50%, #1A0A30 100%);
+  --accent: #00D4FF;
+  --accent2: #A855F7;
+  --tab-active-bg: linear-gradient(135deg, #00D4FF, #7C3AED);
+  --tab-active-text: #fff;
+  --queue-active-bg: rgba(0,212,255,.12);
+  --playbtn-gradient: radial-gradient(circle at 35% 30%, #00D4FF, #1E1E8C 85%);
+  --playbtn-border: #A855F7;
+  --scrub-fill: linear-gradient(90deg, #A855F7, #00D4FF);
+  --glyph-bg: radial-gradient(circle at 35% 30%, #A855F7, #00D4FF 70%);
+  --rangoli-color: rgba(0,212,255,.06);
+  --rangoli-mask: radial-gradient(circle, black 0%, black 35%, transparent 65%);
+  --hero-text-shadow: 0 2px 24px rgba(0,212,255,.3);
+}
+
+/* ── Vidaai ── */
+body[data-theme="vidaai"]{
+  --scene-gradient: linear-gradient(180deg, #1A0E28 0%, #3A1548 18%, #6B2060 38%, #8C3060 56%, #C27040 76%, #E89060 100%);
+  --player-gradient: linear-gradient(180deg, #6B2060 0%, #8C3060 45%, #C27040 100%);
+  --accent: #E8A0B0;
+  --accent2: #C890D0;
+  --tab-active-bg: linear-gradient(135deg, #E8A0B0, #C890D0);
+  --tab-active-text: #1A0E28;
+  --queue-active-bg: rgba(232,160,176,.15);
+  --playbtn-gradient: radial-gradient(circle at 35% 30%, #E8A0B0, #6B2060 85%);
+  --playbtn-border: #C890D0;
+  --scrub-fill: linear-gradient(90deg, #C890D0, #E8A0B0);
+  --glyph-bg: radial-gradient(circle at 35% 30%, #C890D0, #E8A0B0 70%);
+  --rangoli-color: rgba(232,160,176,.06);
+  --rangoli-mask: radial-gradient(circle, black 0%, black 40%, transparent 70%);
+  --hero-text-shadow: 0 2px 24px rgba(232,160,176,.25);
+}
 .scene{
   position:relative;
   min-height:100vh;
-  background: linear-gradient(180deg, #140A24 0%, #2E0F3D 20%, #6B1140 44%, #8C1F3B 64%, #A3491C 84%, #C2701E 100%);
+  background: var(--scene-gradient);
   display:flex;
   flex-direction:column;
   padding-bottom:110px;
-}
-body.theme-early-evening .scene{
-  background: linear-gradient(180deg, #1E0E28 0%, #3A1540 20%, #7A1840 44%, #9C2A30 64%, #B85A1C 84%, #D4801E 100%);
-}
-body.theme-late-night .scene{
-  background: linear-gradient(180deg, #200E30 0%, #2E0F3D 20%, #5C1038 44%, #7A1F3B 64%, #96401C 84%, #B0681E 100%);
 }
 .rangoli{
   position:absolute; top:8%; left:50%; transform:translateX(-50%);
   width:min(640px, 90vw); height:min(640px, 90vw); z-index:0; pointer-events:none;
   background:
-    repeating-conic-gradient(from 0deg, rgba(232,135,30,.09) 0deg 8deg, transparent 8deg 20deg);
+    repeating-conic-gradient(from 0deg, var(--rangoli-color, rgba(232,135,30,.09)) 0deg 8deg, transparent 8deg 20deg);
   border-radius:50%;
-  -webkit-mask-image: radial-gradient(circle, black 0%, black 40%, transparent 72%);
-          mask-image: radial-gradient(circle, black 0%, black 40%, transparent 72%);
+  -webkit-mask-image: var(--rangoli-mask, radial-gradient(circle, black 0%, black 40%, transparent 72%));
+          mask-image: var(--rangoli-mask, radial-gradient(circle, black 0%, black 40%, transparent 72%));
 }
 .stars{
   position:absolute; inset:0 0 55% 0; overflow:hidden; pointer-events:none;
@@ -121,7 +206,7 @@ header{
 .brandmark{ display:flex; align-items:center; gap:10px; }
 .brandmark .glyph{
   width:34px; height:34px; border-radius:50%;
-  background: radial-gradient(circle at 35% 30%, var(--gold), var(--marigold) 70%);
+  background: var(--glyph-bg, radial-gradient(circle at 35% 30%, var(--gold), var(--marigold) 70%));
   display:flex; align-items:center; justify-content:center;
   font-family:'Yatra One', cursive; font-size:17px; color:var(--ink);
   flex-shrink:0;
@@ -206,7 +291,7 @@ header{
 h1{
   font-family:'Yatra One', cursive;
   font-size:clamp(32px, 8vw, 64px); line-height:1.05; color:var(--cream);
-  text-shadow: 0 2px 24px rgba(0,0,0,.35);
+  text-shadow: var(--hero-text-shadow, 0 2px 24px rgba(0,0,0,.35));
 }
 h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',sans-serif; font-weight:400; letter-spacing:1px; margin-top:10px; color: var(--cream); opacity:.85; }
 .tagline{
@@ -220,7 +305,7 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   padding:0 16px; overflow:hidden;
 }
 .lights svg{ display:block; width:100%; max-width:1440px; height:auto; }
-.bulb{ animation: glow 2.2s ease-in-out infinite; }
+.bulb{ fill:var(--accent, #E8871E); animation: glow 2.2s ease-in-out infinite; }
 @keyframes glow{ 0%,100%{ opacity:.55; } 50%{ opacity:1; } }
 
 .mandap{ position:relative; display:block; width:100%; aspect-ratio:1440/260; margin-top:-30px; z-index:1; pointer-events:none; }
@@ -243,9 +328,9 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
 }
 .tab:hover{ background:rgba(247,236,217,.18); border-color:rgba(247,236,217,.35); }
 .tab.active{
-  background: linear-gradient(135deg, var(--marigold), #B85A0E);
-  border-color:var(--marigold);
-  color:var(--ink); font-weight:600;
+  background: var(--tab-active-bg, linear-gradient(135deg, var(--marigold), #B85A0E));
+  border-color:var(--accent, var(--marigold));
+  color:var(--tab-active-text, var(--ink)); font-weight:600;
 }
 .tab:active{ transform:scale(.95); }
 
@@ -418,7 +503,7 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
 /* ========== PLAYER ========== */
 .player{
   position:fixed; left:0; right:0; bottom:0; z-index:10;
-  background: linear-gradient(180deg, #6B1140 0%, #8C1F3B 45%, #A3491C 100%);
+  background: var(--player-gradient, linear-gradient(180deg, #6B1140 0%, #8C1F3B 45%, #A3491C 100%));
   padding: 14px 24px;
   display:flex; align-items:center; gap:16px;
   box-shadow: 0 -10px 30px rgba(0,0,0,.4);
@@ -460,16 +545,16 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   display:flex; align-items:center; justify-content:center; flex-shrink:0;
   transition: background .3s ease, transform .15s, color .3s ease;
 }
-.navbtn:hover{ background: linear-gradient(120deg, var(--marigold), var(--turmeric)); color: var(--ink); border-color:transparent; }
+.navbtn:hover{ background: linear-gradient(120deg, var(--accent, var(--marigold)), var(--accent2, var(--turmeric))); color: var(--ink); border-color:transparent; }
 .navbtn:active{ transform:scale(.9); }
 .navbtn svg{ width:14px; height:14px; }
 
 .playbtn{
-  width:44px; height:44px; border-radius:50%; border:3px double var(--gold); cursor:pointer;
-  background: radial-gradient(circle at 35% 30%, var(--marigold), #7A1F2B 85%);
+  width:44px; height:44px; border-radius:50%; border:3px double var(--playbtn-border, var(--gold)); cursor:pointer;
+  background: var(--playbtn-gradient, radial-gradient(circle at 35% 30%, var(--marigold), #7A1F2B 85%));
   color: var(--cream);
   display:flex; align-items:center; justify-content:center; flex-shrink:0;
-  transition: transform .15s;
+  transition: transform .15s, background .6s ease, border-color .4s ease;
   animation: dholPulse 1.15s ease-in-out infinite;
 }
 @keyframes dholPulse{
@@ -486,7 +571,7 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   background: repeating-linear-gradient(90deg, rgba(247,236,217,.14) 0 5px, rgba(247,236,217,.22) 5px 6px);
 }
 .track .fill{ position:absolute; left:0; top:0; bottom:0; width:34%; border-radius:3px;
-  background: linear-gradient(90deg, var(--gold), var(--marigold));
+  background: var(--scrub-fill, linear-gradient(90deg, var(--gold), var(--marigold)));
 }
 .track .fill::after{
   content:''; position:absolute; right:-6px; top:50%; transform:translateY(-50%);
@@ -533,7 +618,7 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   transition: background .15s;
 }
 .queue-item:hover{ background:rgba(247,236,217,.06); }
-.queue-item.active{ background:rgba(232,135,30,.15); }
+.queue-item.active{ background:var(--queue-active-bg, rgba(232,135,30,.15)); }
 .queue-idx{
   font-size:12px; color:var(--cream); opacity:.45;
   min-width:20px; text-align:right;
@@ -543,6 +628,211 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
 .queue-name{ font-size:13px; color:var(--cream); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .queue-item.active .queue-name{ color:var(--marigold); }
 .queue-film{ font-size:11px; color:var(--cream); opacity:.5; }
+
+/* ═══════════════════════════════════
+   THEME-SPECIFIC DECORATIVE OVERLAYS
+   ═══════════════════════════════════ */
+.theme-overlay{
+  position:absolute; inset:0; pointer-events:none; z-index:1;
+  transition: opacity .6s ease;
+}
+
+/* ── 90s: film grain + vintage vignette ── */
+body[data-theme="90s"] .theme-overlay-90s{ opacity:1; }
+.theme-overlay-90s{
+  opacity:0;
+  background:
+    repeating-linear-gradient(0deg, rgba(232,135,30,.02) 0px, transparent 2px, transparent 4px),
+    repeating-linear-gradient(90deg, rgba(232,135,30,.015) 0px, transparent 1px, transparent 3px);
+  mix-blend-mode: overlay;
+}
+.theme-overlay-90s::after{
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(20,10,36,.4) 100%);
+}
+
+/* ── Sangeet: sparkle dots + bright vignette ── */
+body[data-theme="sangeet"] .theme-overlay-sangeet{ opacity:1; }
+.theme-overlay-sangeet{
+  opacity:0;
+  background:
+    radial-gradient(circle 1.5px at 20% 30%, rgba(255,210,63,.5) 0%, transparent 100%),
+    radial-gradient(circle 1px at 70% 20%, rgba(255,107,157,.5) 0%, transparent 100%),
+    radial-gradient(circle 2px at 45% 60%, rgba(255,210,63,.4) 0%, transparent 100%),
+    radial-gradient(circle 1px at 85% 50%, rgba(255,107,157,.4) 0%, transparent 100%),
+    radial-gradient(circle 1.5px at 30% 80%, rgba(232,135,30,.35) 0%, transparent 100%),
+    radial-gradient(circle 1px at 60% 75%, rgba(255,210,63,.3) 0%, transparent 100%);
+  animation: sparkle 3s ease-in-out infinite alternate;
+}
+@keyframes sparkle{ 0%{ opacity:.6; } 100%{ opacity:1; } }
+
+/* ── DJ: laser lines + neon glow ── */
+body[data-theme="dj"] .theme-overlay-dj{ opacity:1; }
+.theme-overlay-dj{
+  opacity:0;
+  background:
+    linear-gradient(135deg, rgba(0,212,255,.04) 0%, transparent 40%, rgba(168,85,247,.04) 100%);
+}
+.theme-overlay-dj::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:100%;
+  background:
+    repeating-linear-gradient(135deg, transparent 0px, transparent 80px, rgba(0,212,255,.03) 80px, rgba(0,212,255,.03) 81px),
+    repeating-linear-gradient(45deg, transparent 0px, transparent 120px, rgba(168,85,247,.03) 120px, rgba(168,85,247,.03) 121px);
+  animation: laserSweep 8s linear infinite;
+}
+@keyframes laserSweep{ 0%{ transform:translateX(-20px); } 100%{ transform:translateX(20px); } }
+
+/* ── Vidaai: soft glow + warm haze ── */
+body[data-theme="vidaai"] .theme-overlay-vidaai{ opacity:1; }
+.theme-overlay-vidaai{
+  opacity:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 20%, rgba(232,160,176,.06) 0%, transparent 100%),
+    radial-gradient(ellipse 50% 50% at 80% 70%, rgba(200,144,208,.04) 0%, transparent 100%);
+}
+
+/* ═══════════════════════════════════
+   THEME-SPECIFIC ANIMATED ELEMENTS
+   ═══════════════════════════════════ */
+
+/* ── DJ equalizer bars ── */
+.eq-bars{
+  position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+  display:flex; gap:3px; align-items:flex-end; height:30px; opacity:0;
+  transition: opacity .6s ease;
+}
+body[data-theme="dj"] .eq-bars{ opacity:.35; }
+.eq-bar{
+  width:4px; border-radius:2px 2px 0 0;
+  background: linear-gradient(0deg, var(--accent2), var(--accent));
+  animation: eqBounce var(--eq-speed, .8s) ease-in-out infinite alternate;
+}
+.eq-bar:nth-child(1){ height:12px; --eq-speed:.7s; }
+.eq-bar:nth-child(2){ height:20px; --eq-speed:.55s; animation-delay:.1s; }
+.eq-bar:nth-child(3){ height:16px; --eq-speed:.9s; animation-delay:.2s; }
+.eq-bar:nth-child(4){ height:24px; --eq-speed:.6s; animation-delay:.15s; }
+.eq-bar:nth-child(5){ height:14px; --eq-speed:.75s; animation-delay:.25s; }
+.eq-bar:nth-child(6){ height:22px; --eq-speed:.5s; animation-delay:.05s; }
+.eq-bar:nth-child(7){ height:10px; --eq-speed:.85s; animation-delay:.3s; }
+@keyframes eqBounce{ 0%{ height:4px; } 100%{ height:var(--eq-h, 24px); } }
+
+/* ── Sangeet confetti particles ── */
+.confetti-layer{
+  position:absolute; inset:0; pointer-events:none; z-index:2;
+  overflow:hidden; opacity:0; transition: opacity .6s ease;
+}
+body[data-theme="sangeet"] .confetti-layer{ opacity:1; }
+.confetti{
+  position:absolute; top:-10px;
+  width:6px; height:6px;
+  opacity:.7;
+  animation: confettiFall var(--conf-speed, 4s) linear infinite;
+}
+.confetti:nth-child(odd){ border-radius:50%; }
+.confetti:nth-child(even){ border-radius:1px; transform:rotate(45deg); }
+@keyframes confettiFall{
+  0%{ transform:translateY(0) translateX(0) rotate(0deg); opacity:.8; }
+  100%{ transform:translateY(105vh) translateX(var(--conf-drift, 30px)) rotate(var(--conf-spin, 540deg)); opacity:0; }
+}
+
+/* ── Vidaai floating petals ── */
+.vidaai-petals{
+  position:absolute; inset:0; pointer-events:none; z-index:2;
+  overflow:hidden; opacity:0; transition: opacity .6s ease;
+}
+body[data-theme="vidaai"] .vidaai-petals{ opacity:1; }
+.vidaai-petal{
+  position:absolute; top:-20px;
+  width:10px; height:8px;
+  border-radius:0 100% 0 100%;
+  opacity:.6;
+  animation: vidaaiPetalFall var(--vp-speed, 6s) ease-in infinite;
+}
+@keyframes vidaaiPetalFall{
+  0%{ transform:translateY(0) translateX(0) rotate(0deg) scale(.8); opacity:.6; }
+  50%{ opacity:.4; }
+  100%{ transform:translateY(105vh) translateX(var(--vp-drift, 20px)) rotate(var(--vp-spin, 360deg)) scale(1); opacity:0; }
+}
+
+/* ── 90s scanlines ── */
+.scanlines{
+  position:absolute; inset:0; pointer-events:none; z-index:2;
+  opacity:0; transition: opacity .6s ease;
+  background: repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(0,0,0,.04) 3px, rgba(0,0,0,.04) 4px);
+}
+body[data-theme="90s"] .scanlines{ opacity:1; }
+
+/* ═══════════════════════════════════
+   THEME-SPECIFIC LIGHTS ANIMATION
+   ═══════════════════════════════════ */
+/* Sangeet lights pulse faster and brighter */
+body[data-theme="sangeet"] .bulb{ animation: glowSangeet 1.4s ease-in-out infinite; }
+@keyframes glowSangeet{ 0%,100%{ opacity:.7; } 50%{ opacity:1; filter: brightness(1.3); } }
+
+/* DJ lights pulse with neon color */
+body[data-theme="dj"] .bulb{ animation: glowDJ 1.8s ease-in-out infinite; }
+@keyframes glowDJ{ 0%,100%{ opacity:.5; fill:#00D4FF; } 50%{ opacity:1; fill:#A855F7; } }
+
+/* Vidaai lights gentle and warm */
+body[data-theme="vidaai"] .bulb{ animation: glowVidaai 3s ease-in-out infinite; }
+@keyframes glowVidaai{ 0%,100%{ opacity:.4; } 50%{ opacity:.7; } }
+
+/* ═══════════════════════════════════
+   THEME QUEUE ACTIVE NAME COLOR
+   ═══════════════════════════════════ */
+body[data-theme="sangeet"] .queue-item.active .queue-name{ color:#FF6B9D; }
+body[data-theme="sangeet"] .queue-item.active .queue-idx{ color:#FF6B9D; }
+body[data-theme="dj"] .queue-item.active .queue-name{ color:#00D4FF; }
+body[data-theme="dj"] .queue-item.active .queue-idx{ color:#00D4FF; }
+body[data-theme="vidaai"] .queue-item.active .queue-name{ color:#E8A0B0; }
+body[data-theme="vidaai"] .queue-item.active .queue-idx{ color:#E8A0B0; }
+
+/* ═══════════════════════════════════
+   THEME-SPECIFIC UI DETAILS
+   ═══════════════════════════════════ */
+
+/* DJ: neon glow on playbtn */
+body[data-theme="dj"] .playbtn{
+  box-shadow: 0 0 12px rgba(0,212,255,.3), 0 0 24px rgba(168,85,247,.15);
+}
+body[data-theme="dj"] .playbtn:hover{
+  box-shadow: 0 0 16px rgba(0,212,255,.5), 0 0 32px rgba(168,85,247,.25);
+}
+
+/* DJ: neon accent on active tab */
+body[data-theme="dj"] .tab.active{
+  box-shadow: 0 0 10px rgba(0,212,255,.25);
+}
+
+/* Sangeet: warm glow on active tab */
+body[data-theme="sangeet"] .tab.active{
+  box-shadow: 0 0 10px rgba(255,107,157,.2);
+}
+
+/* Vidaai: soft glow on playbtn */
+body[data-theme="vidaai"] .playbtn{
+  box-shadow: 0 0 12px rgba(232,160,176,.2);
+}
+
+/* 90s: subtle warm border glow */
+body[data-theme="90s"] .playbtn{
+  box-shadow: 0 0 8px rgba(232,135,30,.15);
+}
+
+/* DJ: active tab border glow */
+body[data-theme="dj"] .tab.active{
+  border-color:#00D4FF;
+}
+
+/* Sangeet: active tab border */
+body[data-theme="sangeet"] .tab.active{
+  border-color:#FF6B9D;
+}
+
+/* Vidaai: active tab border */
+body[data-theme="vidaai"] .tab.active{
+  border-color:#E8A0B0;
+}
 
 /* ========== RESPONSIVE: TABLET (≤768px) ========== */
 @media (max-width: 768px){
@@ -652,6 +942,12 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
   .faq-section{ padding:0 16px; }
   .faq-q{ padding:12px 40px 12px 14px; font-size:13px; }
   .faq-a{ padding:0 14px 12px; }
+
+  /* ── Theme elements on mobile ── */
+  .eq-bars{ height:20px; gap:2px; }
+  .eq-bar{ width:3px; }
+  .confetti{ width:5px; height:5px; }
+  .vidaai-petal{ width:8px; height:6px; }
 }
 
 /* ========== RESPONSIVE: VERY SMALL (≤360px) ========== */
