@@ -643,20 +643,36 @@
 
   /* ── scrub ── */
   const scrubTrackEl = document.getElementById("scrubTrack");
+  let scrubRaf: number | null = null;
+  let scrubPendingPct = -1;
+  function flushScrubSeek() {
+    if (scrubPendingPct < 0) return;
+    if (scrubRaf !== null) { cancelAnimationFrame(scrubRaf); scrubRaf = null; }
+    if (ytPlayer && typeof ytPlayer.getDuration === "function") {
+      const dur = ytPlayer.getDuration() || 0;
+      if (dur > 0) ytPlayer.seekTo(scrubPendingPct * dur, true);
+    }
+    scrubPendingPct = -1;
+  }
   if (scrubTrackEl) {
-    scrubTrackEl.addEventListener("click", (e: MouseEvent) => {
-      const rect = scrubTrackEl.getBoundingClientRect();
-      const pct = Math.max(
-        0,
-        Math.min(1, (e.clientX - rect.left) / rect.width),
-      );
-      if (ytPlayer && typeof ytPlayer.getDuration === "function") {
-        const dur = ytPlayer.getDuration() || 0;
-        if (dur > 0) ytPlayer.seekTo(pct * dur, true);
+    makeDraggable(scrubTrackEl, (pct) => {
+      scrubPendingPct = pct;
+      if (scrubRaf === null) {
+        scrubRaf = requestAnimationFrame(() => {
+          scrubRaf = null;
+          if (scrubPendingPct < 0) return;
+          if (ytPlayer && typeof ytPlayer.getDuration === "function") {
+            const dur = ytPlayer.getDuration() || 0;
+            if (dur > 0) ytPlayer.seekTo(scrubPendingPct * dur, true);
+          }
+          scrubPendingPct = -1;
+        });
       }
-      const scrubFillEl = document.getElementById("scrubFill");
-      if (scrubFillEl) scrubFillEl.style.width = pct * 100 + "%";
     });
+    scrubTrackEl.addEventListener("mouseup", flushScrubSeek);
+    scrubTrackEl.addEventListener("touchend", flushScrubSeek);
+    document.addEventListener("mouseup", flushScrubSeek);
+    document.addEventListener("touchend", flushScrubSeek);
   }
 
   /* ── volume ── */
@@ -674,6 +690,7 @@
       onChange(pct);
     }
     trackEl.addEventListener("mousedown", (e: MouseEvent) => {
+      e.preventDefault();
       setFromEvent(e.clientX);
       function move(e: MouseEvent) {
         setFromEvent(e.clientX);
@@ -685,12 +702,20 @@
       document.addEventListener("mousemove", move);
       document.addEventListener("mouseup", up);
     });
-    trackEl.addEventListener("touchstart", (e: TouchEvent) =>
-      setFromEvent(e.touches[0].clientX),
-    );
-    trackEl.addEventListener("touchmove", (e: TouchEvent) =>
-      setFromEvent(e.touches[0].clientX),
-    );
+    trackEl.addEventListener("touchstart", (e: TouchEvent) => {
+      e.preventDefault();
+      setFromEvent(e.touches[0].clientX);
+      function move(e: TouchEvent) {
+        e.preventDefault();
+        setFromEvent(e.touches[0].clientX);
+      }
+      function end() {
+        document.removeEventListener("touchmove", move);
+        document.removeEventListener("touchend", end);
+      }
+      document.addEventListener("touchmove", move, { passive: false });
+      document.addEventListener("touchend", end);
+    }, { passive: false });
   }
 
   const volTrack = document.querySelector(".vol .track") as HTMLElement;
@@ -720,7 +745,4 @@
       }
     });
   }
-
-  const scrubTrack = document.querySelector(".scrub .track") as HTMLElement;
-  if (scrubTrack) makeDraggable(scrubTrack, () => {});
 </script>

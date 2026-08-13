@@ -914,7 +914,8 @@ body[data-theme="vidaai"] .tab.active{
     gap:6px;
   }
   .scrub .time{ font-size:10px; min-width:28px; }
-  .track{ height:5px; }
+  .track{ height:8px; }
+  .track .fill::after{ width:16px; height:16px; right:-8px; }
 
   /* ── Queue panel ── */
   .queue-panel{
