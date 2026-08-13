@@ -14,7 +14,7 @@ import Player from '../components/Player.astro';
 				<a href="/" style="text-decoration:none;color:inherit;">DeluxShaadi</a>
 			</div>
 			<nav>
-				<a href="/about" class="active">About</a>
+				<a href="/about">About</a>
 				<a href="/privacy">Privacy</a>
 				<a href="/terms">Terms</a>
 				<a href="/contact">Contact</a>
@@ -26,15 +26,11 @@ import Player from '../components/Player.astro';
 
 		<div class="lights" id="lights"></div>
 
-		<div class="hero">
-			<h1>शादी रेडियो<span class="eng">wedding songs, playing all night</span></h1>
-		</div>
-
-		<div style="display:flex; justify-content:center; align-items:center; min-height:calc(100vh - 280px);">
-			<div class="about-card">
-				<h1>DeluxShaadi Radio<span class="eng">all wedding, all the time</span></h1>
-				<p>This station exists because one too many wedding playlists end at 2am and silence falls. Here, the dhol never stops — Bollywood classics, bhangra anthems, and new sangeet hits spinning back-to-back, the way the DJs at every hall keep the dance floor burning till sunrise. Whether you're getting ready, missing a celebration, or just need a reason to dance alone in your kitchen, there's always a baraat rolling somewhere on this frequency.</p>
-			</div>
+		<div class="error-page">
+			<div class="error-code">500</div>
+			<h1 class="error-title">Dhol toot gaya<span class="eng">something went wrong</span></h1>
+			<p class="error-desc">The server hit a snag mid-beat. Try refreshing the page — the music will be back in a moment.</p>
+			<a href="/" class="error-btn">Back to the Dance Floor</a>
 		</div>
 
 		<footer class="site-footer">

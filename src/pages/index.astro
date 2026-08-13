@@ -6,6 +6,80 @@ import Player from '../components/Player.astro';
 ---
 
 <Layout>
+	<Fragment slot="head">
+		<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is DeluxShaadi Radio?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It's a wedding radio station that plays Hindi wedding and sangeet songs on a continuous loop, similar to how a DJ keeps the music going all night at a real wedding hall."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is DeluxShaadi Radio free to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, the site is completely free to listen to. There's no signup, subscription, or payment required."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What kind of songs does DeluxShaadi Radio play?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A mix of classic and newer Bollywood wedding songs — baraat entrance tracks, sangeet dance numbers, mehendi songs, and emotional vidaai songs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I choose or skip songs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, you can use the next and previous buttons to skip tracks, or open the song list to jump straight to any track in the playlist."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does DeluxShaadi Radio work on mobile phones?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, the site is built to work on both desktop and mobile browsers."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where does the music come from?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Audio plays through embedded YouTube — nothing is hosted or downloaded, and all rights remain with the original labels and artists."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I play DeluxShaadi Radio at an actual wedding or sangeet function?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It works well as ambient background music for small gatherings, sangeet nights, or mehendi functions where you want continuous music without manually queuing songs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to create an account to use it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No account or login is required — just open the site and start listening."
+      }
+    }
+  ]
+}
+		</script>
+	</Fragment>
 	<div class="scene">
 		<div class="rangoli"></div>
 		<div class="stars" id="stars"></div>
@@ -13,12 +87,13 @@ import Player from '../components/Player.astro';
 		<header>
 			<div class="brandmark">
 				<div class="glyph">श</div>
-				<span>DeluxShaadi</span>
+				<a href="/" style="text-decoration:none;color:inherit;">DeluxShaadi</a>
 			</div>
 			<nav>
-				<a href="https://open.spotify.com/playlist/37i9dQZF1DXa4t5hT1c3jZ" target="_blank" rel="noopener noreferrer">Listen on Spotify</a>
-				<a href="https://music.youtube.com/playlist?list=PLCB05E03DA939D484" target="_blank" rel="noopener noreferrer">Listen on YT Music</a>
 				<a href="/about">About</a>
+				<a href="/privacy">Privacy</a>
+				<a href="/terms">Terms</a>
+				<a href="/contact">Contact</a>
 				<button class="navbtn" id="quietCornerToggle" aria-label="Quiet corner mode" title="Quiet corner mode">
 					<span aria-hidden="true">&#x1F31A;</span>
 				</button>
@@ -37,7 +112,55 @@ import Player from '../components/Player.astro';
 
 		<BaraatDancers />
 
+		<footer class="site-footer">
+			<div class="footer-links">
+				<a href="/about">About</a>
+				<a href="/privacy">Privacy</a>
+				<a href="/terms">Terms</a>
+				<a href="/contact">Contact</a>
+			</div>
+			<p class="footer-copy">&copy; 2026 DeluxShaadi Radio. All rights belong to the original artists and labels.</p>
+		</footer>
+
 		<p class="disclaimer">Audio plays through embedded YouTube. Nothing is hosted here, and all rights stay with the labels and performers. Song credits from film soundtrack listings.</p>
+
+		<section class="faq-section">
+			<h2 class="faq-heading">Frequently Asked Questions</h2>
+			<div class="faq-list">
+				<details class="faq-item">
+					<summary class="faq-q">What is DeluxShaadi Radio?</summary>
+					<div class="faq-a"><p>It's a wedding radio station that plays Hindi wedding and sangeet songs on a continuous loop, similar to how a DJ keeps the music going all night at a real wedding hall.</p></div>
+				</details>
+				<details class="faq-item">
+					<summary class="faq-q">Is DeluxShaadi Radio free to use?</summary>
+					<div class="faq-a"><p>Yes, the site is completely free to listen to. There's no signup, subscription, or payment required.</p></div>
+				</details>
+				<details class="faq-item">
+					<summary class="faq-q">What kind of songs does DeluxShaadi Radio play?</summary>
+					<div class="faq-a"><p>A mix of classic and newer Bollywood wedding songs — baraat entrance tracks, sangeet dance numbers, mehendi songs, and emotional vidaai songs.</p></div>
+				</details>
+				<details class="faq-item">
+					<summary class="faq-q">Can I choose or skip songs?</summary>
+					<div class="faq-a"><p>Yes, you can use the next and previous buttons to skip tracks, or open the song list to jump straight to any track in the playlist.</p></div>
+				</details>
+				<details class="faq-item">
+					<summary class="faq-q">Does DeluxShaadi Radio work on mobile phones?</summary>
+					<div class="faq-a"><p>Yes, the site is built to work on both desktop and mobile browsers.</p></div>
+				</details>
+				<details class="faq-item">
+					<summary class="faq-q">Where does the music come from?</summary>
+					<div class="faq-a"><p>Audio plays through embedded YouTube — nothing is hosted or downloaded, and all rights remain with the original labels and artists.</p></div>
+				</details>
+				<details class="faq-item">
+					<summary class="faq-q">Can I play DeluxShaadi Radio at an actual wedding or sangeet function?</summary>
+					<div class="faq-a"><p>It works well as ambient background music for small gatherings, sangeet nights, or mehendi functions where you want continuous music without manually queuing songs.</p></div>
+				</details>
+				<details class="faq-item">
+					<summary class="faq-q">Do I need to create an account to use it?</summary>
+					<div class="faq-a"><p>No account or login is required — just open the site and start listening.</p></div>
+				</details>
+			</div>
+		</section>
 
 <script>
   (function() {

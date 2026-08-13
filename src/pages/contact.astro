@@ -1,0 +1,120 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Player from "../components/Player.astro";
+---
+
+<Layout>
+	<div class="scene">
+		<div class="rangoli"></div>
+		<div class="stars" id="stars"></div>
+
+		<header>
+			<div class="brandmark">
+				<div class="glyph">श</div>
+				<a href="/" style="text-decoration:none;color:inherit;"
+					>DeluxShaadi</a
+				>
+			</div>
+			<nav>
+				<a href="/about">About</a>
+				<a href="/privacy">Privacy</a>
+				<a href="/terms">Terms</a>
+				<a href="/contact">Contact</a>
+				<button
+					class="navbtn"
+					id="quietCornerToggle"
+					aria-label="Quiet corner mode"
+					title="Quiet corner mode"
+				>
+					<span aria-hidden="true">&#x1F31A;</span>
+				</button>
+			</nav>
+		</header>
+
+		<div class="lights" id="lights"></div>
+
+		<div class="content-page">
+			<h1 class="content-title">Contact Us</h1>
+			<div class="content-card">
+				<h2>Get in Touch</h2>
+				<p>
+					Have a question, a song request, or just want to say hello?
+					We'd love to hear from you.
+				</p>
+
+				<h2>Email</h2>
+				<p>
+					Reach us at <a
+						href="mailto:dineshpayal91@gmail.com"
+						class="content-link">dineshpayal91@gmail.com</a
+					>
+				</p>
+
+				<h2>Social</h2>
+				<p>
+					Follow us for updates, new playlists, and behind-the-scenes
+					moments from the wedding radio world.
+				</p>
+
+				<h2>Feedback</h2>
+				<p>
+					Your suggestions help us keep the dhol beating. Let us know
+					what tracks you want to hear next, or if something isn't
+					working right.
+				</p>
+			</div>
+		</div>
+
+		<footer class="site-footer">
+			<div class="footer-links">
+				<a href="/about">About</a>
+				<a href="/privacy">Privacy</a>
+				<a href="/terms">Terms</a>
+				<a href="/contact">Contact</a>
+			</div>
+			<p class="footer-copy">
+				&copy; 2026 DeluxShaadi Radio. All rights belong to the original
+				artists and labels.
+			</p>
+		</footer>
+
+		<p class="disclaimer">
+			Audio plays through embedded YouTube. Nothing is hosted here, and
+			all rights stay with the labels and performers. Song credits from
+			film soundtrack listings.
+		</p>
+
+		<script>
+			(function () {
+				const toggle = document.getElementById("quietCornerToggle");
+				if (!toggle) return;
+				const prefersReduced = window.matchMedia(
+					"(prefers-reduced-motion: reduce)",
+				);
+				let quietModeOn = false;
+				const storedMode = localStorage.getItem("quietCornerMode");
+				if (storedMode === "on" && !prefersReduced.matches) {
+					quietModeOn = true;
+				} else if (storedMode === "off" && prefersReduced.matches) {
+					quietModeOn = false;
+				} else if (storedMode === "" && prefersReduced.matches) {
+					quietModeOn = true;
+					localStorage.setItem("quietCornerMode", "on");
+				}
+				if (quietModeOn) document.body.classList.add("quiet-mode");
+				toggle.addEventListener("click", () => {
+					quietModeOn = !quietModeOn;
+					if (quietModeOn) {
+						document.body.classList.add("quiet-mode");
+						localStorage.setItem("quietCornerMode", "on");
+					} else {
+						document.body.classList.remove("quiet-mode");
+						localStorage.setItem("quietCornerMode", "off");
+					}
+				});
+			})();
+		</script>
+	</div>
+
+	<Player />
+</Layout>
