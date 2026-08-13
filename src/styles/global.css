@@ -499,7 +499,7 @@ h1 .eng{ display:block; font-size:clamp(14px, 3vw, 22px); font-family:'Poppins',
 
 /* ========== QUEUE / SONG LIST PANEL ========== */
 .queue-panel{
-  position:fixed; bottom:0; left:0; right:0; z-index:11;
+  position:fixed; bottom:80px; left:0; right:0; z-index:11;
   background: linear-gradient(180deg, #3A0F3A 0%, #2E0F3D 100%);
   border-top:1px solid rgba(247,236,217,.15);
   border-radius:16px 16px 0 0;

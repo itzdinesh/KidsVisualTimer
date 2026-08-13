@@ -1,10 +1,14 @@
 ---
+
 ---
 
 <div id="yt-player" style="display:none;"></div>
 
 <!-- Hidden Spotify embeds — iframes created by IFrameAPI.createController() -->
-<div id="spotify-embeds" style="position:fixed;bottom:0;left:0;width:300px;height:80px;overflow:hidden;visibility:hidden;pointer-events:none;z-index:-1;">
+<div
+  id="spotify-embeds"
+  style="position:fixed;bottom:0;left:0;width:300px;height:80px;overflow:hidden;visibility:hidden;pointer-events:none;z-index:-1;"
+>
   <div id="spotify-sangeet"></div>
   <div id="spotify-dj"></div>
   <div id="spotify-vidaai"></div>
@@ -19,31 +23,52 @@
     <div class="film" id="trackFilm">Dilwale Dulhania Le Jayenge</div>
   </div>
   <button class="navbtn" id="prevBtn" aria-label="Previous song">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6 10 12l10 6z"/></svg>
+    <svg viewBox="0 0 24 24" fill="currentColor"
+      ><path d="M6 6h2v12H6zM20 6 10 12l10 6z"></path></svg
+    >
   </button>
   <button class="playbtn" id="playBtn" aria-label="Play">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    <svg viewBox="0 0 24 24" fill="currentColor"
+      ><path d="M8 5v14l11-7z"></path></svg
+    >
   </button>
   <button class="navbtn" id="nextBtn" aria-label="Next song">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM4 6l10 6-10 6z"/></svg>
+    <svg viewBox="0 0 24 24" fill="currentColor"
+      ><path d="M16 6h2v12h-2zM4 6l10 6-10 6z"></path></svg
+    >
   </button>
   <button class="navbtn" id="queueBtn" aria-label="Song list">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h18v2H3zm0 4h18v2H3zm0 4h12v2H3zm0 4h12v2H3z"/></svg>
+    <svg viewBox="0 0 24 24" fill="currentColor"
+      ><path d="M3 5h18v2H3zm0 4h18v2H3zm0 4h12v2H3zm0 4h12v2H3z"></path></svg
+    >
   </button>
   <div class="scrub">
     <span class="time" id="currentTime">0:00</span>
-    <div class="track" id="scrubTrack"><div class="fill" id="scrubFill" style="width:0%;"></div></div>
+    <div class="track" id="scrubTrack">
+      <div class="fill" id="scrubFill" style="width:0%;"></div>
+    </div>
     <span class="time" id="durationTime">0:00</span>
   </div>
-  <svg width="18" height="18" viewBox="0 0 24 24" style="flex-shrink:0; opacity:.55;" aria-hidden="true">
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    style="flex-shrink:0; opacity:.55;"
+    aria-hidden="true"
+  >
     <g fill="var(--marigold)">
-      <circle cx="12" cy="6" r="3.4"/><circle cx="12" cy="18" r="3.4"/>
-      <circle cx="6" cy="12" r="3.4"/><circle cx="18" cy="12" r="3.4"/>
+      <circle cx="12" cy="6" r="3.4"></circle><circle cx="12" cy="18" r="3.4"
+      ></circle>
+      <circle cx="6" cy="12" r="3.4"></circle><circle cx="18" cy="12" r="3.4"
+      ></circle>
     </g>
-    <circle cx="12" cy="12" r="2.6" fill="var(--gold)"/>
+    <circle cx="12" cy="12" r="2.6" fill="var(--gold)"></circle>
   </svg>
   <div class="vol">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      ><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"
+      ></path></svg
+    >
     <div class="track"><div class="fill"></div></div>
   </div>
 </div>
@@ -52,7 +77,9 @@
 <div class="queue-panel" id="queuePanel">
   <div class="queue-header">
     <span class="queue-title" id="queueTitle">Song List</span>
-    <button class="queue-close" id="queueClose" aria-label="Close song list">&times;</button>
+    <button class="queue-close" id="queueClose" aria-label="Close song list"
+      >&times;</button
+    >
   </div>
   <div class="queue-list" id="queueList"></div>
 </div>
@@ -77,7 +104,7 @@
   /* ══════════════════════════════════
      STATE
      ══════════════════════════════════ */
-  let activeSource: 'youtube' | 'spotify' = 'youtube';
+  let activeSource: "youtube" | "spotify" = "youtube";
   let ytPlayer: any = null;
   let ytTracks: Track[] = [];
   let ytCurrent = 0;
@@ -88,46 +115,918 @@
     dj: null,
     vidaai: null,
   };
+  const spotifyReady: Record<string, boolean> = {
+    sangeet: false,
+    dj: false,
+    vidaai: false,
+  };
   let activeSpotifyKey: string | null = null;
   let spotifyIFrameAPI: any = null;
   let currentSpotifyTrack: Track | null = null;
 
-  const SPOTIFY_MAP: Record<string, { id: string; uri: string }> = {
-    sangeet: { id: 'spotify-sangeet', uri: 'spotify:playlist:37i9dQZF1DX2ktNbDFDPWZ' },
-    dj:      { id: 'spotify-dj',      uri: 'spotify:playlist:1o1RakJXDw6WtHNmaCLn4e' },
-    vidaai:  { id: 'spotify-vidaai',   uri: 'spotify:playlist:0snMxCN4bcn2hKMWouCpIR' },
+  /* Spotify playlist track lists (hardcoded from embed pages) */
+  const spotifyTracks: Record<string, Track[]> = {
+    sangeet: [
+      {
+        name: "London Thumakda",
+        film: "Labh Janjua, Sonu Kakkar, Neha Kakkar",
+        initials: "L",
+        uri: "spotify:track:2qJAzSE6uC94oH2NRoPrGl",
+      },
+      {
+        name: "Dilliwaali Girlfriend",
+        film: "Pritam, Arijit Singh, Sunidhi Chauhan, Kumaar",
+        initials: "D",
+        uri: "spotify:track:3W1XPf7mvuQcWQB7U7MbTM",
+      },
+      {
+        name: "Tainu Leke",
+        film: "Sonu Nigam, Mahalakshmi Iyer",
+        initials: "T",
+        uri: "spotify:track:34wsgkPMRk3xIfHdwtezbf",
+      },
+      {
+        name: "Ainvayi Ainvayi",
+        film: "Salim-Sulaiman, Salim Merchant, Sunidhi Chauhan, Amitabh Bhattacharya",
+        initials: "A",
+        uri: "spotify:track:74AqVxZ3oXwJ8olHssBUG3",
+      },
+      {
+        name: "Ucha Lamba Kad Forever (Welcome To The Jungle)",
+        film: "Anand Raj Anand, Vikram Montrose, Rubai, Meggha Bali",
+        initials: "U",
+        uri: "spotify:track:7J9m7Heb1kdSVdqRgSIDGq",
+      },
+      {
+        name: "Jag Se Laaj - Cocktail 2",
+        film: "Pritam, Amitabh Bhattacharya, Shilpa Rao, Aarvan, W.i.S.H.",
+        initials: "J",
+        uri: "spotify:track:6GPqgUduoEAJ81ZPA4itWK",
+      },
+      {
+        name: "Mauja Hi Mauja",
+        film: "Pritam, Mika Singh, Irshad Kamil",
+        initials: "M",
+        uri: "spotify:track:2iXVckhPy7tP0wV9DvlrjZ",
+      },
+      {
+        name: "Gallan Goodiyaan",
+        film: "Yashita Sharma, Manish Kumar Tipu, Farhan Akhtar, Shankar Mahadevan, Sukhwinder Singh",
+        initials: "G",
+        uri: "spotify:track:7hNYvX0qAKrxtVr1jGDmvR",
+      },
+      {
+        name: "Laung Da Lashkara",
+        film: "Mahalakshmi Iyer, Hard Kaur, Jassi",
+        initials: "L",
+        uri: "spotify:track:5pQODzb8j3xMQ1qvrQXJvo",
+      },
+      {
+        name: "Kithe Reh Gaya",
+        film: "Neeti Mohan, Abhijit Vaghani",
+        initials: "K",
+        uri: "spotify:track:7oONSa0G2CvYQ0I7G02kgi",
+      },
+      {
+        name: "Ghagra",
+        film: "Pritam, Rekha Bhardwaj, Vishal Dadlani, Amitabh Bhattacharya",
+        initials: "G",
+        uri: "spotify:track:5YY8EsBdUYAg1NJQIvgCEj",
+      },
+      {
+        name: "Kar Le Shaadi",
+        film: "Jazim Sharma, Deepali Sathe, Rimi Dhar",
+        initials: "K",
+        uri: "spotify:track:4TUHFJOopFjmuXv0bH8U22",
+      },
+      {
+        name: "Kiya Kiya",
+        film: "Anand Raj Anand, Shweta Pandit",
+        initials: "K",
+        uri: "spotify:track:0YCPCY9WhQFMFtoSpj6dhL",
+      },
+      {
+        name: "Chikni Chameli",
+        film: "Ajay-Atul, Shreya Ghoshal",
+        initials: "C",
+        uri: "spotify:track:1NtUkEglWHG26BOqj3rPhQ",
+      },
+      {
+        name: "Soni De Nakhre",
+        film: "Wajid, Labh Janjua, Sneha Pant, Sajid-Wajid, Shabbir Ahmed",
+        initials: "S",
+        uri: "spotify:track:4tBMbRwLJa5BjwJ6FrBlks",
+      },
+      {
+        name: "Navrai Majhi",
+        film: "Sunidhi Chauhan, Natali Di Luccio, Neelambari Kirkire, Swanand Kirkire",
+        initials: "N",
+        uri: "spotify:track:5ZLplBxO5OmotTmYY8920p",
+      },
+      {
+        name: "Didi (Sher-E-Baloch) - Dhurandhar The Revenge",
+        film: "Shashwat Sachdev, Khaled, Sons of Yusuf, Nabil El Houri",
+        initials: "D",
+        uri: "spotify:track:3rnQfyFzUNdWKtdwUypWo5",
+      },
+      {
+        name: "Drama Queen",
+        film: "Vishal-Shekhar, Shreya Ghoshal, Vishal Dadlani",
+        initials: "D",
+        uri: "spotify:track:7xxxQG1BupSnOBo4qId9kl",
+      },
+      {
+        name: "Paan Ki Dukaan - O' Romeo",
+        film: "Vishal Bhardwaj, Sukhwinder Singh, Rekha Bhardwaj, Gulzar",
+        initials: "P",
+        uri: "spotify:track:6sQXr0uTPDkf2QTXfIrH4K",
+      },
+      {
+        name: "Chaudhary",
+        film: "Mame Khan",
+        initials: "C",
+        uri: "spotify:track:4QSF0d4ENvMXA03ARpMfaP",
+      },
+      {
+        name: "Shubhaarambh - Kai Po Che",
+        film: "Amit Trivedi, Shruti Pathak, Divya Kumar",
+        initials: "S",
+        uri: "spotify:track:6qGCJLF0V7SuHTOOGUcDsv",
+      },
+      {
+        name: "Bhangra Ta Sajda",
+        film: "Neha Kakkar, Shashwat Sachdev, Romy",
+        initials: "B",
+        uri: "spotify:track:2HNzLD9SV3LoOGf8PA4GNJ",
+      },
+      {
+        name: "Nashe Si Chadh Gayi",
+        film: "Vishal-Shekhar, Arijit Singh, Caralisa Monteiro, Jaideep Sahni",
+        initials: "N",
+        uri: "spotify:track:0biCSADTAblvLTLtJz4pXO",
+      },
+      {
+        name: "Cutiepie",
+        film: "Pritam, Pardeep Sran, Nakash Aziz",
+        initials: "C",
+        uri: "spotify:track:7hXnhouVPnOnFwCGrQMHvB",
+      },
+      {
+        name: "Desi Girl",
+        film: "Vishal-Shekhar, Shankar Mahadevan, Sunidhi Chauhan, Vishal Dadlani",
+        initials: "D",
+        uri: "spotify:track:3Qpk2qHree1RTH5lZaKnEK",
+      },
+      {
+        name: "Hookah Bar",
+        film: "Himesh Reshammiya, Vineet Singh, Aaman Trikha",
+        initials: "H",
+        uri: "spotify:track:4AoQVhME8Ko6LNm4lV2wwQ",
+      },
+      {
+        name: "Nachange Saari Raat",
+        film: "Tulsi Kumar, Neeraj Shridhar, Meet Bros., Kumaar",
+        initials: "N",
+        uri: "spotify:track:1iF6lrJludTZmfgMgXPqSe",
+      },
+      {
+        name: "Jhalla Wallah",
+        film: "Amit Trivedi, Shreya Ghoshal, Kausar Munir",
+        initials: "J",
+        uri: "spotify:track:1y8Ck6jFOyxNC59SrQJIn6",
+      },
+      {
+        name: "Kamariya",
+        film: "Aastha Gill, Sachin Sanghvi, Jigar Saraiya, Divya Kumar",
+        initials: "K",
+        uri: "spotify:track:5cjVsWqIkBQC7acTRhL0RO",
+      },
+      {
+        name: "Gal Mitthi Mitthi",
+        film: "Amit Trivedi, Tochi Raina",
+        initials: "G",
+        uri: "spotify:track:4J9n7thOdqi8gxRGNyQoVC",
+      },
+      {
+        name: "Dil Chori",
+        film: "Yo Yo Honey Singh, Simar Kaur, Ishers, Anand Raj Anand",
+        initials: "D",
+        uri: "spotify:track:6zojSFiUNySBy3Kd1JVCXb",
+      },
+      {
+        name: "Badri Ki Dulhania (Title Track)",
+        film: "Dev Negi, Neha Kakkar, Monali Thakur, Ikka, Tanishk Bagchi",
+        initials: "B",
+        uri: "spotify:track:2xbvLQBFW7E9232BwMBljb",
+      },
+      {
+        name: "Aayi Nai - Stree 2",
+        film: "Sachin-Jigar, Pawan Singh, Simran Choudhary, Divya Kumar",
+        initials: "A",
+        uri: "spotify:track:1mQUEvGR7Sbt2OCz2gFrdx",
+      },
+      {
+        name: "Radha",
+        film: "Vishal-Shekhar, Shreya Ghoshal, Udit Narayan",
+        initials: "R",
+        uri: "spotify:track:6f7zyAEUCZuvX4Zty62Z5o",
+      },
+      {
+        name: "What Jhumka? - Rocky Aur Rani",
+        film: "Pritam, Arijit Singh, Jonita Gandhi, Ranveer Singh",
+        initials: "W",
+        uri: "spotify:track:4uNxdQ1L4Xa52MWX864QhW",
+      },
+      {
+        name: "Jalebi Baby",
+        film: "Tesher",
+        initials: "J",
+        uri: "spotify:track:6GKGoi0FHzldk1ZRQoV1fv",
+      },
+      {
+        name: "Gal Ban Gayi",
+        film: "Meet Bros., Sukhbir, Neha Kakkar",
+        initials: "G",
+        uri: "spotify:track:5RHUlxtZy1CeR4mGFftLoF",
+      },
+      {
+        name: "Proper Patola",
+        film: "Badshah, Diljit Dosanjh, Aastha Gill",
+        initials: "P",
+        uri: "spotify:track:39ujbBjTwwqUFySaCYDMMT",
+      },
+      {
+        name: "Kajra and Uden Jab Jab Mashup",
+        film: "Shashaa Tirupati",
+        initials: "K",
+        uri: "spotify:track:1XfIAQaU9LzMo5xqJII33m",
+      },
+      {
+        name: "Cham Cham",
+        film: "Meet Bros., Monali Thakur",
+        initials: "C",
+        uri: "spotify:track:6GVv6Zn0zfN36sKDJY1axO",
+      },
+      {
+        name: "Anarkali Disco Chali",
+        film: "Mamta Sharma, Sukhwinder Singh",
+        initials: "A",
+        uri: "spotify:track:0YKEBiwNh4VGsuf99aNfLa",
+      },
+      {
+        name: "Maahi Ve",
+        film: "Shankar-Ehsaan-Loy, Sadhana Sargam",
+        initials: "M",
+        uri: "spotify:track:7Czm0vv2sYL5z4P51KY66e",
+      },
+      {
+        name: "The Jawaani Song - SOTY 2",
+        film: "Payal Dev, Vishal-Shekhar, Kishore Kumar",
+        initials: "T",
+        uri: "spotify:track:7KDFmblffwXCVeLnVE66lu",
+      },
+      {
+        name: "Dance Basanti",
+        film: "Sachin-Jigar, Vishal Dadlani, Anushka Manchanda",
+        initials: "D",
+        uri: "spotify:track:1NxlktIRgiAPJ8U06v9veI",
+      },
+      {
+        name: "Sajna Ji Vaari Vaari",
+        film: "Vishal-Shekhar, Sunidhi Chauhan, Shekhar Ravjiani",
+        initials: "S",
+        uri: "spotify:track:66wEHvHkE7iz73PEob4Y98",
+      },
+      {
+        name: "Balam Pichkari",
+        film: "Pritam, Vishal Dadlani, Shalmali Kholgade",
+        initials: "B",
+        uri: "spotify:track:18e3XXYCv4Tx8uUl1mP3CN",
+      },
+      {
+        name: "Morni Banke",
+        film: "Guru Randhawa, Neha Kakkar, Tanishk Bagchi",
+        initials: "M",
+        uri: "spotify:track:5XxzNB2CnNrySvyVLwyobq",
+      },
+      {
+        name: "Jugnu",
+        film: "Badshah, Nikhita Gandhi",
+        initials: "J",
+        uri: "spotify:track:2NTVtNcpC0i1R7LVGaCZCF",
+      },
+      {
+        name: "First Class - Kalank",
+        film: "Pritam, Arijit Singh, Neeti Mohan",
+        initials: "F",
+        uri: "spotify:track:2EvGNKagKtvFeZMLjOfgDP",
+      },
+      {
+        name: "Gali Gali - KGF Chapter 1",
+        film: "Neha Kakkar, Tanishk Bagchi",
+        initials: "G",
+        uri: "spotify:track:5x72Q1SyiDHJ4IF2mRzfkg",
+      },
+      {
+        name: "Baby Doll",
+        film: "Meet Bros Anjjan, Kanika Kapoor",
+        initials: "B",
+        uri: "spotify:track:5c3mUtkS8FvumKaVkcpB0H",
+      },
+      {
+        name: "Aaja Nachle",
+        film: "Salim-Sulaiman, Sunidhi Chauhan",
+        initials: "A",
+        uri: "spotify:track:2Bn2JQAGZzxe09jFzm1SqJ",
+      },
+      {
+        name: "Mummy Nu Pasand - Jai Mummy Di",
+        film: "Sunanda Sharma, Tanishk Bagchi, Jaani",
+        initials: "M",
+        uri: "spotify:track:74qF0JeFMVilMEeFDiQZ48",
+      },
+      {
+        name: "Rangisari - Jugjugg Jeeyo",
+        film: "Kanishk Seth, Kavita Seth",
+        initials: "R",
+        uri: "spotify:track:0DXfJ2iKRDEG7rPgssWFea",
+      },
+      {
+        name: "Iski Uski",
+        film: "Akriti Kakar, Shankar-Ehsaan-Loy",
+        initials: "I",
+        uri: "spotify:track:0ON0JdGgRTVcCInt8j6eod",
+      },
+      {
+        name: "Psycho Saiyaan",
+        film: "Sachet Tandon, Dhvani Bhanushali, Tanishk Bagchi",
+        initials: "P",
+        uri: "spotify:track:6ciLfNKQMG3ULN9EkFyoFl",
+      },
+      {
+        name: "Crazy Kiya Re",
+        film: "Pritam, Sunidhi Chauhan, Sameer Anjaan",
+        initials: "C",
+        uri: "spotify:track:0se928CIhZPlfVGi3A6zrx",
+      },
+      {
+        name: "Milegi Milegi - Stree",
+        film: "Mika Singh, Sachin-Jigar",
+        initials: "M",
+        uri: "spotify:track:52uiJsA4FrtAZlgqxCJwJI",
+      },
+      {
+        name: "Param Sundari",
+        film: "A.R. Rahman, Shreya Ghoshal",
+        initials: "P",
+        uri: "spotify:track:3KeMulXbLDJBQdY5PZbGEh",
+      },
+      {
+        name: "Tukur Tukur",
+        film: "Pritam, Arijit Singh, Neha Kakkar",
+        initials: "T",
+        uri: "spotify:track:5swv4r5dYNHhsL54jGqmn8",
+      },
+      {
+        name: "Naina - Crew",
+        film: "Diljit Dosanjh, Badshah, Raj Ranjodh",
+        initials: "N",
+        uri: "spotify:track:3aCxekXoAhWr6TMqqTctgV",
+      },
+      {
+        name: "Sawan Mein Lag Gayi Aag",
+        film: "Mika Singh, Payal Dev, Neha Kakkar, Badshah",
+        initials: "S",
+        uri: "spotify:track:6oloWgrErtc8dG2WiV55gn",
+      },
+      {
+        name: "Nadiyon Paar - Roohi",
+        film: "Sachin-Jigar, Rashmeet Kaur, Shamur",
+        initials: "N",
+        uri: "spotify:track:2PEo8JQ48mfEv8a2HLqDvt",
+      },
+      {
+        name: "Show Me The Thumka",
+        film: "Pritam, Amitabh Bhattacharya, Sunidhi Chauhan",
+        initials: "S",
+        uri: "spotify:track:1t39FBb0zsKv5krZaqZKCB",
+      },
+      {
+        name: "Chhote Chhote Peg",
+        film: "Yo Yo Honey Singh, Neha Kakkar",
+        initials: "C",
+        uri: "spotify:track:3AQrBSjowqCFu2jiFFuGsv",
+      },
+      {
+        name: "Say Na Say Na",
+        film: "Aneela Mirza, Robert Uhlmarash",
+        initials: "S",
+        uri: "spotify:track:1pKiclTcbYKsqLd6LiBTp9",
+      },
+      {
+        name: "Punjabi Wedding Song",
+        film: "Vishal-Shekhar, Sunidhi Chauhan, Benny Dayal",
+        initials: "P",
+        uri: "spotify:track:69iDTIABXobqbl8zJOp8dq",
+      },
+      {
+        name: "Mere Brother Ki Dulhan",
+        film: "Sohail Sen, KK, Irshad Kamil",
+        initials: "M",
+        uri: "spotify:track:5dRt6VYOszdQAzMkP8PU9J",
+      },
+      {
+        name: "Baby Ko Bass Pasand Hai",
+        film: "Vishal-Shekhar, Vishal Dadlani, Shalmali Kholgade",
+        initials: "B",
+        uri: "spotify:track:7fllsOe1cV2pTBzdbkgrX7",
+      },
+      {
+        name: "Sajna, Say Yes To The Dress",
+        film: "Badshah, Payal Dev",
+        initials: "S",
+        uri: "spotify:track:0eiX2zTStU6Cz4hjUWnUa1",
+      },
+      {
+        name: "Hauli Hauli - De De Pyaar De",
+        film: "Garry Sandhu, Neha Kakkar, Tanishk Bagchi",
+        initials: "H",
+        uri: "spotify:track:60XrRbNjDMAGUZ2xLkU9W3",
+      },
+      {
+        name: "Dus Bahane 2.0 - Baaghi 3",
+        film: "Vishal Dadlani, Shekhar Ravjiani",
+        initials: "D",
+        uri: "spotify:track:0z9lOAVgQT5bysEKZ6Wwbk",
+      },
+      {
+        name: "Bijlee Bijlee",
+        film: "Harrdy Sandhu",
+        initials: "B",
+        uri: "spotify:track:1iZLpuGMr4tn1F5bZu32Kb",
+      },
+      {
+        name: "Ankhiyon Se Goli Mare Returns",
+        film: "Dev Negi, Asees Kaur",
+        initials: "A",
+        uri: "spotify:track:05RjRBgVRLQ9hx5go5AQVQ",
+      },
+      {
+        name: "Dhindhora Baje Re",
+        film: "Pritam, Darshan Raval, Bhoomi Trivedi",
+        initials: "D",
+        uri: "spotify:track:1xxWhDJt3mLaTL234Se6mF",
+      },
+    ],
+    dj: [
+      {
+        name: "Kesariya - Brahmastra",
+        film: "Pritam, Arijit Singh, Amitabh Bhattacharya",
+        initials: "K",
+        uri: "spotify:track:6VBhH7CyP56BXjp8VsDFPZ",
+      },
+      {
+        name: "Raataan Lambiyan - Shershaah",
+        film: "Tanishk Bagchi, Jubin Nautiyal, Asees Kaur",
+        initials: "R",
+        uri: "spotify:track:2rOnSn2piaqLAlYjtfUBlY",
+      },
+      {
+        name: "Ranjha - Shershaah",
+        film: "Jasleen Royal, B Praak, Romy",
+        initials: "R",
+        uri: "spotify:track:72zHuDxFQTjbL51qJQSA7j",
+      },
+      {
+        name: "Chaand Baaliyan",
+        film: "Aditya A, Mumzy Stranger",
+        initials: "C",
+        uri: "spotify:track:07Wy1eKaBeKTUhCQVPvaKP",
+      },
+      {
+        name: "Bole Chudiyan",
+        film: "Jatin-Lalit, Amit Kumar, Sonu Nigam, Alka Yagnik",
+        initials: "B",
+        uri: "spotify:track:1uzkWkIaWaxzHJgJ4Fy5rO",
+      },
+      {
+        name: "Chaka Chak - Atrangi Re",
+        film: "A.R. Rahman, Shreya Ghoshal, Irshad Kamil",
+        initials: "C",
+        uri: "spotify:track:5pbOpE6CfRgGnPPZJSDfME",
+      },
+      {
+        name: "Maahi Ve",
+        film: "Shankar-Ehsaan-Loy, Sadhana Sargam, Sonu Nigam",
+        initials: "M",
+        uri: "spotify:track:7Czm0vv2sYL5z4P51KY66e",
+      },
+      {
+        name: "Sawan Mein Lag Gayi Aag",
+        film: "Mika Singh, Payal Dev, Neha Kakkar, Badshah",
+        initials: "S",
+        uri: "spotify:track:6oloWgrErtc8dG2WiV55gn",
+      },
+      {
+        name: "Bajre Da Sitta",
+        film: "Rashmeet Kaur, Deep Kalsi, Ikka",
+        initials: "B",
+        uri: "spotify:track:5LDvAJwWczQ4DOjKIEtWZs",
+      },
+      {
+        name: "Dil Chori",
+        film: "Yo Yo Honey Singh, Simar Kaur",
+        initials: "D",
+        uri: "spotify:track:6zojSFiUNySBy3Kd1JVCXb",
+      },
+      {
+        name: "Cutiepie - Ae Dil Hai Mushkil",
+        film: "Pritam, Pardeep Sran, Nakash Aziz",
+        initials: "C",
+        uri: "spotify:track:1YOW5pnfikVa6BcCBIOQUU",
+      },
+      {
+        name: "Mehndi Hai Rachnewali",
+        film: "A.R. Rahman, Alka Yagnik",
+        initials: "M",
+        uri: "spotify:track:0lCdndc8chDOcAQqfLvCyE",
+      },
+      {
+        name: "Badtameez Dil",
+        film: "Pritam, Benny Dayal, Shefali Alvares",
+        initials: "B",
+        uri: "spotify:track:4eu27jAU2bbnyHUC3G75U8",
+      },
+      {
+        name: "Desi Girl",
+        film: "Vishal-Shekhar, Shankar Mahadevan, Sunidhi Chauhan",
+        initials: "D",
+        uri: "spotify:track:3Qpk2qHree1RTH5lZaKnEK",
+      },
+      {
+        name: "Illegal Weapon 2.0 - Street Dancer 3D",
+        film: "Jasmine Sandlas, Garry Sandhu, Tanishk Bagchi",
+        initials: "I",
+        uri: "spotify:track:5fXslGZPI5Cco6PKHzlSL3",
+      },
+      {
+        name: "Gallan Goodiyaan",
+        film: "Yashita Sharma, Farhan Akhtar, Shankar Mahadevan",
+        initials: "G",
+        uri: "spotify:track:7hNYvX0qAKrxtVr1jGDmvR",
+      },
+      {
+        name: "Punjabi Wedding Song - Hasee Toh Phasee",
+        film: "Vishal-Shekhar, Sunidhi Chauhan, Benny Dayal",
+        initials: "P",
+        uri: "spotify:track:6FC2FExpCaCV7MyTZG94KY",
+      },
+      {
+        name: "Gal Mitthi Mitthi",
+        film: "Amit Trivedi, Tochi Raina",
+        initials: "G",
+        uri: "spotify:track:4J9n7thOdqi8gxRGNyQoVC",
+      },
+      {
+        name: "Radha",
+        film: "Vishal-Shekhar, Shreya Ghoshal, Udit Narayan",
+        initials: "R",
+        uri: "spotify:track:6f7zyAEUCZuvX4Zty62Z5o",
+      },
+      {
+        name: "Kamariya",
+        film: "Lijo George, Dj Chetas, Darshan Raval",
+        initials: "K",
+        uri: "spotify:track:5HJvDTnAaDWqhsE841I1QR",
+      },
+      {
+        name: "London Thumakda",
+        film: "Labh Janjua, Sonu Kakkar, Neha Kakkar",
+        initials: "L",
+        uri: "spotify:track:2qJAzSE6uC94oH2NRoPrGl",
+      },
+      {
+        name: "Saajanji Ghar Aaye",
+        film: "Jatin-Lalit, Kumar Sanu, Alka Yagnik",
+        initials: "S",
+        uri: "spotify:track:5yDC62x6y5vZc32PzULCeU",
+      },
+      {
+        name: "Tere Bina",
+        film: "A.R. Rahman, Chinmayi",
+        initials: "T",
+        uri: "spotify:track:4FeczSomVWVyU4FW7xDeAI",
+      },
+      {
+        name: "Din Shagna Da",
+        film: "Jasleen Royal, Neeraj Rajawat",
+        initials: "D",
+        uri: "spotify:track:20rwogC6aE369YsxFb5aRp",
+      },
+      {
+        name: "Banno - Tannu Weds Manu Returns",
+        film: "Brijesh Shandilya, Swati Sharma",
+        initials: "B",
+        uri: "spotify:track:3L8WtGLEWg3CJggIBGvkNL",
+      },
+      {
+        name: "Don't Be Shy Again - Bala",
+        film: "Sachin-Jigar, Badshah, Shalmali Kholgade",
+        initials: "D",
+        uri: "spotify:track:2TbCdbFzs2xO2nzasn0Qvw",
+      },
+      {
+        name: "Say Shava Shava",
+        film: "Aadesh Shrivastava, Alka Yagnik, Amitabh Bachchan",
+        initials: "S",
+        uri: "spotify:track:7CdABTaND3EW5cETakiBD3",
+      },
+      {
+        name: "Morni Banke - Badhaai Ho",
+        film: "Guru Randhawa, Neha Kakkar, Tanishk Bagchi",
+        initials: "M",
+        uri: "spotify:track:2Wu9PNpLUCBl3W1GaPqkhl",
+      },
+      {
+        name: "Mehndi Laga Ke Rakhna",
+        film: "Lata Mangeshkar, Udit Narayan",
+        initials: "M",
+        uri: "spotify:track:1DBnQsAclYECi8ybpWs1fv",
+      },
+      {
+        name: "Channa Mereya - Ae Dil Hai Mushkil",
+        film: "Pritam, Arijit Singh",
+        initials: "C",
+        uri: "spotify:track:1plFCZ6QFAjSRutT02GTCn",
+      },
+      {
+        name: "Pal",
+        film: "Javed-Mohsin, Arijit Singh, Shreya Ghoshal",
+        initials: "P",
+        uri: "spotify:track:79hQvdTHNBkq2fp2ZrM8b2",
+      },
+      {
+        name: "Video Bana De",
+        film: "Sukh-E Muzical Doctorz, Aastha Gill, Jaani",
+        initials: "V",
+        uri: "spotify:track:7hXcOpRn1c1zFG6sOFcfj5",
+      },
+      {
+        name: "Tooh",
+        film: "Vishal-Shekhar, Mika Singh, Mamta Sharma",
+        initials: "T",
+        uri: "spotify:track:2hmg0cMbUyHnFyINH5Nch3",
+      },
+      {
+        name: "Sanedo",
+        film: "Tanishk Bagchi, Vayu, Darshan Raval",
+        initials: "S",
+        uri: "spotify:track:5T2FWPKgrOHtBrzi9UF5m6",
+      },
+      {
+        name: "Rum Whisky - Vicky Donor",
+        film: "Akshay Verma",
+        initials: "R",
+        uri: "spotify:track:2IbvIRyVjgKOOTn3DJuOk9",
+      },
+      {
+        name: "Bumbro - Mission Kashmir",
+        film: "Shankar Mahadevan, Sunidhi Chauhan",
+        initials: "B",
+        uri: "spotify:track:114EjUlcKajU9Syfk5n0a5",
+      },
+      {
+        name: "Piya O Re Piya",
+        film: "Atif Aslam, Shreya Ghoshal",
+        initials: "P",
+        uri: "spotify:track:1cgxdfJhtATjI7nu94LobA",
+      },
+    ],
+    vidaai: [
+      {
+        name: "Babul Ka Ghar",
+        film: "Kishore Kumar, Alka Yagnik",
+        initials: "B",
+        uri: "spotify:track:7wqiiB93h52kihooOenIej",
+      },
+      {
+        name: "Babul Ki Duayen Leti Ja",
+        film: "Mohammed Rafi",
+        initials: "B",
+        uri: "spotify:track:5eKjkCPDGijnMPVErOYNMy",
+      },
+      {
+        name: "Sabki Baaratein Aayi",
+        film: "Jaspinder Narula",
+        initials: "S",
+        uri: "spotify:track:0GHp1w79xDkJOwoLHLBc4C",
+      },
+      {
+        name: "Dulhe Ka Sehra",
+        film: "Nusrat Fateh Ali Khan",
+        initials: "D",
+        uri: "spotify:track:1VDOo2IV62R7Po62XJZlST",
+      },
+      {
+        name: "Mehndi Laga Ke Rakhna",
+        film: "Lata Mangeshkar, Udit Narayan",
+        initials: "M",
+        uri: "spotify:track:1bqMVta76huBpSIzTIrDM0",
+      },
+      {
+        name: "Saajanji Ghar Aaye",
+        film: "Jatin-Lalit, Kumar Sanu, Alka Yagnik",
+        initials: "S",
+        uri: "spotify:track:5yDC62x6y5vZc32PzULCeU",
+      },
+      {
+        name: "Tainu Leke",
+        film: "Sonu Nigam, Mahalakshmi Iyer",
+        initials: "T",
+        uri: "spotify:track:34wsgkPMRk3xIfHdwtezbf",
+      },
+      {
+        name: "Chura Ke Leja",
+        film: "Palak Muchhal, Yashraj Kapil",
+        initials: "C",
+        uri: "spotify:track:62Ebvf6k2lPlQ1scLYK14P",
+      },
+      {
+        name: "Hamari Shaadi Mein",
+        film: "Babul Supriyo, Shreya Ghoshal",
+        initials: "H",
+        uri: "spotify:track:6sfKt7I5G9nVRAcg8ejAYi",
+      },
+      {
+        name: "Dulhan Banti Hain",
+        film: "Lata Mangeshkar",
+        initials: "D",
+        uri: "spotify:track:735FejpwF4iFDnfRmXLjvs",
+      },
+      {
+        name: "Genda Phool",
+        film: "Rekha Bhardwaj, A.R. Rahman",
+        initials: "G",
+        uri: "spotify:track:15Vuw407y6UWIPUfGrpJ1e",
+      },
+      {
+        name: "Yeh Galiyan Yeh Chaubara",
+        film: "Lata Mangeshkar",
+        initials: "Y",
+        uri: "spotify:track:7KvFdgH7rn9wCJAUn9NQX8",
+      },
+      {
+        name: "Chote Chote Bhaiyon Ke Bade Bhaiya",
+        film: "Udit Narayan, Kavita Krishnamurthy",
+        initials: "C",
+        uri: "spotify:track:6LJhtkzikhMyIBMFWr5TNX",
+      },
+      {
+        name: "Lathe Di Chadar",
+        film: "Neha Bhasin",
+        initials: "L",
+        uri: "spotify:track:6MKbIiNOu3bp5TWk3LKrJM",
+      },
+      {
+        name: "Pyaara Bhaiya Mera",
+        film: "Alka Yagnik, Kumar Sanu",
+        initials: "P",
+        uri: "spotify:track:2VBhSMcwi9r6rrtKZd5XNc",
+      },
+      {
+        name: "O Jiji",
+        film: "Shreya Ghoshal, Pamela Jain",
+        initials: "O",
+        uri: "spotify:track:6IhKQU9SxNt4riFKsSzjqX",
+      },
+      {
+        name: "Main Sehra Bandh Ke",
+        film: "Udit Narayan",
+        initials: "M",
+        uri: "spotify:track:7rxfPJ3mzyI6HrCU0Ffy60",
+      },
+      {
+        name: "Punjabi Wedding Song",
+        film: "Vishal-Shekhar, Sunidhi Chauhan, Benny Dayal",
+        initials: "P",
+        uri: "spotify:track:69iDTIABXobqbl8zJOp8dq",
+      },
+      {
+        name: "Tum Par Hum Hai Atke Yaara",
+        film: "Kumar Sanu, Kavita Krishnamurthy",
+        initials: "T",
+        uri: "spotify:track:6MuzOc3b0CudU3UZb3JJOE",
+      },
+      {
+        name: "Teri Ungli Pakad Ke Chala",
+        film: "Udit Narayan, Jyotsna Hardikar",
+        initials: "T",
+        uri: "spotify:track:5r1XDP2BkiWkE0wafWFuBb",
+      },
+      {
+        name: "Sunoji Dulhan Ek Bat Sunoji",
+        film: "Roop Kumar Rathod, Udit Narayan, Kavita Krishnamurthy",
+        initials: "S",
+        uri: "spotify:track:4ikz0KUfVkFGnoRxsN6ejb",
+      },
+      {
+        name: "Baharo Phool Barsao",
+        film: "Mohammed Rafi",
+        initials: "B",
+        uri: "spotify:track:06WBL2qDIabVl2Q1gpNvOa",
+      },
+      {
+        name: "Kaun Disha Mein Leke Chala",
+        film: "Jaspal Singh, Hemlata",
+        initials: "K",
+        uri: "spotify:track:6XHGdm4kC51tydnWaUqtZi",
+      },
+      {
+        name: "Saiyaan Superstar",
+        film: "Tulsi Kumar, Amaal Mallik",
+        initials: "S",
+        uri: "spotify:track:320GYtO51QayJwOiO1zIrp",
+      },
+      {
+        name: "Baba Ki Rani Hoon",
+        film: "Alka Yagnik",
+        initials: "B",
+        uri: "spotify:track:0H9JGvfWtr9WwcdufZSmNr",
+      },
+      {
+        name: "Mehndi Hai Rachnewali",
+        film: "A.R. Rahman, Alka Yagnik",
+        initials: "M",
+        uri: "spotify:track:0lCdndc8chDOcAQqfLvCyE",
+      },
+      {
+        name: "Haldi Lagaao Re",
+        film: "Sapna Awasthi",
+        initials: "H",
+        uri: "spotify:track:5zv3G85qfHARj6Zi9piivV",
+      },
+      {
+        name: "Gallan Goodiyaan",
+        film: "Farhan Akhtar, Shankar Mahadevan",
+        initials: "G",
+        uri: "spotify:track:7hNYvX0qAKrxtVr1jGDmvR",
+      },
+      {
+        name: "Pehla Pehla Pyar",
+        film: "S. P. Balasubrahmanyam",
+        initials: "P",
+        uri: "spotify:track:7scJ5s4S8oMGVm6wZzCz1r",
+      },
+      {
+        name: "Do Anjaane Ajnabi",
+        film: "Udit Narayan, Shreya Ghoshal",
+        initials: "D",
+        uri: "spotify:track:66cYwZ8uCn71S9ng2aunfx",
+      },
+    ],
+  };
+  const spotifyCurrent: Record<string, number> = {
+    sangeet: 0,
+    dj: 0,
+    vidaai: 0,
   };
 
-  const SPOTIFY_PLAYLIST_IDS: Record<string, string> = {
-    sangeet: '37i9dQZF1DX2ktNbDFDPWZ',
-    dj: '1o1RakJXDw6WtHNmaCLn4e',
-    vidaai: '0snMxCN4bcn2hKMWouCpIR',
+  const SPOTIFY_MAP: Record<string, { id: string; uri: string }> = {
+    sangeet: {
+      id: "spotify-sangeet",
+      uri: "spotify:playlist:37i9dQZF1DX2ktNbDFDPWZ",
+    },
+    dj: { id: "spotify-dj", uri: "spotify:playlist:1o1RakJXDw6WtHNmaCLn4e" },
+    vidaai: {
+      id: "spotify-vidaai",
+      uri: "spotify:playlist:0snMxCN4bcn2hKMWouCpIR",
+    },
   };
 
   /* ══════════════════════════════════
      UTILITIES
      ══════════════════════════════════ */
   function formatTime(seconds: number): string {
-    if (isNaN(seconds) || seconds < 0) return '0:00';
+    if (isNaN(seconds) || seconds < 0) return "0:00";
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   }
 
   function updatePlayButtonState(isPlaying: boolean) {
-    const playBtn = document.getElementById('playBtn');
+    const playBtn = document.getElementById("playBtn");
     if (!playBtn) return;
     playBtn.innerHTML = isPlaying
       ? '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>'
       : '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
-    playBtn.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
+    playBtn.setAttribute("aria-label", isPlaying ? "Pause" : "Play");
   }
 
   function setTrackUI(name: string, film: string, initials?: string) {
-    const thumbText = document.getElementById('thumbText');
-    const trackName = document.getElementById('trackName');
-    const trackFilm = document.getElementById('trackFilm');
-    if (thumbText) thumbText.textContent = initials || name.charAt(0) || '🎵';
+    const thumbText = document.getElementById("thumbText");
+    const trackName = document.getElementById("trackName");
+    const trackFilm = document.getElementById("trackFilm");
+    if (thumbText) thumbText.textContent = initials || name.charAt(0) || "🎵";
     if (trackName) trackName.textContent = name;
     if (trackFilm) trackFilm.textContent = film;
   }
@@ -135,29 +1034,33 @@
   /* ══════════════════════════════════
      SONG LIST / QUEUE PANEL
      ══════════════════════════════════ */
-  const queuePanel = document.getElementById('queuePanel');
-  const queueList = document.getElementById('queueList');
-  const queueTitle = document.getElementById('queueTitle');
-  const queueBtn = document.getElementById('queueBtn');
-  const queueClose = document.getElementById('queueClose');
+  const queuePanel = document.getElementById("queuePanel");
+  const queueList = document.getElementById("queueList");
+  const queueTitle = document.getElementById("queueTitle");
+  const queueBtn = document.getElementById("queueBtn");
+  const queueClose = document.getElementById("queueClose");
 
   function buildQueueList(tracks: Track[], activeIdx: number) {
     if (!queueList) return;
-    queueList.innerHTML = '';
+    queueList.innerHTML = "";
     tracks.forEach((t, i) => {
-      const item = document.createElement('div');
-      item.className = 'queue-item' + (i === activeIdx ? ' active' : '');
+      const item = document.createElement("div");
+      item.className = "queue-item" + (i === activeIdx ? " active" : "");
       item.innerHTML = `<span class="queue-idx">${i + 1}</span><span class="queue-track"><span class="queue-name">${t.name}</span><span class="queue-film">${t.film}</span></span>`;
-      item.addEventListener('click', () => {
-        if (activeSource === 'youtube' && ytPlayer) {
+      item.addEventListener("click", () => {
+        if (activeSource === "youtube" && ytPlayer) {
           ytPlayer.playVideoAt(i);
           ytCurrent = i;
-        } else if (activeSource === 'spotify' && activeSpotifyKey && t.uri) {
-          spotifyControllers[activeSpotifyKey]?.loadUri(t.uri);
+          setTrackUI(t.name, t.film, t.initials);
+          updatePlayButtonState(true);
+          updateQueueHighlight(i);
+        } else if (activeSource === "spotify" && activeSpotifyKey) {
+          const key = activeSpotifyKey;
+          if (t.uri) {
+            startSpotifyNav(t.uri, key, i);
+            queuePanel?.classList.remove("open");
+          }
         }
-        setTrackUI(t.name, t.film, t.initials);
-        updatePlayButtonState(true);
-        updateQueueHighlight(i);
       });
       queueList.appendChild(item);
     });
@@ -165,96 +1068,122 @@
 
   function updateQueueHighlight(activeIdx: number) {
     if (!queueList) return;
-    queueList.querySelectorAll('.queue-item').forEach((el, i) => {
-      el.classList.toggle('active', i === activeIdx);
+    queueList.querySelectorAll(".queue-item").forEach((el, i) => {
+      el.classList.toggle("active", i === activeIdx);
     });
   }
 
-  queueBtn?.addEventListener('click', () => {
-    queuePanel?.classList.toggle('open');
+  queueBtn?.addEventListener("click", () => {
+    queuePanel?.classList.toggle("open");
   });
 
-  queueClose?.addEventListener('click', () => {
-    queuePanel?.classList.remove('open');
+  queueClose?.addEventListener("click", () => {
+    queuePanel?.classList.remove("open");
   });
 
   /* ══════════════════════════════════
      SPRINKLE / PETAL LAYER
      ══════════════════════════════════ */
-  const petalLayer = document.getElementById('petalLayer');
+  const petalLayer = document.getElementById("petalLayer");
   let sprinkleInterval: ReturnType<typeof setInterval> | null = null;
   const MAX_SPRINKLES = 15;
 
   function spawnSprinkle() {
     if (!petalLayer) return;
     if (petalLayer.children.length >= MAX_SPRINKLES) return;
-    const el = document.createElement('div');
-    el.className = 'sprinkle';
-    const colors = ['#E8871E', '#D4A017', '#AD1F5C', '#FFC93C', '#F7ECD9'];
+    const el = document.createElement("div");
+    el.className = "sprinkle";
+    const colors = ["#E8871E", "#D4A017", "#AD1F5C", "#FFC93C", "#F7ECD9"];
     el.style.background = colors[Math.floor(Math.random() * colors.length)];
-    el.style.left = Math.random() * 100 + '%';
-    el.style.setProperty('--fall-duration', (3 + Math.random() * 3) + 's');
-    el.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
-    el.style.setProperty('--spin', (Math.random() * 720 - 360) + 'deg');
-    el.addEventListener('animationend', () => el.remove());
+    el.style.left = Math.random() * 100 + "%";
+    el.style.setProperty("--fall-duration", 3 + Math.random() * 3 + "s");
+    el.style.setProperty("--drift", Math.random() * 60 - 30 + "px");
+    el.style.setProperty("--spin", Math.random() * 720 - 360 + "deg");
+    el.addEventListener("animationend", () => el.remove());
     petalLayer.appendChild(el);
   }
 
   function startSprinkles() {
     if (sprinkleInterval) return;
-    sprinkleInterval = setInterval(() => spawnSprinkle(), 400 + Math.random() * 300);
+    sprinkleInterval = setInterval(
+      () => spawnSprinkle(),
+      400 + Math.random() * 300,
+    );
   }
 
   function stopSprinkles() {
-    if (sprinkleInterval) { clearInterval(sprinkleInterval); sprinkleInterval = null; }
+    if (sprinkleInterval) {
+      clearInterval(sprinkleInterval);
+      sprinkleInterval = null;
+    }
   }
 
   /* ══════════════════════════════════
      YOUTUBE PLAYER
      ══════════════════════════════════ */
-  const YT_PLAYLIST_ID = 'PLTGEaM6uPj_EEPv9gnijXesdghvSjJhHZ';
+  const YT_PLAYLIST_ID = "PLTGEaM6uPj_EEPv9gnijXesdghvSjJhHZ";
 
   function parseTrackTitle(rawTitle: string, defaultAuthor: string): Track {
     let songName = rawTitle.trim();
     let filmName = defaultAuthor;
-    if (songName.includes(' | ')) {
-      const p = songName.split(' | ');
-      songName = p[0].trim(); filmName = p[1].trim();
-    } else if (songName.includes('|')) {
-      const p = songName.split('|');
-      songName = p[0].trim(); filmName = p[1].trim();
-    } else if (songName.includes(' - ')) {
-      const p = songName.split(' - ');
-      songName = p[0].trim(); filmName = p.slice(1).join(' - ').trim();
+    if (songName.includes(" | ")) {
+      const p = songName.split(" | ");
+      songName = p[0].trim();
+      filmName = p[1].trim();
+    } else if (songName.includes("|")) {
+      const p = songName.split("|");
+      songName = p[0].trim();
+      filmName = p[1].trim();
+    } else if (songName.includes(" - ")) {
+      const p = songName.split(" - ");
+      songName = p[0].trim();
+      filmName = p.slice(1).join(" - ").trim();
     }
-    return { name: songName, film: filmName, initials: Array.from(songName.trim())[0] || '🎵' };
+    return {
+      name: songName,
+      film: filmName,
+      initials: Array.from(songName.trim())[0] || "🎵",
+    };
   }
 
   async function fetchPlaylistTracks(videoIds: string[]): Promise<Track[]> {
     return Promise.all(
       videoIds.map(async (id) => {
         try {
-          const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`);
-          if (!res.ok) throw new Error('oembed failed');
+          const res = await fetch(
+            `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`,
+          );
+          if (!res.ok) throw new Error("oembed failed");
           const data = await res.json();
-          return parseTrackTitle(data.title || 'Untitled', data.author_name || 'YouTube');
-        } catch { return { name: `Track ${id}`, film: 'YouTube', initials: '🎵' }; }
-      })
+          return parseTrackTitle(
+            data.title || "Untitled",
+            data.author_name || "YouTube",
+          );
+        } catch {
+          return { name: `Track ${id}`, film: "YouTube", initials: "🎵" };
+        }
+      }),
     );
   }
 
   function updateYTProgress() {
-    if (activeSource !== 'youtube' || !ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
+    if (
+      activeSource !== "youtube" ||
+      !ytPlayer ||
+      typeof ytPlayer.getCurrentTime !== "function"
+    )
+      return;
     const cur = ytPlayer.getCurrentTime() || 0;
     const dur = ytPlayer.getDuration() || 0;
-    const currentTimeEl = document.getElementById('currentTime');
-    const durationTimeEl = document.getElementById('durationTime');
-    const scrubFillEl = document.getElementById('scrubFill');
+    const currentTimeEl = document.getElementById("currentTime");
+    const durationTimeEl = document.getElementById("durationTime");
+    const scrubFillEl = document.getElementById("scrubFill");
     if (currentTimeEl) currentTimeEl.textContent = formatTime(cur);
     if (durationTimeEl) durationTimeEl.textContent = formatTime(dur);
-    if (scrubFillEl) scrubFillEl.style.width = dur > 0 ? (cur / dur) * 100 + '%' : '0%';
+    if (scrubFillEl)
+      scrubFillEl.style.width = dur > 0 ? (cur / dur) * 100 + "%" : "0%";
 
-    if (typeof ytPlayer.getPlaylistIndex === 'function') {
+    if (typeof ytPlayer.getPlaylistIndex === "function") {
       const idx = ytPlayer.getPlaylistIndex();
       if (idx >= 0 && idx < ytTracks.length && idx !== ytCurrent) {
         ytCurrent = idx;
@@ -266,17 +1195,18 @@
   }
 
   setInterval(() => {
-    if (activeSource === 'youtube') updateYTProgress();
+    if (activeSource === "youtube") updateYTProgress();
   }, 500);
 
   function initYTPlayer() {
     if (!window.YT || !window.YT.Player) return;
-    ytPlayer = new window.YT.Player('yt-player', {
-      height: '0', width: '0',
-      playerVars: { listType: 'playlist', list: YT_PLAYLIST_ID },
+    ytPlayer = new window.YT.Player("yt-player", {
+      height: "0",
+      width: "0",
+      playerVars: { listType: "playlist", list: YT_PLAYLIST_ID },
       events: {
         onReady: async () => {
-          if (ytPlayer && typeof ytPlayer.getPlaylist === 'function') {
+          if (ytPlayer && typeof ytPlayer.getPlaylist === "function") {
             const videoIds = ytPlayer.getPlaylist();
             if (Array.isArray(videoIds) && videoIds.length > 0) {
               ytTracks = await fetchPlaylistTracks(videoIds);
@@ -290,14 +1220,14 @@
           }
         },
         onStateChange: (event: any) => {
-          if (activeSource !== 'youtube') return;
-          const isPlaying = event.data === (window.YT?.PlayerState?.PLAYING ?? 1);
+          if (activeSource !== "youtube") return;
+          const isPlaying = event.data === 1;
           updatePlayButtonState(isPlaying);
           updateYTProgress();
           if (isPlaying) startSprinkles();
           else stopSprinkles();
-        }
-      }
+        },
+      },
     });
   }
 
@@ -305,10 +1235,14 @@
     initYTPlayer();
   } else {
     window.onYouTubeIframeAPIReady = initYTPlayer;
-    if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      const first = document.getElementsByTagName('script')[0];
+    if (
+      !document.querySelector(
+        'script[src="https://www.youtube.com/iframe_api"]',
+      )
+    ) {
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      const first = document.getElementsByTagName("script")[0];
       if (first?.parentNode) first.parentNode.insertBefore(tag, first);
       else document.head.appendChild(tag);
     }
@@ -317,56 +1251,152 @@
   /* ══════════════════════════════════
      SPOTIFY CONTROLLERS (IFrame API)
      ══════════════════════════════════ */
+  let spotifyBusy = false;
+  let spotifyWantsPlay = false;
+  let spotifyNavTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function clearSpotifyNavTimer() {
+    if (spotifyNavTimer !== null) {
+      clearTimeout(spotifyNavTimer);
+      spotifyNavTimer = null;
+    }
+  }
+
+  function updateSpotifyButtonStates() {
+    if (activeSource !== "spotify" || !activeSpotifyKey) {
+      [prevBtn, nextBtn, playBtn].forEach((btn) => {
+        if (!btn) return;
+        btn.classList.remove("disabled");
+        (btn as HTMLElement).style.pointerEvents = "";
+        (btn as HTMLElement).style.opacity = "";
+      });
+      return;
+    }
+    const ready = !!spotifyReady[activeSpotifyKey];
+    [prevBtn, nextBtn, playBtn].forEach((btn) => {
+      if (!btn) return;
+      btn.classList.toggle("disabled", !ready);
+      (btn as HTMLElement).style.pointerEvents = ready ? "" : "none";
+      (btn as HTMLElement).style.opacity = ready ? "" : ".35";
+    });
+  }
+
+  function startSpotifyNav(targetUri: string, key: string, newIdx: number) {
+    if (spotifyBusy) return;
+    const ctrl = spotifyControllers[key];
+    if (!ctrl || !spotifyReady[key]) return;
+
+    console.log(`[Spotify] → loadUri: ${targetUri} (idx ${newIdx})`);
+    spotifyBusy = true;
+    spotifyWantsPlay = true;
+    spotifyCurrent[key] = newIdx;
+    try {
+      ctrl.loadUri(targetUri);
+    } catch (err) {
+      console.warn("[Spotify] loadUri failed", err);
+      spotifyBusy = false;
+      spotifyWantsPlay = false;
+      return;
+    }
+
+    clearSpotifyNavTimer();
+    spotifyNavTimer = setTimeout(() => {
+      spotifyNavTimer = null;
+      console.log(
+        `[Spotify] ⏱ confirm timeout — no playback_update arrived, firing resume()`,
+      );
+      try {
+        ctrl.resume();
+      } catch {}
+    }, 1200);
+  }
+
   function initSpotifyControllers() {
     if (!spotifyIFrameAPI) return;
 
     Object.entries(SPOTIFY_MAP).forEach(([key, { id, uri }]) => {
       const element = document.getElementById(id);
-      if (!element) { console.warn(`[Spotify] element #${id} not found`); return; }
+      if (!element) {
+        console.warn(`[Spotify] element #${id} not found`);
+        return;
+      }
 
-      const options = { uri, width: '300', height: '80' };
+      const options = { uri, width: "300", height: "80" };
       const callback = (controller: any) => {
         spotifyControllers[key] = controller;
-        console.log(`[Spotify] Controller ready: ${key}`);
+        console.log(`[Spotify] Controller created: ${key}`);
 
-        controller.addListener('ready', () => {
+        controller.addListener("ready", () => {
           console.log(`[Spotify] Embed ready: ${key}`);
+          spotifyReady[key] = true;
+          updateSpotifyButtonStates();
         });
 
-        controller.addListener('playback_started', (e: any) => {
-          console.log(`[Spotify] playback_started: ${key}`, e?.data?.playingURI);
+        controller.addListener("playback_started", (e: any) => {
+          console.log(
+            `[Spotify] playback_started: ${key}`,
+            e?.data?.playingURI,
+          );
+          spotifyBusy = false;
         });
 
-        controller.addListener('playback_update', (e: any) => {
+        /* ── SINGLE SOURCE OF TRUTH for ALL Spotify UI ── */
+        controller.addListener("playback_update", (e: any) => {
           const data = e?.data;
           if (!data) return;
+          const isActiveSource =
+            activeSource === "spotify" && activeSpotifyKey === key;
+          if (!isActiveSource) return;
 
-          /* ── FIX #2: drive play/pause icon from isPaused ── */
           const isPaused = data.isPaused === true;
           const isPlaying = !isPaused;
+
+          console.log(
+            `[Spotify] playback_update: ${key} isPaused=${isPaused} uri=${data.playingURI ?? "none"} pos=${data.position ?? 0}`,
+          );
+
+          /* ── clear nav timer: we got a confirming update ── */
+          clearSpotifyNavTimer();
+
+          /* ── FALLBACK: if we wanted play but track is paused, resume once ── */
+          if (isPaused && spotifyWantsPlay) {
+            spotifyWantsPlay = false;
+            console.log(`[Spotify] ▶ resume fallback (wantsPlay, isPaused)`);
+            try {
+              controller.resume();
+            } catch {}
+            return;
+          }
+          if (!isPaused) spotifyWantsPlay = false;
+
           updatePlayButtonState(isPlaying);
+          if (isPlaying) startSprinkles();
+          else stopSprinkles();
 
-          if (isPlaying) startSprinkles(); else stopSprinkles();
-
-          /* update track info from playback_update */
+          /* track info from playback URI */
           if (data.playingURI) {
-            const uriParts = data.playingURI.split(':');
-            const trackId = uriParts[uriParts.length - 1];
-            /* try to extract name from URI or use a placeholder */
-            const trackName = `Track ${trackId.substring(0, 8)}...`;
-            currentSpotifyTrack = { name: trackName, film: key, initials: trackName.charAt(0), uri: data.playingURI };
-            setTrackUI(trackName, key, trackName.charAt(0));
+            const tracks = spotifyTracks[key];
+            const match = tracks?.find((t) => t.uri === data.playingURI);
+            if (match) {
+              const idx = tracks.indexOf(match);
+              spotifyCurrent[key] = idx;
+              currentSpotifyTrack = match;
+              setTrackUI(match.name, match.film, match.initials);
+              updateQueueHighlight(idx);
+            }
           }
 
-          /* update scrub */
+          /* scrub bar */
           const pos = data.position || 0;
           const dur = data.duration || 0;
-          const currentTimeEl = document.getElementById('currentTime');
-          const durationTimeEl = document.getElementById('durationTime');
-          const scrubFillEl = document.getElementById('scrubFill');
+          const currentTimeEl = document.getElementById("currentTime");
+          const durationTimeEl = document.getElementById("durationTime");
+          const scrubFillEl = document.getElementById("scrubFill");
           if (currentTimeEl) currentTimeEl.textContent = formatTime(pos / 1000);
-          if (durationTimeEl) durationTimeEl.textContent = formatTime(dur / 1000);
-          if (scrubFillEl) scrubFillEl.style.width = dur > 0 ? (pos / dur) * 100 + '%' : '0%';
+          if (durationTimeEl)
+            durationTimeEl.textContent = formatTime(dur / 1000);
+          if (scrubFillEl)
+            scrubFillEl.style.width = dur > 0 ? (pos / dur) * 100 + "%" : "0%";
         });
       };
 
@@ -384,9 +1414,13 @@
       spotifyIFrameAPI = IFrameAPI;
       initSpotifyControllers();
     };
-    if (!document.querySelector('script[src="https://open.spotify.com/embed/iframe-api/v1"]')) {
-      const tag = document.createElement('script');
-      tag.src = 'https://open.spotify.com/embed/iframe-api/v1';
+    if (
+      !document.querySelector(
+        'script[src="https://open.spotify.com/embed/iframe-api/v1"]',
+      )
+    ) {
+      const tag = document.createElement("script");
+      tag.src = "https://open.spotify.com/embed/iframe-api/v1";
       tag.async = true;
       document.head.appendChild(tag);
     }
@@ -397,10 +1431,20 @@
      TAB SWITCHING
      ══════════════════════════════════ */
   function pauseCurrentSource() {
-    if (activeSource === 'youtube' && ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
+    if (
+      activeSource === "youtube" &&
+      ytPlayer &&
+      typeof ytPlayer.pauseVideo === "function"
+    ) {
       ytPlayer.pauseVideo();
-    } else if (activeSource === 'spotify' && activeSpotifyKey && spotifyControllers[activeSpotifyKey]) {
-      spotifyControllers[activeSpotifyKey].togglePlay();
+    } else if (
+      activeSource === "spotify" &&
+      activeSpotifyKey &&
+      spotifyControllers[activeSpotifyKey]
+    ) {
+      try {
+        spotifyControllers[activeSpotifyKey].togglePlay();
+      } catch {}
     }
   }
 
@@ -412,174 +1456,230 @@
   }
 
   function switchTab(tab: HTMLElement) {
-    const source = tab.dataset.source as 'youtube' | 'spotify';
-    const playlistUri = tab.dataset.playlistUri || '';
-    if (tab.classList.contains('active')) return;
+    const source = tab.dataset.source as "youtube" | "spotify";
+    const playlistUri = tab.dataset.playlistUri || "";
+    if (tab.classList.contains("active")) return;
 
     pauseCurrentSource();
     stopSprinkles();
+    spotifyBusy = false;
+    spotifyWantsPlay = false;
+    clearSpotifyNavTimer();
 
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
+    /* ── reset UI to neutral immediately ── */
+    updatePlayButtonState(false);
+    setTrackUI("Loading...", "", "🎵");
+    const scrubFillEl = document.getElementById("scrubFill");
+    const currentTimeEl = document.getElementById("currentTime");
+    const durationTimeEl = document.getElementById("durationTime");
+    if (scrubFillEl) scrubFillEl.style.width = "0%";
+    if (currentTimeEl) currentTimeEl.textContent = "0:00";
+    if (durationTimeEl) durationTimeEl.textContent = "0:00";
+
+    document
+      .querySelectorAll(".tab")
+      .forEach((t) => t.classList.remove("active"));
+    tab.classList.add("active");
 
     activeSource = source;
 
-    if (source === 'youtube') {
+    if (source === "youtube") {
       activeSpotifyKey = null;
-      if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
-        ytPlayer.playVideo();
-      }
       const t = ytTracks[ytCurrent];
       if (t) setTrackUI(t.name, t.film, t.initials);
       buildQueueList(ytTracks, ytCurrent);
+      updatePlayButtonState(false);
     } else {
       const key = getSpotifyKey(playlistUri);
       activeSpotifyKey = key;
-      setTrackUI('Loading...', '', '🎵');
-
-      if (key && spotifyControllers[key]) {
-        console.log(`[Spotify] Playing ${key}`);
-        spotifyControllers[key].togglePlay();
+      if (key && spotifyTracks[key]?.length > 0) {
+        const idx = spotifyCurrent[key] ?? 0;
+        const t = spotifyTracks[key][idx];
+        if (t) setTrackUI(t.name, t.film, t.initials);
+        buildQueueList(spotifyTracks[key], idx);
       } else {
-        setTrackUI('Tap play to start', '', '🎵');
+        setTrackUI("Tap play to start", "", "🎵");
       }
-
-      /* build queue from playlist ID */
-      const plId = SPOTIFY_PLAYLIST_IDS[key || ''];
-      if (plId) fetchSpotifyPlaylistTracks(plId, key || '');
+      updatePlayButtonState(false);
     }
-
-    updatePlayButtonState(true);
-  }
-
-  async function fetchSpotifyPlaylistTracks(playlistId: string, key: string) {
-    try {
-      /* use oEmbed-like approach: fetch embed page and extract track list */
-      /* Since we can't use Web API without auth, use the embed's internal data */
-      /* Build a placeholder list — tracks will update as playback_update fires */
-      const placeholderTracks: Track[] = [];
-      for (let i = 0; i < 20; i++) {
-        placeholderTracks.push({ name: `Track ${i + 1}`, film: key, initials: '🎵' });
-      }
-      /* Don't override with placeholder — just show what we have from playback */
-      console.log(`[Spotify] Playlist ${playlistId} loaded for ${key}`);
-    } catch (err) {
-      console.warn(`[Spotify] Failed to fetch playlist ${playlistId}`, err);
-    }
+    updateSpotifyButtonStates();
   }
 
   /* ── event delegation: survives SPA DOM swaps ── */
-  document.addEventListener('click', (e) => {
-    const tab = (e.target as HTMLElement).closest('.tab') as HTMLElement;
-    if (tab && tab.closest('#sourceTabs')) {
+  document.addEventListener("click", (e) => {
+    const tab = (e.target as HTMLElement).closest(".tab") as HTMLElement;
+    if (tab && tab.closest("#sourceTabs")) {
       switchTab(tab);
     }
   });
 
   /* ══════════════════════════════════
-     PLAYER CONTROLS (route to active source)
+     PLAYER CONTROLS
      ══════════════════════════════════ */
-  const prevBtn = document.getElementById('prevBtn');
+
+  /* ── prev ── */
+  const prevBtn = document.getElementById("prevBtn");
   if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      if (activeSource === 'youtube' && ytPlayer && typeof ytPlayer.previousVideo === 'function') {
+    prevBtn.addEventListener("click", () => {
+      if (
+        activeSource === "youtube" &&
+        ytPlayer &&
+        typeof ytPlayer.previousVideo === "function"
+      ) {
         ytPlayer.previousVideo();
+      } else if (activeSource === "spotify" && activeSpotifyKey) {
+        const key = activeSpotifyKey;
+        const idx = (spotifyCurrent[key] ?? 0) - 1;
+        if (idx >= 0 && spotifyTracks[key]?.[idx]) {
+          startSpotifyNav(spotifyTracks[key][idx].uri, key, idx);
+        }
       }
-      /* Spotify embed API has no previousTrack — no-op */
     });
   }
 
-  const nextBtn = document.getElementById('nextBtn');
+  /* ── next ── */
+  const nextBtn = document.getElementById("nextBtn");
   if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      if (activeSource === 'youtube' && ytPlayer && typeof ytPlayer.nextVideo === 'function') {
+    nextBtn.addEventListener("click", () => {
+      if (
+        activeSource === "youtube" &&
+        ytPlayer &&
+        typeof ytPlayer.nextVideo === "function"
+      ) {
         ytPlayer.nextVideo();
+      } else if (activeSource === "spotify" && activeSpotifyKey) {
+        const key = activeSpotifyKey;
+        const tracks = spotifyTracks[key];
+        const idx = (spotifyCurrent[key] ?? 0) + 1;
+        if (tracks && idx < tracks.length) {
+          startSpotifyNav(tracks[idx].uri, key, idx);
+        }
       }
-      /* Spotify embed API has no nextTrack — no-op */
     });
   }
 
-  const playBtn = document.getElementById('playBtn');
+  /* ── play / pause ── */
+  const playBtn = document.getElementById("playBtn");
   if (playBtn) {
-    playBtn.addEventListener('click', () => {
-      if (activeSource === 'youtube' && ytPlayer) {
+    playBtn.addEventListener("click", () => {
+      if (activeSource === "youtube" && ytPlayer) {
         const state = ytPlayer.getPlayerState ? ytPlayer.getPlayerState() : -1;
-        if (state === (window.YT?.PlayerState?.PLAYING ?? 1)) {
+        if (state === 1) {
           ytPlayer.pauseVideo();
+          updatePlayButtonState(false);
+          stopSprinkles();
         } else {
           ytPlayer.playVideo();
+          updatePlayButtonState(true);
+          startSprinkles();
         }
-      } else if (activeSource === 'spotify' && activeSpotifyKey && spotifyControllers[activeSpotifyKey]) {
-        spotifyControllers[activeSpotifyKey].togglePlay();
+      } else if (activeSource === "spotify" && activeSpotifyKey) {
+        if (spotifyControllers[activeSpotifyKey]) {
+          try {
+            spotifyControllers[activeSpotifyKey].togglePlay();
+          } catch {}
+        }
       }
     });
   }
 
   /* ── scrub ── */
-  const scrubTrackEl = document.getElementById('scrubTrack');
+  const scrubTrackEl = document.getElementById("scrubTrack");
   if (scrubTrackEl) {
-    scrubTrackEl.addEventListener('click', (e: MouseEvent) => {
+    scrubTrackEl.addEventListener("click", (e: MouseEvent) => {
       const rect = scrubTrackEl.getBoundingClientRect();
-      const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-
-      if (activeSource === 'youtube' && ytPlayer && typeof ytPlayer.getDuration === 'function') {
+      const pct = Math.max(
+        0,
+        Math.min(1, (e.clientX - rect.left) / rect.width),
+      );
+      if (
+        activeSource === "youtube" &&
+        ytPlayer &&
+        typeof ytPlayer.getDuration === "function"
+      ) {
         const dur = ytPlayer.getDuration() || 0;
         if (dur > 0) ytPlayer.seekTo(pct * dur, true);
-      } else if (activeSource === 'spotify' && activeSpotifyKey && spotifyControllers[activeSpotifyKey]) {
-        const dur = parseFloat(document.getElementById('durationTime')?.textContent || '0') * 1000;
-        if (dur > 0) spotifyControllers[activeSpotifyKey].seek(pct * dur / 1000);
+      } else if (
+        activeSource === "spotify" &&
+        activeSpotifyKey &&
+        spotifyControllers[activeSpotifyKey]
+      ) {
+        const dur =
+          parseFloat(
+            document.getElementById("durationTime")?.textContent || "0",
+          ) * 1000;
+        if (dur > 0)
+          spotifyControllers[activeSpotifyKey].seek((pct * dur) / 1000);
       }
-
-      const scrubFillEl = document.getElementById('scrubFill');
-      if (scrubFillEl) scrubFillEl.style.width = (pct * 100) + '%';
+      const scrubFillEl = document.getElementById("scrubFill");
+      if (scrubFillEl) scrubFillEl.style.width = pct * 100 + "%";
     });
   }
 
   /* ── volume ── */
-  function makeDraggable(trackEl: HTMLElement, onChange: (pct: number) => void) {
-    const fill = trackEl.querySelector('.fill') as HTMLElement;
+  function makeDraggable(
+    trackEl: HTMLElement,
+    onChange: (pct: number) => void,
+  ) {
+    const fill = trackEl.querySelector(".fill") as HTMLElement;
     if (!fill) return;
     function setFromEvent(clientX: number) {
       const rect = trackEl.getBoundingClientRect();
       let pct = (clientX - rect.left) / rect.width;
       pct = Math.max(0, Math.min(1, pct));
-      fill.style.width = (pct * 100) + '%';
+      fill.style.width = pct * 100 + "%";
       onChange(pct);
     }
-    trackEl.addEventListener('mousedown', (e: MouseEvent) => {
+    trackEl.addEventListener("mousedown", (e: MouseEvent) => {
       setFromEvent(e.clientX);
-      function move(e: MouseEvent) { setFromEvent(e.clientX); }
-      function up() { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); }
-      document.addEventListener('mousemove', move);
-      document.addEventListener('mouseup', up);
+      function move(e: MouseEvent) {
+        setFromEvent(e.clientX);
+      }
+      function up() {
+        document.removeEventListener("mousemove", move);
+        document.removeEventListener("mouseup", up);
+      }
+      document.addEventListener("mousemove", move);
+      document.addEventListener("mouseup", up);
     });
-    trackEl.addEventListener('touchstart', (e: TouchEvent) => setFromEvent(e.touches[0].clientX));
-    trackEl.addEventListener('touchmove', (e: TouchEvent) => setFromEvent(e.touches[0].clientX));
+    trackEl.addEventListener("touchstart", (e: TouchEvent) =>
+      setFromEvent(e.touches[0].clientX),
+    );
+    trackEl.addEventListener("touchmove", (e: TouchEvent) =>
+      setFromEvent(e.touches[0].clientX),
+    );
   }
 
-  const volTrack = document.querySelector('.vol .track') as HTMLElement;
-  const volIcon = document.querySelector('.vol svg') as HTMLElement;
+  const volTrack = document.querySelector(".vol .track") as HTMLElement;
+  const volIcon = document.querySelector(".vol svg") as HTMLElement;
   if (volTrack && volIcon) {
     makeDraggable(volTrack, (pct) => {
       lastVolume = Math.round(pct * 100);
-      volIcon.style.opacity = lastVolume === 0 ? '.45' : '1';
-      if (activeSource === 'youtube' && ytPlayer && typeof ytPlayer.setVolume === 'function') {
+      volIcon.style.opacity = lastVolume === 0 ? ".45" : "1";
+      if (
+        activeSource === "youtube" &&
+        ytPlayer &&
+        typeof ytPlayer.setVolume === "function"
+      ) {
         ytPlayer.setVolume(lastVolume);
       }
-      /* Spotify embed API has no setVolume — volume controlled by embed UI only */
     });
-    volIcon.addEventListener('click', () => {
-      const fill = volTrack.querySelector('.fill') as HTMLElement;
+    volIcon.addEventListener("click", () => {
+      const fill = volTrack.querySelector(".fill") as HTMLElement;
       if (!fill) return;
-      const isMuted = fill.style.width === '0%';
-      fill.style.width = isMuted ? lastVolume + '%' : '0%';
-      volIcon.style.opacity = isMuted ? '1' : '.45';
-      if (activeSource === 'youtube' && ytPlayer && typeof ytPlayer.setVolume === 'function') {
+      const isMuted = fill.style.width === "0%";
+      fill.style.width = isMuted ? lastVolume + "%" : "0%";
+      volIcon.style.opacity = isMuted ? "1" : ".45";
+      if (
+        activeSource === "youtube" &&
+        ytPlayer &&
+        typeof ytPlayer.setVolume === "function"
+      ) {
         ytPlayer.setVolume(isMuted ? lastVolume : 0);
       }
     });
   }
 
-  const scrubTrack = document.querySelector('.scrub .track') as HTMLElement;
+  const scrubTrack = document.querySelector(".scrub .track") as HTMLElement;
   if (scrubTrack) makeDraggable(scrubTrack, () => {});
 </script>
