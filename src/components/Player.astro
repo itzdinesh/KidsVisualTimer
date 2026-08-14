@@ -104,6 +104,9 @@
   let isDragging = false;
   let dragPct = 0;
 
+  /* ── intent tracking: prevents onStateChange flicker ── */
+  let lastUserAction: "play" | "pause" | null = null;
+
   /* ══════════════════════════════════
      TAB CONFIG — all YouTube
      ══════════════════════════════════ */
@@ -217,12 +220,15 @@
       item.innerHTML = `<span class="queue-idx">${i + 1}</span><span class="queue-track"><span class="queue-name">${t.name}</span><span class="queue-film">${t.film}</span></span>`;
       item.addEventListener("click", () => {
         if (ytPlayer && typeof ytPlayer.playVideoAt === "function") {
+          lastUserAction = "play";
           ytPlayer.playVideoAt(i);
           ytCurrent = i;
           setTrackUI(t.name, t.film, t.initials);
           updatePlayButtonState(true);
+          startSprinkles();
           updateQueueHighlight(i);
           queuePanel?.classList.remove("open");
+          /* NO timeout — onStateChange will clear lastUserAction */
         }
       });
       queueList.appendChild(item);
@@ -328,7 +334,6 @@
 
   function spawnThemeParticles(tabKey: string) {
     clearThemeParticles();
-    /* clear existing particles */
     const confLayer = document.getElementById("confettiLayer");
     const vidaaiLayer = document.getElementById("vidaaiPetals");
     if (confLayer) confLayer.innerHTML = "";
@@ -342,10 +347,73 @@
   }
 
   /* ══════════════════════════════════
+     PLAYBACK HELPERS
+     ══════════════════════════════════ */
+
+  /**
+   * Reliable play: calls playVideo(), verifies state, retries once.
+   * Sets lastUserAction so onStateChange doesn't flicker the UI.
+   * Does NOT clear lastUserAction — only onStateChange should do that.
+   */
+  function reliablePlay(): Promise<boolean> {
+    lastUserAction = "play";
+    return new Promise((resolve) => {
+      if (!ytPlayer || typeof ytPlayer.playVideo !== "function") {
+        lastUserAction = null;
+        resolve(false);
+        return;
+      }
+      /* already playing — nothing to do */
+      try {
+        if (ytPlayer.getPlayerState() === 1) {
+          /* don't clear lastUserAction here — let onStateChange confirm */
+          resolve(true);
+          return;
+        }
+      } catch { /* ignore */ }
+
+      try { ytPlayer.playVideo(); } catch { lastUserAction = null; resolve(false); return; }
+
+      /* verify after a short delay */
+      setTimeout(() => {
+        try {
+          const s = ytPlayer.getPlayerState();
+          if (s === 1) { resolve(true); return; }
+        } catch { /* ignore */ }
+
+        /* retry once — mobile Safari may need a second nudge */
+        try { ytPlayer.playVideo(); } catch { lastUserAction = null; resolve(false); return; }
+        setTimeout(() => {
+          try {
+            const playing = ytPlayer.getPlayerState() === 1;
+            if (!playing) lastUserAction = null; /* only clear on definitive failure */
+            resolve(playing);
+          }
+          catch { lastUserAction = null; resolve(false); }
+        }, 250);
+      }, 200);
+    });
+  }
+
+  /**
+   * Reliable pause. Sets lastUserAction so onStateChange doesn't flicker.
+   * Does NOT clear lastUserAction — only onStateChange should do that.
+   */
+  function reliablePause(): void {
+    lastUserAction = "pause";
+    if (!ytPlayer || typeof ytPlayer.pauseVideo !== "function") {
+      lastUserAction = null;
+      return;
+    }
+    try { ytPlayer.pauseVideo(); } catch { /* ignore */ }
+    /* NO timeout to clear lastUserAction — onStateChange is the single source of truth */
+  }
+
+  /* ══════════════════════════════════
      YOUTUBE PLAYER (unified for all tabs)
      ══════════════════════════════════ */
   function updateYTProgress() {
-    if (isDragging) return; /* user is scrubbing — don't fight their position */
+    if (isDragging) return;
     if (
       !ytPlayer ||
       typeof ytPlayer.getCurrentTime !== "function"
@@ -379,17 +447,14 @@
     if (!cfg || !ytPlayer) return;
     activeTabKey = tabKey;
 
-    /* bump generation — any in-flight fetch from a previous tab is now stale */
     const gen = ++tabGeneration;
 
-    /* immediately clear tracks + queue */
     ytTracks = [];
     ytCurrent = 0;
     if (queueList) {
       queueList.innerHTML = '<div class="queue-item" style="opacity:.5;pointer-events:none;"><span class="queue-track"><span class="queue-name">Loading songs...</span></span></div>';
     }
 
-    /* load playlist or single video */
     if (cfg.playlistId) {
       ytPlayer.loadPlaylist({
         list: cfg.playlistId,
@@ -399,16 +464,15 @@
       ytPlayer.loadVideoById(cfg.videoId);
     }
 
-    /* fetch track titles via oembed */
     if (cfg.playlistId) {
       try {
         await new Promise((r) => setTimeout(r, 1500));
-        if (gen !== tabGeneration) return; /* stale — another tab was switched */
+        if (gen !== tabGeneration) return;
         if (ytPlayer && typeof ytPlayer.getPlaylist === "function") {
           const videoIds = ytPlayer.getPlaylist();
           if (Array.isArray(videoIds) && videoIds.length > 0) {
             const tracks = await fetchPlaylistTracks(videoIds);
-            if (gen !== tabGeneration) return; /* stale */
+            if (gen !== tabGeneration) return;
             ytTracks = tracks;
             ytCurrent = 0;
             if (ytTracks.length > 0) {
@@ -424,10 +488,9 @@
       }
     }
 
-    /* single video: fetch its title */
     if (cfg.videoId) {
       const tracks = await fetchPlaylistTracks([cfg.videoId]);
-      if (gen !== tabGeneration) return; /* stale */
+      if (gen !== tabGeneration) return;
       ytTracks = tracks;
       ytCurrent = 0;
       if (tracks.length > 0) {
@@ -455,27 +518,25 @@
         onReady: async () => {
           playerReady = true;
           const gen = tabGeneration;
-          /* if single video, load it now */
           if (firstCfg?.videoId && ytPlayer.loadVideoById) {
             ytPlayer.loadVideoById(firstCfg.videoId);
           }
-          /* fetch track list */
           if (firstCfg?.playlistId && typeof ytPlayer.getPlaylist === "function") {
             const videoIds = ytPlayer.getPlaylist();
             if (Array.isArray(videoIds) && videoIds.length > 0) {
               const tracks = await fetchPlaylistTracks(videoIds);
-              if (gen !== tabGeneration) return; /* stale */
+              if (gen !== tabGeneration) return;
               ytTracks = tracks;
               ytCurrent = 0;
               if (tracks.length > 0) {
                 const t = tracks[0];
                 setTrackUI(t.name, t.film, t.initials);
               }
-              buildQueueList(tracks, 0);
+              buildQueueList(ytTracks, 0);
             }
           } else if (firstCfg?.videoId) {
             const tracks = await fetchPlaylistTracks([firstCfg.videoId]);
-            if (gen !== tabGeneration) return; /* stale */
+            if (gen !== tabGeneration) return;
             ytTracks = tracks;
             ytCurrent = 0;
             if (tracks.length > 0) {
@@ -485,11 +546,50 @@
           }
         },
         onStateChange: (event: any) => {
-          const isPlaying = event.data === 1;
-          updatePlayButtonState(isPlaying);
+          const ytState = event.data;
+
+          /* update progress bar always */
           updateYTProgress();
-          if (isPlaying) startSprinkles();
-          else stopSprinkles();
+
+          /* handle sprinkle/petal lifecycle */
+          if (ytState === 1) startSprinkles();
+          else if (ytState === 2 || ytState === 0 || ytState === -1) stopSprinkles();
+
+          /* ── intent-based play/pause UI sync ── */
+
+          /* if user just clicked play, only override if YouTube contradicts */
+          if (lastUserAction === "play") {
+            if (ytState === 1) {
+              /* confirmed playing — clear intent */
+              lastUserAction = null;
+              updatePlayButtonState(true);
+            } else if (ytState === 0 || ytState === -1) {
+              /* ended or unstarted — YouTube refused, revert UI */
+              lastUserAction = null;
+              updatePlayButtonState(false);
+            }
+            /* buffering (3), paused (2), cued (5) — ignore, keep optimistic UI */
+            return;
+          }
+
+          /* if user just clicked pause, only override if YouTube contradicts */
+          if (lastUserAction === "pause") {
+            if (ytState !== 1) {
+              /* confirmed not playing — clear intent */
+              lastUserAction = null;
+              updatePlayButtonState(false);
+            }
+            /* still playing (1) — YouTube hasn't paused yet, keep optimistic UI */
+            return;
+          }
+
+          /* no pending intent — sync UI with actual state */
+          if (ytState === 1) {
+            updatePlayButtonState(true);
+          } else if (ytState === 0 || ytState === 2 || ytState === -1) {
+            updatePlayButtonState(false);
+          }
+          /* ignore buffering (3) and cued (5) — don't touch the icon */
         },
       },
     });
@@ -522,12 +622,10 @@
         return;
       }
       const state = ytPlayer.getPlayerState();
-      /* already stopped (-1) or ended (0) */
       if (state === -1 || state === 0) {
         resolve();
         return;
       }
-      /* wait for onStateChange to confirm stop, with timeout fallback */
       let resolved = false;
       const done = () => {
         if (resolved) return;
@@ -535,7 +633,6 @@
         resolve();
       };
       setTimeout(done, 300);
-      /* poll as backup since onStateChange may not fire for stopVideo */
       const poll = setInterval(() => {
         try {
           const s = ytPlayer.getPlayerState();
@@ -556,19 +653,16 @@
     if (tab.classList.contains("active")) return;
     if (!TABS[tabKey]) return;
 
-    /* fully stop current audio — stopVideo is more reliable than pauseVideo */
     if (ytPlayer && typeof ytPlayer.stopVideo === "function") {
       ytPlayer.stopVideo();
     }
     await waitForPlayerStop();
     stopSprinkles();
 
-    /* immediately clear all state */
     ytTracks = [];
     ytCurrent = 0;
     tabGeneration++;
 
-    /* reset UI to neutral */
     updatePlayButtonState(false);
     setTrackUI("Loading...", "", "🎵");
     const scrubFillEl = document.getElementById("scrubFill");
@@ -578,7 +672,6 @@
     if (currentTimeEl) currentTimeEl.textContent = "0:00";
     if (durationTimeEl) durationTimeEl.textContent = "0:00";
 
-    /* clear queue panel immediately */
     if (queueList) {
       queueList.innerHTML = '<div class="queue-item" style="opacity:.5;pointer-events:none;"><span class="queue-track"><span class="queue-name">Loading songs...</span></span></div>';
     }
@@ -589,11 +682,9 @@
       .forEach((t) => t.classList.remove("active"));
     tab.classList.add("active");
 
-    /* apply theme */
     document.body.setAttribute("data-theme", tabKey);
     spawnThemeParticles(tabKey);
 
-    /* load new tab */
     loadTab(tabKey);
   }
 
@@ -631,20 +722,32 @@
   /* ── play / pause ── */
   const playBtn = document.getElementById("playBtn");
   if (playBtn) {
-    playBtn.addEventListener("click", () => {
-      if (!ytPlayer) return;
+    playBtn.addEventListener("click", async () => {
+      if (!ytPlayer || !playerReady) return;
+      if (lastUserAction) return; /* already handling a tap */
+
       const state = ytPlayer.getPlayerState ? ytPlayer.getPlayerState() : -1;
+
       if (state === 1) {
-        /* playing → pause */
+        /* playing → pause: update UI immediately, call pause */
         updatePlayButtonState(false);
         stopSprinkles();
-        ytPlayer.pauseVideo();
-      } else {
-        /* paused/stopped/ended → play */
-        updatePlayButtonState(true);
-        startSprinkles();
-        ytPlayer.playVideo();
+        reliablePause();
+        return;
       }
+
+      /* paused / stopped / ended / unstarted / cued → play */
+      updatePlayButtonState(true);
+      startSprinkles();
+
+      const ok = await reliablePlay();
+      if (!ok) {
+        /* playback didn't start — revert UI */
+        updatePlayButtonState(false);
+        stopSprinkles();
+      }
+      /* safety: clear intent after 2s in case onStateChange never fires */
+      setTimeout(() => { lastUserAction = null; }, 2000);
     });
   }
 
@@ -653,25 +756,21 @@
   if (scrubTrackEl) {
     makeDraggable(
       scrubTrackEl,
-      /* onChange — visual only, no seek */
       (pct) => {
         isDragging = true;
         dragPct = pct;
-        /* update time label to show where user is aiming */
         if (ytPlayer && typeof ytPlayer.getDuration === "function") {
           const dur = ytPlayer.getDuration() || 0;
           const curTimeEl = document.getElementById("currentTime");
           if (curTimeEl) curTimeEl.textContent = formatTime(pct * dur);
         }
       },
-      /* onEnd — seek to final position */
       (pct) => {
         isDragging = false;
         if (ytPlayer && typeof ytPlayer.getDuration === "function") {
           const dur = ytPlayer.getDuration() || 0;
           if (dur > 0) ytPlayer.seekTo(pct * dur, true);
         }
-        /* force one progress update so UI snaps to the seeked position */
         updateYTProgress();
       },
     );
@@ -756,19 +855,20 @@
      GLOBAL PLAYER API (for Baraat mode etc.)
      ══════════════════════════════════ */
   (window as any).__dsPlayer = {
-    play() {
-      if (ytPlayer && typeof ytPlayer.playVideo === "function") {
-        ytPlayer.playVideo();
-        updatePlayButtonState(true);
-        startSprinkles();
-      }
-    },
-    pause() {
-      if (ytPlayer && typeof ytPlayer.pauseVideo === "function") {
-        ytPlayer.pauseVideo();
+    async play() {
+      if (!ytPlayer || !playerReady) return;
+      updatePlayButtonState(true);
+      startSprinkles();
+      const ok = await reliablePlay();
+      if (!ok) {
         updatePlayButtonState(false);
         stopSprinkles();
       }
+    },
+    pause() {
+      updatePlayButtonState(false);
+      stopSprinkles();
+      reliablePause();
     },
     isPlaying() {
       return ytPlayer && typeof ytPlayer.getPlayerState === "function"
