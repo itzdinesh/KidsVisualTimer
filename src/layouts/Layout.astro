@@ -62,6 +62,11 @@ import Player from '../components/Player.astro';
 					<div class="glyph">श</div>
 					<a href="/" style="text-decoration:none;color:inherit;">DeluxShaadi</a>
 				</div>
+				<div class="listener-badge" id="listenerBadge">
+					<span class="listener-dot"></span>
+					<span class="listener-count" id="listenerCount">1</span>
+					<span class="listener-label">listening now</span>
+				</div>
 				<div class="nav-links">
 					<a href="/about">About</a>
 					<a href="/privacy">Privacy</a>
@@ -522,6 +527,37 @@ import Player from '../components/Player.astro';
   window.addEventListener('popstate', () => {
     loadPage(window.location.pathname, true);
   });
+
+  /* ═══════════════════════════════════
+     LISTENER COUNT (simulated)
+     ═══════════════════════════════════ */
+  (function initListenerCount() {
+    const countEl = document.getElementById('listenerCount');
+    if (!countEl) return;
+
+    /* IST hour-based seed */
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const istHour = new Date(now.getTime() + istOffset + now.getTimezoneOffset() * 60 * 1000).getHours();
+
+    let base: number;
+    if (istHour >= 18 && istHour < 23) {
+      base = 280 + Math.floor(Math.random() * 141);
+    } else if (istHour >= 6 && istHour < 18) {
+      base = 60 + Math.floor(Math.random() * 91);
+    } else {
+      base = 30 + Math.floor(Math.random() * 61);
+    }
+
+    countEl.textContent = String(base);
+
+    /* natural jitter every 15-20s */
+    setInterval(() => {
+      base += Math.floor(Math.random() * 9) - 4;
+      base = Math.max(1, base);
+      countEl.textContent = String(base);
+    }, 15000 + Math.random() * 5000);
+  })();
 </script>
 	</body>
 </html>
